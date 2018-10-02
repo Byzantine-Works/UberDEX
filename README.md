@@ -1,0 +1,2 @@
+# ByDEX
+ByDEX is Byzantine's secure, robust and highly decoupled white-label DEX ecosystem. This platform encapsulates exchange infrastructure and smart contracts to deliver a high-performance, enterprise grade, autonomous and decentralized exchanges across various chains. The solution augments both real-time trading DApps and on-chain instant and transparent settlement. This enables a 3-4 week window from soup to nuts of starting a new DEX business and opening trades on any supported base token and stable coin.
