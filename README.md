@@ -6,5 +6,5 @@ Digital Asset Relay is a multi-chain DEX order liquidity protocol designed for h
 
 # Synopsis
 UberDEX’s patent-pending decentralized architecture provides the highest level of autonomous, secure, and reliable multi-chain token trading ecosystem that is designed from the ground up to deliver the performance of Centralized Exchanges in a DEX network. Algorithmic-trading ready outta box?
-The unique design pairs transparent side-chain orderbooks and trading engines with a decentralized chain-specific Smart Contract.
-The side-chain infrastructure manages the trading experience, while the smart contract handles all funds, trade authorization, and final settlement in a completely autonomous manner.
+The unique design pairs transparent low-latency global orderbooks and trading engines with a decentralized chain-specific Smart Contract.
+The global orderbook infrastructure augments the trading experience, while the smart contract handles all funds, trade authorization, and final settlement in a completely autonomous and decentralized manner.
