@@ -1,0 +1,29 @@
+{
+  "http.port": 35000,
+  "companies": [
+    {
+      "name": "ABC",
+      "symbol": "ABC",
+      "precision": 4,
+      "volume": 95000,
+      "price": 1234,
+      "variation": 150
+    },
+    {
+      "name": "SYS",
+      "symbol": "SYS",
+      "precision": 4,
+      "volume": 98000,
+      "price": 856,
+      "variation": 120
+    },
+    {
+      "name": "BLACK",
+      "symbol": "BLACK",
+      "precision": 4,
+      "volume": 90000,
+      "price": 1985,
+      "variation": 350
+    }
+  ]
+}

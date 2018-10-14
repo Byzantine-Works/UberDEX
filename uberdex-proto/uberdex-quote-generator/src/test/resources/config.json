@@ -1,0 +1,32 @@
+{
+  "companies": [
+    {
+      "name": "ABC",
+      "symbol": "ABC",
+      "precision": 4,
+      "volume": 100000,
+      "price": 1234,
+      "variation": 25,
+      "period": 100
+    },
+    {
+      "name": "SYS",
+      "symbol": "SYS",
+      "volume": 500000,
+      "precision": 4,
+      "price": 800,
+      "variation": 50,
+      "period": 100
+    },
+    {
+      "name": "BLACK",
+      "symbol": "BLACK",
+      "precision": 4,
+      "volume": 90000,
+      "price": 300,
+      "variation": 150,
+      "period": 100
+    }
+  ]
+
+}
