@@ -1,3 +1,7 @@
+### MacOS baggage
+.DS_Store
+__MAC*
+
 ### Asciidoctor output
 /docs/output
 /docs-zh-cn/output
