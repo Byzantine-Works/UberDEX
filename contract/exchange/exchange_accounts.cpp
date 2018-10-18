@@ -31,14 +31,16 @@ int64_t safe_add(int64_t a, int64_t b)
 }
 
 void exchange_accounts::adjust_balance_helper(
-    account_name owner, extended_asset delta, exaccount& exa) {
+    account_name owner, extended_asset delta, exaccount &exa)
+{
   const auto &b = exa.balances[delta.get_extended_symbol()] += delta.amount;
   eosio_assert(b >= 0, "overdrawn balance 2");
   print("New exchange balance for ", name{owner}, " = ", b, "\n");
 }
 
 void exchange_accounts::adjust_balance_on_admin_withdrawal(
-    account_name owner, extended_asset delta, int64_t block_number, uint64_t nonce) {
+    account_name owner, extended_asset delta, int64_t block_number, uint64_t nonce)
+{
   exaccounts existing_accounts(_this_contract, _this_contract);
   auto itr = existing_accounts.find(owner);
   eosio_assert(itr != existing_accounts.end(), "Exchange account must exist to perform withdrawals");
@@ -49,21 +51,22 @@ void exchange_accounts::adjust_balance_on_admin_withdrawal(
   // Update the balance and nonce.
   existing_accounts.modify(itr, _this_contract, [&](auto &exa) {
     adjust_balance_helper(owner, delta, exa);
-    exa.last_active_transaction = block_number;
     exa.last_withdrawal_nonce = nonce;
   });
 }
 
 void exchange_accounts::adjust_balance_on_user_withdrawal(
-    account_name owner, extended_asset delta, int64_t block_number, int64_t inactivity_release_period, uint64_t nonce) {
+    account_name owner, extended_asset delta, int64_t block_number, int64_t funds_release_lockup_period, uint64_t nonce)
+{
   exaccounts existing_accounts(_this_contract, _this_contract);
   auto itr = existing_accounts.find(owner);
   eosio_assert(itr != existing_accounts.end(), "Exchange account must exist to perform withdrawals");
 
   // Since this is a withdrawal transaction that has not been signed by the exchange, make sure enough
   // time has passed since the last user transaction.
-  eosio_assert(block_number > itr->last_active_transaction + inactivity_release_period,
-               "Not enough time has passed since the last user transaction to allow user withdrawals.");
+  print("block_number => ", block_number, ":: lock_block_number => ", itr->lock_block_number, ":: ", "funds_release_lockup_period =>", funds_release_lockup_period, "\r\n");
+  eosio_assert((itr->lock_block_number > 0) && (block_number > itr->lock_block_number + funds_release_lockup_period),
+               "Not enough time has passed since the account lock to allow user withdrawals.");
 
   // Validate that the withdrawal nonce is greater than the last recorded withdrawal nonce.
   eosio_assert(nonce > itr->last_withdrawal_nonce, "Invalid withdrawal nonce.");
@@ -86,8 +89,6 @@ void exchange_accounts::adjust_balance_on_deposit(account_name owner, extended_a
     existing_accounts.emplace(owner, [&](auto &exa) {
       exa.owner = owner;
       exa.balances[delta.get_extended_symbol()] = delta.amount;
-      exa.last_active_transaction = block_number;
-      exa.invalid_order_nonce = 0;
       eosio_assert(delta.amount >= 0, "overdrawn balance 1");
       print("New exchange balance for ", name{owner}, " = ", delta.amount, "\n");
     });
@@ -96,7 +97,6 @@ void exchange_accounts::adjust_balance_on_deposit(account_name owner, extended_a
   {
     existing_accounts.modify(itr, _this_contract, [&](auto &exa) {
       adjust_balance_helper(owner, delta, exa);
-      exa.last_active_transaction = block_number;
     });
   }
 
@@ -133,8 +133,6 @@ void exchange_accounts::adjust_fees_balance(account_name fees_account,
       exa.owner = fees_account;
       exa.balances[token_buy_symbol] = taker_fee;
       exa.balances[token_sell_symbol] = maker_fee;
-      exa.last_active_transaction = block_number;
-      exa.invalid_order_nonce = 0;
       print("New fees account balance for ", name{fees_account}, ", symbol ", token_buy_symbol, " = ", taker_fee, ", symbol ", token_sell_symbol, " = ", maker_fee, "\n");
     });
   }
@@ -146,7 +144,6 @@ void exchange_accounts::adjust_fees_balance(account_name fees_account,
       const auto &b2 = exa.balances[token_sell_symbol] += maker_fee;
       eosio_assert(b2 >= 0, "overdrawn balance 3");
       print("New fees account balance for ", name{fees_account}, ", symbol ", token_buy_symbol, " = ", b1, ", symbol ", token_sell_symbol, " = ", b2, "\n");
-      exa.last_active_transaction = block_number;
     });
   }
 }
@@ -180,13 +177,18 @@ void exchange_accounts::get_userregisteredkey(account_name user)
 }
 
 //Print balances to console in pseudo-json for verification
-void exchange_accounts::get_balances(account_name owner)
+void exchange_accounts::get_balances(account_name owner, int64_t current_block_number)
 {
   //print("Balances for account: ", name{owner});
   exaccounts existing_accounts(_this_contract, _this_contract);
   auto itr = existing_accounts.find(owner);
   if (itr != existing_accounts.end())
   {
+    // if (itr->lock_block_number == 0) {
+    //   print("Account is unlocked.\n");
+    // } else {
+    //   print("Account has been locked for ", current_block_number - itr->lock_block_number, " blocks.\n");
+    // }
     for (auto balance : itr->balances)
     {
       print("{'account':'", name{owner}, "','token':'", balance.first, "','amount':", balance.second, "}");
@@ -197,12 +199,13 @@ void exchange_accounts::get_balances(account_name owner)
 void exchange_accounts::record_trade(account_name taker, const checksum256 &trade_hash,
                                      int64_t amount, int64_t amount_buy, int64_t amount_sell, int64_t taker_fee,
                                      const extended_symbol &token_buy_symbol, const extended_symbol &token_sell_symbol,
-                                     int64_t block_number, bytes taker_signature)
+                                     int64_t block_number, int64_t trade_lock_period, bytes taker_signature)
 {
   exaccounts existing_accounts(_this_contract, _this_contract);
   auto itr = existing_accounts.find(taker);
   eosio_assert(itr != existing_accounts.end(), "Account/exchange balance must exist to perform a trade");
   existing_accounts.modify(itr, _this_contract, [&](auto &existing_account) {
+    assert_trades_allowed(existing_account.lock_block_number, block_number, trade_lock_period);
     // Validate the trade.
     auto &executed_trades = existing_account.executed_trades;
     auto trade_itr = executed_trades.find(trade_hash);
@@ -220,8 +223,6 @@ void exchange_accounts::record_trade(account_name taker, const checksum256 &trad
     balances[token_buy_symbol] = safe_sub(balances[token_buy_symbol], amount);
     balances[token_buy_symbol] = safe_sub(balances[token_buy_symbol], taker_fee);
     balances[token_sell_symbol] = safe_add(balances[token_sell_symbol], safe_mul(amount_sell, amount) / amount_buy);
-
-    existing_account.last_active_transaction = block_number;
   });
 }
 
@@ -242,12 +243,13 @@ void exchange_accounts::reset_exchange(account_name owner, int64_t blocknumber)
 void exchange_accounts::update_order(account_name maker, const checksum256 &order_hash,
                                      int64_t amount, int64_t amount_buy, int64_t amount_sell, int64_t maker_fee,
                                      const extended_symbol &token_buy_symbol, const extended_symbol &token_sell_symbol,
-                                     uint64_t nonce, int64_t block_number, bytes maker_signature)
+                                     uint64_t nonce, int64_t block_number, int64_t trade_lock_period, bytes maker_signature)
 {
   exaccounts existing_accounts(_this_contract, _this_contract);
   auto itr = existing_accounts.find(maker);
   eosio_assert(itr != existing_accounts.end(), "Account/exchange balance must exist to perform a trade");
   existing_accounts.modify(itr, _this_contract, [&](auto &existing_account) {
+    assert_trades_allowed(existing_account.lock_block_number, block_number, trade_lock_period);
     eosio_assert(existing_account.invalid_order_nonce <= nonce, "This order has been invalidated");
     auto &order_fills = existing_account.order_fills;
 
@@ -279,8 +281,6 @@ void exchange_accounts::update_order(account_name maker, const checksum256 &orde
     balances[token_buy_symbol] = safe_add(balances[token_buy_symbol], amount);
     balances[token_sell_symbol] = safe_sub(balances[token_sell_symbol], safe_mul(amount_sell, amount) / amount_buy);
     balances[token_sell_symbol] = safe_sub(balances[token_sell_symbol], maker_fee);
-
-    existing_account.last_active_transaction = block_number;
   });
 }
 
@@ -293,8 +293,6 @@ void exchange_accounts::register_user(account_name user, const std::vector<char>
     existing_accounts.emplace(user, [&](auto &exa) {
       exa.owner = user;
       exa.public_key = public_key;
-      exa.last_active_transaction = 0;
-      exa.invalid_order_nonce = 0;
     });
   }
   else
@@ -313,6 +311,33 @@ void exchange_accounts::invalidate_orders_before(account_name user, uint64_t bef
   eosio_assert(before_nonce > itr->invalid_order_nonce, "The new order invalidation nonce must be greater than the old one.");
   existing_accounts.modify(itr, _this_contract, [&](auto &exa) {
     exa.invalid_order_nonce = before_nonce;
+  });
+}
+
+void exchange_accounts::assert_trades_allowed(int64_t lock_block_number, int64_t current_block_number, int64_t trade_lock_period)
+{
+  // Allow transactions for a specified period of time (1 hour by default) after the user account has been locked.
+  eosio_assert((lock_block_number == 0) || (current_block_number - lock_block_number) <= trade_lock_period,
+               "Transactions are not allowed starting one hour after the account has been locked.");
+}
+
+void exchange_accounts::lock_user_account(account_name user, int64_t current_block_number)
+{
+  exaccounts existing_accounts(_this_contract, _this_contract);
+  auto itr = existing_accounts.find(user);
+  eosio_assert(itr != existing_accounts.end(), "Account must exist in order to lock it.");
+  existing_accounts.modify(itr, _this_contract, [&](auto &exa) {
+    exa.lock_block_number = current_block_number;
+  });
+}
+
+void exchange_accounts::unlock_user_account(account_name user)
+{
+  exaccounts existing_accounts(_this_contract, _this_contract);
+  auto itr = existing_accounts.find(user);
+  eosio_assert(itr != existing_accounts.end(), "Account must exist in order to unlock it.");
+  existing_accounts.modify(itr, _this_contract, [&](auto &exa) {
+    exa.lock_block_number = 0;
   });
 }
 } // namespace eosio
