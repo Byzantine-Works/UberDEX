@@ -1,19 +1,29 @@
 {
-  "name": "test",
+  "name": "eos-api-unit-tests",
   "version": "1.0.0",
-  "description": "UberDEX API Tests",
-  "keywords": [
-    "UberDEX",
-    "API Tests"
-  ],
-  "main": "uberdextests.js",
+  "description": "Mocha+Chai Driven Unit Tests using a facade API for eos on-chain interactions for UberDEX/LADR",
+  "main": "eosapi.js",
   "scripts": {
-    "test": "node uberdextests.js"
+    "test": "./node_modules/.bin/mocha --reporter mochawesome ./UberDEX.unit.tests.js --exit",
+    "start": "node uberdexapi.js"
   },
+  "keywords": [],
   "author": "M.Reddy <reddy@byzanti.ne>",
   "license": "ISC",
   "dependencies": {
-    "dotenv": "^6.1.0",
-    "request": "^2.88.0"
+    "bignumber.js": "^7.2.1",
+    "commander": "^2.17.1",
+    "dotenv": "^6.0.0",
+    "eosjs": "^16.0.3",
+    "eosjs-ecc": "^4.0.3",
+    "express": "^4.16.3",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.2"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "chai-http": "^4.0.0",
+    "mocha": "^5.2.0",
+    "mochawesome": "^3.0.3"
   }
 }
