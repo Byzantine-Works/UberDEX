@@ -141,6 +141,44 @@ const options = {
   sign: true
 };*/
 
+async function getAccountActiveKey(account) {
+    var accountDetails = await eos.getAccount(account);
+    //console.log(JSON.stringify(accountDetails));
+    for (var i = 0, len = accountDetails.permissions.length; i < len; i++) {
+        if (accountDetails.permissions[i].perm_name === 'active') {
+            return accountDetails.permissions[i].required_auth.keys[0].key;
+        }
+    }
+
+}
+
+//UberDEX exdeposit api
+async function exdeposit(contract, from, amount, key, nonce) {
+    console.log("exdeposit: => contract:from:amount:key,nonce => " + contract + ":" + from + ":" + amount + ":" + key + ":" + nonce);
+    var activeKey = await getAccountActiveKey(from);
+    console.log("Account active key for:" + from + " is => " + activeKey);
+    await register([from, activeKey]);
+    var trxDeposit = await eos.transaction(contract, contractuser => {
+        contractuser.transfer({
+            from: from,
+            to: EXCHANGE_ACCOUNT,
+            quantity: amount,
+            memo: "deposit"
+        }, {
+            authorization: [from]
+        });
+    });
+    console.log("exdeposit => transaction:" + trxDeposit);
+    return (trxDeposit);
+}
+
+//UberDEX exwithdraw api
+async function exwithdraw(admin, account, amount, nonce) {
+    console.log("exwithdraw: =>admin:from:amount:nonce => " + admin + ":" + account + ":" + amount + ":" + nonce);
+    await setadmin(["admin", true]);
+    return await withdraw([admin, account, amount, nonce]);
+}
+
 //Deposit with exchange contract
 async function deposit(args) {
     if (args.length < 2) {
@@ -282,7 +320,7 @@ async function withdraw(args) {
         return;
     }
     [admin, account, amount, nonce] = args;
-    log("function:withdraw :: account=" + account + " amount= " + amount + " :from:" + account + " :nonce:" + nonce);
+    log("function:withdraw :: admin=" + admin + " amount= " + amount + " :from:" + account + " :nonce:" + nonce);
     // if (amount.indexOf("IQ") > -1) {
     //     eosTokenContract = "everipediaiq";
     // }else{
@@ -959,3 +997,6 @@ var server = app.listen(process.env.EOSAPIPORT, function () {
     log('Running mode => ' + mode);
     log("EosConfig =>" + JSON.stringify(eosNetwork, null, 2));
 });
+
+module.exports.exdeposit = exdeposit;
+module.exports.exwithdraw = exwithdraw;
