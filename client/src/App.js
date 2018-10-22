@@ -1,14 +1,22 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import Main from './components/main';
 import './App.css';
-import Home from './components/home';
 
+import { Layout, Content } from 'react-mdl';
 class App extends Component {
   render() {
     return (
-        <Home />
+      <div className="demo-big-content">
+          <Layout>
+              <Content>
+                  <div className="page-content" />
+                  <Main />
+              </Content>
+          </Layout>
+      </div>
     );
   }
 }
 
 export default App;
+

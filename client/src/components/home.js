@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import Header from './header';
-import Banner from './main_banner';
-import EOS from './eos_table';
-import Features from './features';
+import Banner from './home_page/main_banner';
+import EOS from './home_page/eos_table';
+import Features from './home_page/features';
 import Call_action from './call_action';
 import Footer from './footer';
 

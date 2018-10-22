@@ -1,7 +1,13 @@
 import React, {Component} from 'react';
 import logo from './logo_main.png';
 import logos from './logos.png';
+import $ from "jquery";
 
+function handleClick(e) {
+    e.preventDefault();
+    $('.signIn_popup ').fadeIn();
+  }
+  
 class Header extends Component{
     render(){
        
@@ -15,10 +21,10 @@ class Header extends Component{
                     <div className="menu_sections">
                         <nav>
                             <ul>
-                                <li><a href="/">Exchange</a></li>
-                                <li><a href="/">Markets</a></li>
-                                <li><a href="/">Supports</a></li>
-                                <li><a href="/">Sign In</a></li>
+                                <li><a href="/exchange">Exchange</a></li>
+                                <li><a href="/market">Markets</a></li>
+                                <li><a href="/support">Supports</a></li>
+                                <li><a href="/"  onClick={handleClick}>Sign In</a></li>
                                 <li><a href="/" className="bgs">Get Started</a></li>
                             </ul>
                         </nav>
@@ -29,7 +35,9 @@ class Header extends Component{
                                 <i className="fa fa-globe-africa"></i>
                                 <select className="basic">
                                     <option>English</option>
-                                    <option>Urdu</option>
+                                    <option>한국어</option>
+                                    <option>繁體中文</option>
+                                    <option>简体中文</option>
                                 </select>
                             </p>
                         </div>
