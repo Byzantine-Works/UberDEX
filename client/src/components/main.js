@@ -3,16 +3,16 @@ import {Switch, Route} from 'react-router-dom';
 import { BrowserRouter } from 'react-router-dom';
 
 import Home from './home';
-import Exchange from './exchange_page';
+import Exchange from './exchangePage';
 import Market from './market';
 import Support from './support';
 import About from './about';
-import User_agreement from './user_agreement';
+import Useragreement from './userAgreement';
 import contact from './contact';
 import trade from './trade';
-import trade_rule from './trade_rule';
+import traderule from './tradeRule';
 import announcements from './announcements';
-import fail_announcement from './fail_announcement';
+import failannouncement from './failAnnouncement';
 
 const Main = ()=> (
     <BrowserRouter>
@@ -22,12 +22,12 @@ const Main = ()=> (
     <Route path='/market' component={ Market } />
     <Route path='/support' component={ Support } />
     <Route path='/about' component={ About } />
-    <Route path='/user_agreement' component={ User_agreement } />
+    <Route path='/user_agreement' component={ Useragreement } />
     <Route path='/contact' component={ contact } />
     <Route path='/trade' component={ trade } />
-    <Route path='/trade_rule' component={ trade_rule } />
+    <Route path='/trade_rule' component={ traderule } />
     <Route path='/announcements' component={ announcements } />
-    <Route path='/fail_announcement' component={ fail_announcement } />
+    <Route path='/failannouncement' component={ failannouncement } />
 </Switch>
 </BrowserRouter>
 

@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import Header from './header';
-import EOS from './Home/eosMarket';
+import Trading from './Exchange/trading';
+import TradingCenter from './Exchange/tradingPlatform';
+import Order from './Exchange/order';
 import Callaction from './callAction';
 import Footer from './footer';
 
@@ -12,7 +14,9 @@ class Home extends Component{
                 <div className="wellcomBanner">
                     <Header />
                 </div>
-                <EOS />
+                <Trading />
+                <TradingCenter />
+                <Order />
                 <Callaction />
                 <Footer />
             </div>

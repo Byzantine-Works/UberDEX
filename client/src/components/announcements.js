@@ -1,14 +1,14 @@
 import React, {Component} from 'react';
 import Header from './header';
-import Call_action from './call_action';
+import Callaction from './callAction';
 import Footer from './footer';
 
 class Home extends Component{
     render(){
        
         return(
-            <div className="support_page">
-                <div className="wellcom_banner">
+            <div className="aboutPage">
+                <div className="wellcomBanner">
                     <Header />
                 </div>
                 
@@ -49,7 +49,7 @@ class Home extends Component{
                         </ul>
                     </div>
                 </div>
-                <Call_action />
+                <Callaction />
                 <Footer />
             </div>
         )

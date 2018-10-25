@@ -1,23 +1,23 @@
 import React, {Component} from 'react';
 import Header from './header';
-import Call_action from './call_action';
+import Callaction from './callAction';
 import Footer from './footer';
 
 class Home extends Component{
     render(){
        
         return(
-            <div className="support_page">
-                <div className="wellcom_banner">
+            <div className="supportPage">
+                <div className="wellcomBanner">
                     <Header />
                 </div>
-                <div className="support_search">
+                <div className="supportSearch">
                     <form>
                         <i className="fa fa-search"></i>
                         <input type="text" placeholder="Search" />
                     </form>
                 </div>
-                <div className="recnt_activity">
+                <div className="recntActivity">
                     <div className="container">
                         <h3>Recent activity</h3>
                         <ul>
@@ -176,7 +176,7 @@ class Home extends Component{
                         </ul>
                     </div>
                 </div>
-                <Call_action />
+                <Callaction />
                 <Footer />
             </div>
         )
