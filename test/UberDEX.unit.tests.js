@@ -30,8 +30,8 @@ const TAKER1_TEST_WITHDRAW_TRADE_BALANCE_EOS = "100.0000 EOS@eosio.token";
 const TAKER1_TEST_WITHDRAW_TRADE_BALANCE_SYS = "897.4000 SYS@eosio.token";
 
 // everipediaiq IQ contract test configuration for deposit and transfer
-const MULTI_TOKEN_CONTRACT_DEPOSIT_TRADE_AMOUNT = "1.0000 IQ";
-const MULTI_TOKEN_CONTRACT_WITHDRAW_TRADE_AMOUNT = "1.0000 IQ@everipediaiq";
+const MULTI_TOKEN_CONTRACT_DEPOSIT_TRADE_AMOUNT = "1.000 IQ";
+const MULTI_TOKEN_CONTRACT_WITHDRAW_TRADE_AMOUNT = "1.000 IQ@everipediaiq";
 const MULTI_TOKEN_CONTRACT_TEST_USER = "reddy";
 
 // Escape hatch test configuration for exchange-signatureless withdrawals

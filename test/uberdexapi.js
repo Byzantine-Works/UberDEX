@@ -63,13 +63,11 @@ var {
 
 async function resetExchange(args) {
     if (args.length < 1) {
-        log(
-            `Usage:eosapi resetExchange owner. Example 'eosapi resetExchange owner`
-        );
+        log(`Usage:eosapi resetExchange owner. Example 'eosapi resetExchange owner`);
         return;
     }
     [owner] = args;
-    var trxResetExchange = await eos.transaction("exchange", contractuser => {
+    var trxResetExchange = await eos.transaction('exchange', (contractuser) => {
         contractuser.resetex({
             owner: owner
         }, {
@@ -81,14 +79,12 @@ async function resetExchange(args) {
 
 async function invalidateOrders(args) {
     if (args.length < 3) {
-        log(
-            `Usage:eosapi invalidateorders admin account nonce. Example 'eosapi invalidateOrder admin 42`
-        );
+        log(`Usage:eosapi invalidateorders admin account nonce. Example 'eosapi invalidateOrder admin 42`);
         return;
     }
     [admin, account, nonce] = args;
-    log("function:invalidateOrders :: admin:account:nonce => " + admin + ":" + account + ":" + nonce);
-    var trxInvalidateOrders = await eos.transaction(EXCHANGE_ACCOUNT, contractuser => {
+    log('function:invalidateOrders :: admin:account:nonce => ' + admin + ':' + account + ':' + nonce);
+    var trxInvalidateOrders = await eos.transaction(EXCHANGE_ACCOUNT, (contractuser) => {
         contractuser.invalorders({
             admin: admin,
             user: account,
@@ -101,29 +97,36 @@ async function invalidateOrders(args) {
     return trxInvalidateOrders;
 }
 
+async function getAccount(args) {
+    if (args.length < 1) {
+        log(`Usage:eosapi getAccount account. Example 'eosapi getAccount user1`);
+        return;
+    }
+    [user] = args;
+    const accountInfo = await eos.getAccount(user);
+    log("getAccount for user '" + user + "' is ", accountInfo);
+    return accountInfo;
+}
+
 async function getBalance(args) {
     if (args.length < 2) {
-        log(
-            `Usage:eosapi balance account symbol. Example 'eosapi balance user1 SYS`
-        );
+        log(`Usage:eosapi balance account symbol. Example 'eosapi balance user1 SYS`);
         return;
     }
     [user, symbol] = args;
-    const balance = await eos.getCurrencyBalance("eosio.token", user, symbol);
+    const balance = await eos.getCurrencyBalance('eosio.token', user, symbol);
     log("balance for account/user '" + user + "' is ", balance);
     return balance;
 }
 
 async function getExBalance(args) {
     if (args.length < 1) {
-        log(
-            `Usage:eosapi exbalance account. Example 'eosapi exbalance user1`
-        );
+        log(`Usage:eosapi exbalance account. Example 'eosapi exbalance user1`);
         return;
     }
     [account] = args;
-    log("getExBalance => for account:" + account);
-    var trxGetExBalance = await eos.transaction("exchange", contractuser => {
+    log('getExBalance => for account:' + account);
+    var trxGetExBalance = await eos.transaction('exchange', (contractuser) => {
         contractuser.getbalances({
             owner: account
         }, {
@@ -141,83 +144,48 @@ const options = {
   sign: true
 };*/
 
-async function getAccountActiveKey(account) {
-    var accountDetails = await eos.getAccount(account);
-    //console.log(JSON.stringify(accountDetails));
-    for (var i = 0, len = accountDetails.permissions.length; i < len; i++) {
-        if (accountDetails.permissions[i].perm_name === 'active') {
-            return accountDetails.permissions[i].required_auth.keys[0].key;
-        }
-    }
-
-}
-
-//UberDEX exdeposit api
-async function exdeposit(contract, from, amount, key, nonce) {
-    console.log("exdeposit: => contract:from:amount:key,nonce => " + contract + ":" + from + ":" + amount + ":" + key + ":" + nonce);
-    var activeKey = await getAccountActiveKey(from);
-    console.log("Account active key for:" + from + " is => " + activeKey);
-    await register([from, activeKey]);
-    var trxDeposit = await eos.transaction(contract, contractuser => {
-        contractuser.transfer({
-            from: from,
-            to: EXCHANGE_ACCOUNT,
-            quantity: amount,
-            memo: "deposit"
-        }, {
-            authorization: [from]
-        });
-    });
-    console.log("exdeposit => transaction:" + trxDeposit);
-    return (trxDeposit);
-}
-
-//UberDEX exwithdraw api
-async function exwithdraw(admin, account, amount, nonce) {
-    console.log("exwithdraw: =>admin:from:amount:nonce => " + admin + ":" + account + ":" + amount + ":" + nonce);
-    await setadmin(["admin", true]);
-    return await withdraw([admin, account, amount, nonce]);
-}
-
 //Deposit with exchange contract
 async function deposit(args) {
     if (args.length < 2) {
-        log(
-            `Usage:eosapi  deposit account amount. Example 'eosapi deposit user1 "1.0000 SYS"`
-        );
+        log(`Usage:eosapi  deposit account amount. Example 'eosapi deposit user1 "1.0000 SYS"`);
         return;
     }
 
     [account, amount] = args;
-    log("function:deposit :: account=" + account + " amount= " + amount);
-    if (amount.indexOf("IQ") > -1) {
-        eosTokenContract = "everipediaiq";
+    log('function:deposit :: account=' + account + ' amount= ' + amount);
+    if (amount.indexOf('IQ') > -1) {
+        eosTokenContract = 'everipediaiq';
     }
-    var trxDeposit = await eos.transaction(eosTokenContract, contractuser => {
+    var trxDeposit = await eos.transaction(eosTokenContract, (contractuser) => {
         contractuser.transfer({
             from: account,
             to: EXCHANGE_ACCOUNT,
             quantity: amount,
-            memo: "deposit"
+            memo: 'deposit'
         }, {
             authorization: [account]
             //authorization:[{ actor: account, permission:'active' }]
         });
     });
     //log(trxDeposit);
-    return (trxDeposit);
+    return trxDeposit;
 }
 
 async function setLockParameters(args) {
     if (args.length < 3) {
-        log(
-            `Usage:eosapi setLockParameters admin tradelockperiod fundsreleaseperiod. Example 'eosapi admin 1 100`
-        );
+        log(`Usage:eosapi setLockParameters admin tradelockperiod fundsreleaseperiod. Example 'eosapi admin 1 100`);
         return;
     }
     [admin, tradelockperiod, fundsreleaseperiod] = args;
-    log("function:setLockParameters :: admin:tradelockperiod:fundsreleaseperiod=" + admin + ":" + tradelockperiod + ":" + fundsreleaseperiod);
-    var trxSetLockParameters = await eos.transaction(EXCHANGE_ACCOUNT, contractuser => {
+    log(
+        'function:setLockParameters :: admin:tradelockperiod:fundsreleaseperiod=' +
+        admin +
+        ':' +
+        tradelockperiod +
+        ':' +
+        fundsreleaseperiod
+    );
+    var trxSetLockParameters = await eos.transaction(EXCHANGE_ACCOUNT, (contractuser) => {
         contractuser.setlockparam({
             admin: admin,
             tradelockperiod: tradelockperiod,
@@ -232,14 +200,12 @@ async function setLockParameters(args) {
 
 async function setReleasePeriod(args) {
     if (args.length < 2) {
-        log(
-            `Usage:eosapi setReleasePeriod admin period. Example 'eosapi admin setreleaseperiod 1`
-        );
+        log(`Usage:eosapi setReleasePeriod admin period. Example 'eosapi admin setreleaseperiod 1`);
         return;
     }
     [admin, period] = args;
-    log("function:setReleasePeriod :: admin:period=" + admin + ":" + period);
-    var trxSetReleasePeriod = await eos.transaction(EXCHANGE_ACCOUNT, contractuser => {
+    log('function:setReleasePeriod :: admin:period=' + admin + ':' + period);
+    var trxSetReleasePeriod = await eos.transaction(EXCHANGE_ACCOUNT, (contractuser) => {
         contractuser.setrelprd({
             admin: admin,
             releaseperiod: period
@@ -253,14 +219,12 @@ async function setReleasePeriod(args) {
 
 async function setadmin(args) {
     if (args.length < 2) {
-        log(
-            `Usage:eosapi setadmin account isadmin. Example 'eosapi setadmin admin true`
-        );
+        log(`Usage:eosapi setadmin account isadmin. Example 'eosapi setadmin admin true`);
         return;
     }
     [account, isAdmin] = args;
-    log("function:setadmin :: account:isAdmin=" + account + ":" + isAdmin);
-    var trxSetAdmin = await eos.transaction(EXCHANGE_ACCOUNT, contractuser => {
+    log('function:setadmin :: account:isAdmin=' + account + ':' + isAdmin);
+    var trxSetAdmin = await eos.transaction(EXCHANGE_ACCOUNT, (contractuser) => {
         contractuser.setadmin({
             account: account,
             isadmin: isAdmin ? 1 : 0
@@ -274,14 +238,12 @@ async function setadmin(args) {
 
 async function lock(args) {
     if (args.length < 1) {
-        log(
-            `Usage:eosapi lock account. Example 'eosapi lock user`
-        );
+        log(`Usage:eosapi lock account. Example 'eosapi lock user`);
         return;
     }
     [account] = args;
-    log("function:lock :: account=" + account);
-    var trxLock = await eos.transaction(EXCHANGE_ACCOUNT, contractuser => {
+    log('function:lock :: account=' + account);
+    var trxLock = await eos.transaction(EXCHANGE_ACCOUNT, (contractuser) => {
         contractuser.lock({
             user: account
         }, {
@@ -294,14 +256,12 @@ async function lock(args) {
 
 async function unlock(args) {
     if (args.length < 1) {
-        log(
-            `Usage:eosapi unlock account. Example 'eosapi unlock user`
-        );
+        log(`Usage:eosapi unlock account. Example 'eosapi unlock user`);
         return;
     }
     [account] = args;
-    log("function:unlock :: account=" + account);
-    var trxUnlock = await eos.transaction(EXCHANGE_ACCOUNT, contractuser => {
+    log('function:unlock :: account=' + account);
+    var trxUnlock = await eos.transaction(EXCHANGE_ACCOUNT, (contractuser) => {
         contractuser.unlock({
             user: account
         }, {
@@ -314,19 +274,17 @@ async function unlock(args) {
 
 async function withdraw(args) {
     if (args.length < 3) {
-        log(
-            `Usage:eosapi withdraw account amount nonce. Example 'eosapi withdraw user1 "1.0000 SYS@eosio.token" 42`
-        );
+        log(`Usage:eosapi withdraw account amount nonce. Example 'eosapi withdraw user1 "1.0000 SYS@eosio.token" 42`);
         return;
     }
     [admin, account, amount, nonce] = args;
-    log("function:withdraw :: admin=" + admin + " amount= " + amount + " :from:" + account + " :nonce:" + nonce);
+    log('function:withdraw :: account=' + account + ' amount= ' + amount + ' :from:' + account + ' :nonce:' + nonce);
     // if (amount.indexOf("IQ") > -1) {
     //     eosTokenContract = "everipediaiq";
     // }else{
     //     eosTokenContract = "eosio.token";
     // }
-    var trxWithdraw = await eos.transaction(EXCHANGE_ACCOUNT, contractuser => {
+    var trxWithdraw = await eos.transaction(EXCHANGE_ACCOUNT, (contractuser) => {
         contractuser.withdraw({
             admin: admin,
             from: account,
@@ -348,13 +306,13 @@ async function withdraweh(args) {
         return;
     }
     [account, amount, nonce] = args;
-    log("function:withdraweh :: account=" + account + " amount= " + amount + " :from:" + account + " :nonce:" + nonce);
+    log('function:withdraweh :: account=' + account + ' amount= ' + amount + ' :from:' + account + ' :nonce:' + nonce);
     // if (amount.indexOf("IQ") > -1) {
     //     eosTokenContract = "everipediaiq";
     // }else{
     //     eosTokenContract = "eosio.token";
     // }
-    var trxWithdraw = await eos.transaction(EXCHANGE_ACCOUNT, contractuser => {
+    var trxWithdraw = await eos.transaction(EXCHANGE_ACCOUNT, (contractuser) => {
         contractuser.userwithdraw({
             user: account,
             quantity: amount,
@@ -369,15 +327,13 @@ async function withdraweh(args) {
 
 async function withdrawadmin(args) {
     if (args.length < 2) {
-        log(
-            `Usage:eosapi withdrawadmin account amount. Example 'eosapi withdrawadmin ledger "1.0000 SYS@eosio.token"`
-        );
+        log(`Usage:eosapi withdrawadmin account amount. Example 'eosapi withdrawadmin ledger "1.0000 SYS@eosio.token"`);
         return;
     }
     [account, amount] = args;
-    log("function:withdrawadmin :: account=" + account + " amount= " + amount + " :from:" + EXCHANGE_ACCOUNT);
+    log('function:withdrawadmin :: account=' + account + ' amount= ' + amount + ' :from:' + EXCHANGE_ACCOUNT);
 
-    var trxWithdraw = await eos.transaction(EXCHANGE_ACCOUNT, contractuser => {
+    var trxWithdraw = await eos.transaction(EXCHANGE_ACCOUNT, (contractuser) => {
         contractuser.admwithdraw({
             ledger: account,
             quantity: amount
@@ -391,27 +347,24 @@ async function withdrawadmin(args) {
 
 async function sign(args) {
     if (args.length < 2) {
-        log(
-            `Usage:eosapi sign data privateKey. Example 'eosapi sign some_data SOME_PRIV_KEY`
-        );
+        log(`Usage:eosapi sign data privateKey. Example 'eosapi sign some_data SOME_PRIV_KEY`);
         return;
     }
     [data, privateKey] = args;
     var signature = ecc.sign(data, privateKey);
-    log("sig-> " + ecc.sign(data, privateKey));
+    log('sig-> ' + ecc.sign(data, privateKey));
     //log("sig hash -> " + ecc.signHash(data, privateKey));
     //log("sha256hash -> " + ecc.sha256(data));
-    log(" recover -> " + ecc.recover(signature, data));
+    log(' recover -> ' + ecc.recover(signature, data));
     //log(ecc.verify(signature, data, pubkey));
 
     var sig = ecc.Signature.fromString(signature).toBuffer();
-    var sigPacked = new sig.constructor(sig.length + 1)
-    sigPacked.set(Uint8Array.of(0), 0)
-    sigPacked.set(sig, 1)
+    var sigPacked = new sig.constructor(sig.length + 1);
+    sigPacked.set(Uint8Array.of(0), 0);
+    sigPacked.set(sig, 1);
     var sigHex = sigPacked.toString('hex');
-    log(" sigHex -> " + sigHex);
+    log(' sigHex -> ' + sigHex);
 }
-
 
 async function register(args) {
     if (args.length < 2) {
@@ -421,10 +374,10 @@ async function register(args) {
         return;
     }
     [account, pubkey] = args;
-    log("[account, pubkey] -> " + account + " :: " + pubkey);
+    log('[account, pubkey] -> ' + account + ' :: ' + pubkey);
 
     if (!ecc.isValidPublic(pubkey)) {
-        log(" Invalid pubkey!");
+        log(' Invalid pubkey!');
         return;
     }
 
@@ -433,9 +386,9 @@ async function register(args) {
     pkPacked.set(Uint8Array.of(0), 0);
     pkPacked.set(pk, 1);
     var pkHex = pkPacked.toString('hex');
-    log("pkHex in bytes -> " + pkHex);
+    log('pkHex in bytes -> ' + pkHex);
 
-    trxRegisterUser = await eos.transaction("exchange", contractuser => {
+    trxRegisterUser = await eos.transaction('exchange', (contractuser) => {
         contractuser.registeruser({
             user: account,
             publickey: pkHex
@@ -459,10 +412,24 @@ async function trade(args) {
         );
         return;
     }
-    [admin, amountbuy, amountsell, nonce, amount, tradenonce, tokenbuy, tokensell, makerfee, takerfee, maker, taker, feeaccount] = args;
+    [
+        admin,
+        amountbuy,
+        amountsell,
+        nonce,
+        amount,
+        tradenonce,
+        tokenbuy,
+        tokensell,
+        makerfee,
+        takerfee,
+        maker,
+        taker,
+        feeaccount
+    ] = args;
 
     // begin order, trade serialization, sign with maker1 and taker1 accounts and submit trade
-    log("args-> " + args);
+    log('args-> ' + args);
 
     //getBN's
     var amountbuyBN = new BN(amountbuy);
@@ -471,9 +438,16 @@ async function trade(args) {
     var nonceBN = new BN(nonce);
     var tradenonceBN = new BN(tradenonce);
 
-
     //construct order buffer
-    var orderBuffer = serializeOrder(EXCHANGE_ACCOUNT, tokenbuy, tokensell, amountbuyBN, amountsellBN, nonceBN, MAKER_ACCOUNT);
+    var orderBuffer = serializeOrder(
+        EXCHANGE_ACCOUNT,
+        tokenbuy,
+        tokensell,
+        amountbuyBN,
+        amountsellBN,
+        nonceBN,
+        MAKER_ACCOUNT
+    );
     var orderHash = ecc.sha256(orderBuffer);
     var orderHashBuffer = Buffer.from(orderHash, 'hex');
     log('orderBuffer - orderHashBuffer -> ', orderHashBuffer);
@@ -494,8 +468,7 @@ async function trade(args) {
     //log("makerSignaturePacked -> " + makerSignaturePacked);
 
     //Test - Maker PUB_KEY recovery
-    log(" recover maker PK from sig/orderBuffer -> " + ecc.recover(makerSignature, orderBuffer));
-
+    log(' recover maker PK from sig/orderBuffer -> ' + ecc.recover(makerSignature, orderBuffer));
 
     //construct takersignature
     var takerSignature = ecc.sign(tradeBuffer, TAKER_PRIV_KEY);
@@ -506,31 +479,29 @@ async function trade(args) {
     //log("takerSignaturePacked -> " + takerSignaturePacked);
 
     //Test - Taker PUB_KEY recovery
-    log(" recover taker PK from sig/tradeBuffer -> " + ecc.recover(takerSignature, tradeBuffer));
-
-
+    log(' recover taker PK from sig/tradeBuffer -> ' + ecc.recover(takerSignature, tradeBuffer));
 
     //console log trade:payload dataset as json
     var p = {};
-    p["amountbuy"] = amountbuyBN.toString();
-    p["amountsell"] = amountsellBN.toString();
-    p["nonce"] = nonceBN.toString();
-    p["amount"] = amountBN.toString();
-    p["tradenonce"] = tradenonceBN.toString();
-    p["tokenbuy"] = toEosExtendedAssetString(tokenbuy, amountbuy);
-    p["tokensell"] = toEosExtendedAssetString(tokensell, amountsell);
-    p["makerfee"] = takerfee;
-    p["takerfee"] = makerfee;
-    p["maker"] = maker;
-    p["taker"] = taker;
-    p["feeaccount"] = feeaccount;
-    p["admin"] = admin;
-    p["makersig"] = makerSignaturePacked;
-    p["takersig"] = takerSignaturePacked;
+    p['amountbuy'] = amountbuyBN.toString();
+    p['amountsell'] = amountsellBN.toString();
+    p['nonce'] = nonceBN.toString();
+    p['amount'] = amountBN.toString();
+    p['tradenonce'] = tradenonceBN.toString();
+    p['tokenbuy'] = toEosExtendedAssetString(tokenbuy, amountbuy);
+    p['tokensell'] = toEosExtendedAssetString(tokensell, amountsell);
+    p['makerfee'] = takerfee;
+    p['takerfee'] = makerfee;
+    p['maker'] = maker;
+    p['taker'] = taker;
+    p['feeaccount'] = feeaccount;
+    p['admin'] = admin;
+    p['makersig'] = makerSignaturePacked;
+    p['takersig'] = takerSignaturePacked;
 
-    log(" Payload -> " + JSON.stringify(p, null, 4));
+    log(' Payload -> ' + JSON.stringify(p, null, 4));
 
-    var trxTrade = await eos.transaction("exchange", contractuser => {
+    var trxTrade = await eos.transaction('exchange', (contractuser) => {
         contractuser.trade({
             admin: p.admin,
             amountbuy: p.amountbuy,
@@ -554,7 +525,6 @@ async function trade(args) {
     //log(trxTrade);
     return trxTrade;
 }
-
 
 // Serialize, Hashing & Other Util Functions
 function serializeOrder(exchangeAccount, tokenBuy, tokenSell, amountBuyBN, amountSellBN, nonceBN, makerAccount) {
@@ -615,16 +585,17 @@ function serializeExtendedSymbol(tokenSymbol) {
     log('tokenSymbol: ', eosTokenContract);
     extendedSymbolBuffer.set(serializeTokenSymbolName(tokenSymbol, 4));
     extendedSymbolBuffer.set(
-        serializeUInt64BN(BN(format.encodeName(eosTokenContract, /*littleEndian=*/ false))), uint64_size * 1);
+        serializeUInt64BN(BN(format.encodeName(eosTokenContract, /*littleEndian=*/ false))),
+        uint64_size * 1
+    );
     return extendedSymbolBuffer;
 }
-
 
 // The binary format of eosio::symbol_name:
 // Byte 0: precision
 // Byte 1-7: char[7] of the symbol name
 function serializeTokenSymbolName(tokenSymbol, precision) {
-    log(tokenSymbol + " -> " + precision);
+    log(tokenSymbol + ' -> ' + precision);
     assert(tokenSymbol.length <= 7);
     var tokenSymbolBuffer = Buffer.alloc(uint64_size);
     tokenSymbolBuffer.writeUInt8(precision, 0);
@@ -655,7 +626,7 @@ function serializeTrade(orderHash, amountBN, takerAccount, tradeNonceBN) {
 }
 
 function toEosExtendedAssetString(token, amount) {
-    var exAssetString = parseFloat(Math.round(amount * 100) / 100).toFixed(4) + ' ' + token + "@" + eosTokenContract;
+    var exAssetString = parseFloat(Math.round(amount * 100) / 100).toFixed(4) + ' ' + token + '@' + eosTokenContract;
     //log("toEosExtendedAssetString -> " + exAssetString);
     return exAssetString;
 }
@@ -742,6 +713,7 @@ app.get('/orderbook', function (req, res) {
         }
     });
 });
+
 // Running a lean REST-API@8900
 // get EOS Node Info
 app.get('/info', function (req, res) {
@@ -763,9 +735,10 @@ app.post('/balance', function (req, res) {
     getExBalance(args)
         .then(function (data) {
             log('balance::-> ' + JSON.stringify(data, null, 4));
+            logTransaction(data);
             if (data.processed.action_traces[0].console) {
-                var consoleJsonFromTrxData = (data.processed.action_traces[0].console).replace(/\'/g, "\"");
-                log("console json -> " + consoleJsonFromTrxData);
+                var consoleJsonFromTrxData = data.processed.action_traces[0].console.replace(/\'/g, '"');
+                log('console json -> ' + consoleJsonFromTrxData);
             }
             res.status(200).send(data /*JSON.stringify(data,null,2)*/ );
         })
@@ -782,6 +755,7 @@ app.post('/accountBalance', function (req, res) {
     getBalance(args)
         .then(function (data) {
             log('accountBalance::-> ' + JSON.stringify(data, null, 4));
+            logTransaction(data);
             res.status(200).send(data /*JSON.stringify(data,null,2)*/ );
         })
         .catch(function (err) {
@@ -797,6 +771,7 @@ app.post('/deposit', function (req, res) {
     deposit(args)
         .then(function (data) {
             log('deposit:-> ' + JSON.stringify(data, null, 4));
+            logTransaction(data);
             res.status(200).send(data /*JSON.stringify(data,null,2)*/ );
         })
         .catch(function (err) {
@@ -812,6 +787,7 @@ app.post('/withdraw', function (req, res) {
     withdraw(args)
         .then(function (data) {
             log('withdraw:-> ' + JSON.stringify(data, null, 4));
+            logTransaction(data);
             res.status(200).send(data /*JSON.stringify(data,null,2)*/ );
         })
         .catch(function (err) {
@@ -827,6 +803,7 @@ app.post('/withdrawViaEscapeHatch', function (req, res) {
     withdraweh(args)
         .then(function (data) {
             log('withdrawViaEscapeHatch:-> ' + JSON.stringify(data, null, 4));
+            logTransaction(data);
             res.status(200).send(data /*JSON.stringify(data,null,2)*/ );
         })
         .catch(function (err) {
@@ -842,6 +819,7 @@ app.post('/invalidateOrders', function (req, res) {
     invalidateOrders(args)
         .then(function (data) {
             log('invalidateOrders:-> ' + JSON.stringify(data, null, 4));
+            logTransaction(data);
             res.status(200).send(data /*JSON.stringify(data,null,2)*/ );
         })
         .catch(function (err) {
@@ -857,6 +835,7 @@ app.post('/setLockParameters', function (req, res) {
     setLockParameters(args)
         .then(function (data) {
             log('setLockParameters:-> ' + JSON.stringify(data, null, 4));
+            logTransaction(data);
             res.status(200).send(data /*JSON.stringify(data,null,2)*/ );
         })
         .catch(function (err) {
@@ -872,6 +851,7 @@ app.post('/setReleasePeriod', function (req, res) {
     setReleasePeriod(args)
         .then(function (data) {
             log('setReleasePeriod:-> ' + JSON.stringify(data, null, 4));
+            logTransaction(data);
             res.status(200).send(data /*JSON.stringify(data,null,2)*/ );
         })
         .catch(function (err) {
@@ -887,6 +867,7 @@ app.post('/setAdmin', function (req, res) {
     setadmin(args)
         .then(function (data) {
             log('setAdmin:-> ' + JSON.stringify(data, null, 4));
+            logTransaction(data);
             res.status(200).send(data /*JSON.stringify(data,null,2)*/ );
         })
         .catch(function (err) {
@@ -895,7 +876,6 @@ app.post('/setAdmin', function (req, res) {
         });
 });
 
-
 // Lock user account
 app.post('/lock', function (req, res) {
     var body = req.body;
@@ -903,6 +883,7 @@ app.post('/lock', function (req, res) {
     lock(args)
         .then(function (data) {
             log('lock:-> ' + JSON.stringify(data, null, 4));
+            logTransaction(data);
             res.status(200).send(data /*JSON.stringify(data,null,2)*/ );
         })
         .catch(function (err) {
@@ -918,6 +899,7 @@ app.post('/unlock', function (req, res) {
     unlock(args)
         .then(function (data) {
             log('unlock:-> ' + JSON.stringify(data, null, 4));
+            logTransaction(data);
             res.status(200).send(data /*JSON.stringify(data,null,2)*/ );
         })
         .catch(function (err) {
@@ -933,6 +915,7 @@ app.post('/withdrawadmin', function (req, res) {
     withdrawadmin(args)
         .then(function (data) {
             log('withdrawadmin:-> ' + JSON.stringify(data, null, 4));
+            logTransaction(data);
             res.status(200).send(data /*JSON.stringify(data,null,2)*/ );
         })
         .catch(function (err) {
@@ -947,6 +930,7 @@ app.post('/register', function (req, res) {
     register(args)
         .then(function (data) {
             log('register:-> ' + JSON.stringify(data, null, 4));
+            logTransaction(data);
             res.status(200).send(data /*JSON.stringify(data,null,2)*/ );
         })
         .catch(function (err) {
@@ -958,10 +942,25 @@ app.post('/register', function (req, res) {
 //trade
 app.post('/trade', function (req, res) {
     var body = req.body;
-    var args = [body.admin, body.amountbuy, body.amountsell, body.nonce, body.amount, body.tradenonce, body.tokenbuy, body.tokensell, body.makerfee, body.takerfee, body.maker, body.taker, body.feeaccount];
+    var args = [
+        body.admin,
+        body.amountbuy,
+        body.amountsell,
+        body.nonce,
+        body.amount,
+        body.tradenonce,
+        body.tokenbuy,
+        body.tokensell,
+        body.makerfee,
+        body.takerfee,
+        body.maker,
+        body.taker,
+        body.feeaccount
+    ];
     trade(args)
         .then(function (data) {
             log('trade:-> ' + JSON.stringify(data, null, 4));
+            logTransaction(data);
             res.status(200).send(data /*JSON.stringify(data,null,2)*/ );
         })
         .catch(function (err) {
@@ -977,6 +976,7 @@ app.post('/reset', function (req, res) {
     resetExchange(args)
         .then(function (data) {
             log('reset:-> ' + JSON.stringify(data, null, 4));
+            logTransaction(data);
             res.status(200).send(data /*JSON.stringify(data,null,2)*/ );
         })
         .catch(function (err) {
@@ -990,12 +990,59 @@ function log(string) {
         console.log(string);
     }
 }
+
+function logTransaction(string) {
+    if (process.env.STAKE_VERBOSITY !== 'false' && string.processed !== undefined) {
+        var tco = {};
+        var accountInfo = getAccount(['exchange']);
+        accountInfo.then(function (data) {
+            // console.log("ram_usage=" + data.ram_usage);
+            tco.txid = string.processed.id;
+            tco.cpu_usage_us = string.processed.receipt.cpu_usage_us;
+            tco.net_usage_words = string.processed.receipt.net_usage_words;
+
+            tco.net_usage = string.processed.net_usage;
+            tco.action_name = string.processed.action_traces[0].act.name;
+            tco.ram_usage = data.ram_usage;
+            console.log(tco);
+        });
+    }
+}
+
+//UberDEX exdeposit api
+async function exdeposit(contract, from, amount, key, nonce) {
+    console.log("exdeposit: => contract:from:amount:key,nonce => " + contract + ":" + from + ":" + amount + ":" + key + ":" + nonce);
+    var activeKey = await getAccountActiveKey(from);
+    console.log("Account active key for:" + from + " is => " + activeKey);
+    await register([from, activeKey]);
+    var trxDeposit = await eos.transaction(contract, contractuser => {
+        contractuser.transfer({
+            from: from,
+            to: EXCHANGE_ACCOUNT,
+            quantity: amount,
+            memo: "deposit"
+        }, {
+            authorization: [from]
+        });
+    });
+    console.log("exdeposit => transaction:" + trxDeposit);
+    return (trxDeposit);
+}
+
+//UberDEX exwithdraw api
+async function exwithdraw(admin, account, amount, nonce) {
+    console.log("exwithdraw: =>admin:from:amount:nonce => " + admin + ":" + account + ":" + amount + ":" + nonce);
+    await setadmin(["admin", true]);
+    return await withdraw([admin, account, amount, nonce]);
+}
+
 //start EOS-API service
-var server = app.listen(process.env.EOSAPIPORT, function () {
+var server = app.listen(config.eosapiport, function () {
+    //var host = process.env.host;//os.hostname();
     var port = server.address().port;
     log('EOS-Exchange Contract API listening at http://localhost:' + port);
     log('Running mode => ' + mode);
-    log("EosConfig =>" + JSON.stringify(eosNetwork, null, 2));
+    log('eosConfig =>' + JSON.stringify(eosNetwork, null, 2));
 });
 
 module.exports.exdeposit = exdeposit;
