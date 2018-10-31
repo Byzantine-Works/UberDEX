@@ -508,6 +508,24 @@ describe('IDEX EOS-ExchangeContract', function () {
             });
     });
 
+    // GET - Check if user public_key is paired
+    it('[21.1] should allow checking for registered key for *' + MAKER1 + '* accounts public_key', function () {
+        return chai.request(uberdexAPI)
+            .post('/ispkpaired')
+            .send({
+                account: MAKER1
+            })
+            .then(function (res) {
+                log(res.body);
+                expect(res).to.have.status(200);
+                expect(res).to.be.json;
+                expect(res.body).to.be.an('object');
+                expect(res.body.transaction_id).to.be.an('string');
+                expect(res.body.processed.receipt.status).to.equal('executed');
+                var keyExists = JSON.parse(res.body.processed.action_traces[0].console.replace(/\'/g, "\""));
+                expect(keyExists.public_key_exists).to.equal(true);
+            });
+    });
 
     // POST - User Register public_key Action prior to Trading
     it('[22] should allow for registering *' + TAKER1 + '* accounts public_key', function () {

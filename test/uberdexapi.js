@@ -366,6 +366,21 @@ async function sign(args) {
     log(' sigHex -> ' + sigHex);
 }
 
+async function ispkpaired(args) {
+    if (args.length < 1) {
+        log(`Usage:eosapi ispkpaired account. Example 'eosapi ispkpaired user`);
+        return;
+    }
+    [account] = args;
+    log('function:ispkpaired :: account=' + account);
+    var trxIspkpaired = await eos.transaction(EXCHANGE_ACCOUNT, (contractuser) => {
+        contractuser.ispkpaired({
+            user: account
+        });
+    });
+    return trxIspkpaired;
+}
+
 async function register(args) {
     if (args.length < 2) {
         log(
@@ -859,6 +874,26 @@ app.post('/setReleasePeriod', function (req, res) {
             res.status(400).send(err);
         });
 });
+
+
+// check if user public_key is paired
+app.post('/ispkpaired', function (req, res) {
+    var body = req.body;
+    var args = [body.account];
+    ispkpaired(args)
+        .then(function (data) {
+            log('ispkpaired:-> ' + JSON.stringify(data, null, 4));
+            logTransaction(data);
+            var keyExists = data.processed.action_traces[0].console.replace(/\'/g, "\"");
+            //console.log(JSON.parse(keyExists).public_key_exists);
+            res.status(200).send(data /*JSON.stringify(data,null,2)*/ );
+        })
+        .catch(function (err) {
+            log('Error in ispkpaired -> : ' + err);
+            res.status(400).send(err);
+        });
+});
+
 
 // Set admin
 app.post('/setAdmin', function (req, res) {
