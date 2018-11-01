@@ -108,17 +108,6 @@ async function getAccount(args) {
     return accountInfo;
 }
 
-async function getBalance(args) {
-    if (args.length < 2) {
-        log(`Usage:eosapi balance account symbol. Example 'eosapi balance user1 SYS`);
-        return;
-    }
-    [user, symbol] = args;
-    const balance = await eos.getCurrencyBalance('eosio.token', user, symbol);
-    log("balance for account/user '" + user + "' is ", balance);
-    return balance;
-}
-
 async function getExBalance(args) {
     if (args.length < 1) {
         log(`Usage:eosapi exbalance account. Example 'eosapi exbalance user1`);
@@ -1071,6 +1060,23 @@ async function exwithdraw(admin, account, amount, nonce) {
     return await withdraw([admin, account, amount, nonce]);
 }
 
+//get chain balance
+//TODO: remove this test method from production codes
+//TODO: remove hardcoded token symbols
+async function getBalance(user, symbol) {
+    var balances = [];
+    const eosBalance = await eos.getCurrencyBalance('eosio.token', user, 'EOS');
+    const iqBalance = await eos.getCurrencyBalance('everipediaiq', user, 'IQ');
+    const abcBalance = await eos.getCurrencyBalance('eosio.token', user, 'ABC');
+    const sysBalance = await eos.getCurrencyBalance('eosio.token', user, 'SYS');
+    balances.push(eosBalance);
+    balances.push(iqBalance);
+    balances.push(abcBalance);
+    balances.push(sysBalance);
+    console.log("balance for account/user " + user + " is ", balances);
+    return balances;
+}
+
 //start EOS-API service
 var server = app.listen(config.eosapiport, function () {
     //var host = process.env.host;//os.hostname();
@@ -1082,3 +1088,4 @@ var server = app.listen(config.eosapiport, function () {
 
 module.exports.exdeposit = exdeposit;
 module.exports.exwithdraw = exwithdraw;
+module.exports.getBalance = getBalance;
