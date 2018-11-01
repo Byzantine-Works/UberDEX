@@ -134,7 +134,6 @@ void exchange::registeruser(account_name user, bytes publickey)
 void exchange::ispkpaired(account_name user)
 {
   //returns existing paired key
-  require_auth(user);
   _accounts.get_userregisteredkey(user);
 }
 
