@@ -1069,10 +1069,11 @@ async function getBalance(user, symbol) {
     const iqBalance = await eos.getCurrencyBalance('everipediaiq', user, 'IQ');
     const abcBalance = await eos.getCurrencyBalance('eosio.token', user, 'ABC');
     const sysBalance = await eos.getCurrencyBalance('eosio.token', user, 'SYS');
-    balances.push(eosBalance);
-    balances.push(iqBalance);
-    balances.push(abcBalance);
-    balances.push(sysBalance);
+    console.log("ASDFASDFDSA" + eosBalance);
+    if (eosBalance.length > 0) balances.push(eosBalance[0]);
+    if (iqBalance.length > 0) balances.push(iqBalance[0]);
+    if (abcBalance.length > 0) balances.push(abcBalance[0]);
+    if (sysBalance.length > 0) balances.push(sysBalance[0]);
     console.log("balance for account/user " + user + " is ", balances);
     return balances;
 }
