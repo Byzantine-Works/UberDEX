@@ -271,6 +271,7 @@ void exchange_accounts::update_order(account_name maker, const checksum256 &orde
       print("Order has not been previously partially filled.\n");
     }
     int64_t new_fill = safe_add(order_fill, amount);
+    print("Amount is => ", amount, " Newfill is => ", new_fill);
     eosio_assert(new_fill <= amount_buy, "Exceeded the order amount\n");
     order_fills[order_hash] = new_fill;
 
