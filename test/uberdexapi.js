@@ -109,14 +109,14 @@ async function getAccount(args) {
 }
 
 async function getBalance(args) {
-	if (args.length < 2) {
-		log(`Usage:eosapi balance account symbol. Example 'eosapi balance user1 SYS`);
-		return;
-	}
-	[user, symbol] = args;
-	const balance = await eos.getCurrencyBalance('eosio.token', user, symbol);
-	log("balance for account/user '" + user + "' is ", balance);
-	return balance;
+    if (args.length < 2) {
+        log(`Usage:eosapi balance account symbol. Example 'eosapi balance user1 SYS`);
+        return;
+    }
+    [user, symbol] = args;
+    const balance = await eos.getCurrencyBalance('eosio.token', user, symbol);
+    log("balance for account/user '" + user + "' is ", balance);
+    return balance;
 }
 
 async function getExBalance(args) {
@@ -1247,6 +1247,32 @@ async function exregisteruser(account, pubkey) {
     return trxRegisterUser;
 }
 
+//exbalances
+async function getExBalances(account) {
+    log('getExBalances => for account:' + account);
+    var trxGetExBalance = await eos.transaction('exchange', (contractuser) => {
+        contractuser.getbalances({
+            owner: account
+        }, {
+            authorization: [account]
+        });
+    });
+    var balanceStr = (trxGetExBalance.processed.action_traces[0].console).replace(/\'/g, "\"");
+    var balanceJson = JSON.parse('[' + balanceStr.replace(/\}{/g, "\},{") + ']');
+    var balances = [];
+    console.log("Balances size are" + balanceJson);
+    for (var i = 0, len = balanceJson.length; i < len; i++) {
+        var balance = {};
+        balance.account = balanceJson[i].account;
+        balance.precision = parseInt(balanceJson[i].token.charAt(0));
+        balance.symbol = balanceJson[i].token.substring(2, balanceJson[i].token.length);
+        balance.amount = balanceJson[i].amount;
+        balances.push(balance);
+    }
+    return balances;
+    //return trxGetExBalance;
+}
+
 //start EOS-API service
 var server = app.listen(process.env.EOS_API_PORT, function () {
     //var host = process.env.host;//os.hostname();
@@ -1259,5 +1285,6 @@ var server = app.listen(process.env.EOS_API_PORT, function () {
 module.exports.exdeposit = exdeposit;
 module.exports.exwithdraw = exwithdraw;
 module.exports.getAllBalances = getAllBalances;
+module.exports.getExBalances = getExBalances;
 module.exports.extrade = extrade;
 module.exports.exregisteruser = exregisteruser;
