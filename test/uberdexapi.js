@@ -1248,7 +1248,7 @@ async function exregisteruser(account, pubkey) {
 }
 
 //start EOS-API service
-var server = app.listen(config.eosapiport, function () {
+var server = app.listen(process.env.EOS_API_PORT, function () {
     //var host = process.env.host;//os.hostname();
     var port = server.address().port;
     log('EOS-Exchange Contract API listening at http://localhost:' + port);
