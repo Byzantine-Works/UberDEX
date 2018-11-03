@@ -108,6 +108,17 @@ async function getAccount(args) {
     return accountInfo;
 }
 
+async function getBalance(args) {
+	if (args.length < 2) {
+		log(`Usage:eosapi balance account symbol. Example 'eosapi balance user1 SYS`);
+		return;
+	}
+	[user, symbol] = args;
+	const balance = await eos.getCurrencyBalance('eosio.token', user, symbol);
+	log("balance for account/user '" + user + "' is ", balance);
+	return balance;
+}
+
 async function getExBalance(args) {
     if (args.length < 1) {
         log(`Usage:eosapi exbalance account. Example 'eosapi exbalance user1`);
@@ -535,14 +546,14 @@ function serializeOrder(exchangeAccount, tokenBuy, tokenSell, amountBuyBN, amoun
     const serializedTokenSymbolSize = uint64_size * 2;
     const serializedSize = 5 * uint64_size + 2 * serializedTokenSymbolSize;
     var orderBuffer = Buffer.alloc(serializedSize);
-    log('serializedSize: ', serializedSize);
+    console.log('serializedSize: ', serializedSize);
     var offset = 0;
     orderBuffer.set(serializeAccountName(exchangeAccount), offset);
     offset += uint64_size;
     const tokenBuyBuffer = serializeExtendedSymbol(tokenBuy);
     assert(tokenBuyBuffer.length == serializedTokenSymbolSize);
     orderBuffer.set(tokenBuyBuffer, offset);
-    log('tokenBuyBuffer: ', tokenBuyBuffer);
+    console.log('tokenBuyBuffer: ', tokenBuyBuffer);
     offset += serializedTokenSymbolSize;
     orderBuffer.set(serializeUInt64BN(amountBuyBN), offset);
     offset += uint64_size;
@@ -585,13 +596,25 @@ function serializeUInt64BN(bn) {
 
 function serializeExtendedSymbol(tokenSymbol) {
     var extendedSymbolBuffer = Buffer.alloc(uint64_size * 2);
-    log('tokenSymbol: ', tokenSymbol);
-    log('tokenSymbol: ', eosTokenContract);
-    extendedSymbolBuffer.set(serializeTokenSymbolName(tokenSymbol, 4));
-    extendedSymbolBuffer.set(
-        serializeUInt64BN(BN(format.encodeName(eosTokenContract, /*littleEndian=*/ false))),
-        uint64_size * 1
-    );
+    console.log('tokenSymbol: ', tokenSymbol);
+    var precision;
+    //console.log('tokenSymbol: ', eosTokenContract);
+    if (tokenSymbol.indexOf("IQ") > -1) {
+        precision = 3;
+        extendedSymbolBuffer.set(serializeTokenSymbolName(tokenSymbol, precision));
+        extendedSymbolBuffer.set(
+            serializeUInt64BN(BN(format.encodeName("everipediaiq", /*littleEndian=*/ false))),
+            uint64_size * 1
+        );
+    } else {
+        precision = 4;
+        extendedSymbolBuffer.set(serializeTokenSymbolName(tokenSymbol, precision));
+        extendedSymbolBuffer.set(
+            serializeUInt64BN(BN(format.encodeName(eosTokenContract, /*littleEndian=*/ false))),
+            uint64_size * 1
+        );
+    }
+
     return extendedSymbolBuffer;
 }
 
@@ -599,7 +622,7 @@ function serializeExtendedSymbol(tokenSymbol) {
 // Byte 0: precision
 // Byte 1-7: char[7] of the symbol name
 function serializeTokenSymbolName(tokenSymbol, precision) {
-    log(tokenSymbol + ' -> ' + precision);
+    console.log(tokenSymbol + ' -> ' + precision);
     assert(tokenSymbol.length <= 7);
     var tokenSymbolBuffer = Buffer.alloc(uint64_size);
     tokenSymbolBuffer.writeUInt8(precision, 0);
@@ -630,8 +653,14 @@ function serializeTrade(orderHash, amountBN, takerAccount, tradeNonceBN) {
 }
 
 function toEosExtendedAssetString(token, amount) {
-    var exAssetString = parseFloat(Math.round(amount * 100) / 100).toFixed(4) + ' ' + token + '@' + eosTokenContract;
-    //log("toEosExtendedAssetString -> " + exAssetString);
+    var exAssetString;
+    if (token.indexOf("IQ") > -1)
+        //exAssetString = parseFloat(Math.round(amount * 100) / 100).toFixed(3) + ' ' + token + '@everipediaiq';
+        exAssetString = parseFloat(amount / 1000).toFixed(3) + ' ' + token + '@everipediaiq';
+    else
+        //exAssetString = parseFloat(Math.round(amount * 100) / 100).toFixed(4) + ' ' + token + '@' + eosTokenContract;
+        exAssetString = parseFloat(amount / 10000).toFixed(4) + ' ' + token + '@' + eosTokenContract;
+    console.log("toEosExtendedAssetString -> " + exAssetString);
     return exAssetString;
 }
 
@@ -1063,19 +1092,159 @@ async function exwithdraw(admin, account, amount, nonce) {
 //get chain balance
 //TODO: remove this test method from production codes
 //TODO: remove hardcoded token symbols
-async function getBalance(user, symbol) {
+async function getAllBalances(user, symbol) {
     var balances = [];
     const eosBalance = await eos.getCurrencyBalance('eosio.token', user, 'EOS');
     const iqBalance = await eos.getCurrencyBalance('everipediaiq', user, 'IQ');
     const abcBalance = await eos.getCurrencyBalance('eosio.token', user, 'ABC');
     const sysBalance = await eos.getCurrencyBalance('eosio.token', user, 'SYS');
-    console.log("ASDFASDFDSA" + eosBalance);
     if (eosBalance.length > 0) balances.push(eosBalance[0]);
     if (iqBalance.length > 0) balances.push(iqBalance[0]);
     if (abcBalance.length > 0) balances.push(abcBalance[0]);
     if (sysBalance.length > 0) balances.push(sysBalance[0]);
     console.log("balance for account/user " + user + " is ", balances);
     return balances;
+}
+
+//Trade function
+async function extrade(admin, amountbuy, amountsell, nonce, amount, tradenonce, tokenbuy, tokensell, makerfee, takerfee, maker, taker, feeaccount) {
+    var trade = {};
+    trade.admin = admin;
+    trade.amountbuy = amountbuy;
+    trade.amountsell = amountsell;
+    trade.nonce = nonce;
+    trade.amount = amount;
+    trade.tradenonce = tradenonce;
+    trade.tokenbuy = tokenbuy;
+    trade.tokensell = tokensell;
+    trade.makerfee = makerfee;
+    trade.takerfee = takerfee;
+    trade.maker = maker;
+    trade.taker = taker;
+    trade.feeaccount = feeaccount;
+
+    // begin order, trade serialization, sign with maker1 and taker1 accounts and submit trade
+    console.log('Trade ' + JSON.stringify(trade));
+
+    //getBN's
+    var amountbuyBN = new BN(trade.amountbuy);
+    var amountBN = new BN(trade.amount);
+    var amountsellBN = new BN(trade.amountsell);
+    var nonceBN = new BN(trade.nonce);
+    var tradenonceBN = new BN(trade.tradenonce);
+
+    //construct order buffer
+    var orderBuffer = serializeOrder(
+        EXCHANGE_ACCOUNT,
+        trade.tokenbuy,
+        trade.tokensell,
+        amountbuyBN,
+        amountsellBN,
+        nonceBN,
+        MAKER_ACCOUNT
+    );
+    var orderHash = ecc.sha256(orderBuffer);
+    var orderHashBuffer = Buffer.from(orderHash, 'hex');
+    console.log('orderBuffer - orderHashBuffer -> ', orderHashBuffer);
+
+    //construct trade buffer
+    var tradeBuffer = serializeTrade(orderHashBuffer, amountBN, TAKER_ACCOUNT, tradenonceBN);
+    var tradeHash = ecc.sha256(tradeBuffer);
+    var tradeHashBuffer = Buffer.from(tradeHash, 'hex');
+
+    console.log('tradeBuffer - tradeHashBuffer -> ', tradeHashBuffer);
+
+    //construct makersignature - Using priv key to sign, with scatter, you'd construct signatureBuffer from scatter arbitrary sig
+    var makerSignature = ecc.sign(orderBuffer, MAKER_PRIV_KEY);
+    var makerSignatureBuffer = ecc.Signature.fromString(makerSignature).toBuffer();
+    var makerSignaturePacked = new makerSignatureBuffer.constructor(makerSignatureBuffer.length + 1);
+    makerSignaturePacked.set(Uint8Array.of(0), 0);
+    makerSignaturePacked.set(makerSignatureBuffer, 1);
+    //log("makerSignaturePacked -> " + makerSignaturePacked);
+
+    //Test - Maker PUB_KEY recovery
+    console.log(' recover maker PK from sig/orderBuffer -> ' + ecc.recover(makerSignature, orderBuffer));
+
+    //construct takersignature
+    var takerSignature = ecc.sign(tradeBuffer, TAKER_PRIV_KEY);
+    var takerSignatureBuffer = ecc.Signature.fromString(takerSignature).toBuffer();
+    var takerSignaturePacked = new takerSignatureBuffer.constructor(takerSignatureBuffer.length + 1);
+    takerSignaturePacked.set(Uint8Array.of(0), 0);
+    takerSignaturePacked.set(takerSignatureBuffer, 1);
+    //log("takerSignaturePacked -> " + takerSignaturePacked);
+
+    //Test - Taker PUB_KEY recovery
+    console.log(' recover taker PK from sig/tradeBuffer -> ' + ecc.recover(takerSignature, tradeBuffer));
+
+    //console log trade:payload dataset as json
+    var p = {};
+    p['amountbuy'] = amountbuyBN.toString();
+    p['amountsell'] = amountsellBN.toString();
+    p['nonce'] = nonceBN.toString();
+    p['amount'] = amountBN.toString();
+    p['tradenonce'] = tradenonceBN.toString();
+    p['tokenbuy'] = toEosExtendedAssetString(tokenbuy, amountbuy);
+    p['tokensell'] = toEosExtendedAssetString(tokensell, amountsell);
+    p['makerfee'] = makerfee;
+    p['takerfee'] = takerfee;
+    p['maker'] = maker;
+    p['taker'] = taker;
+    p['feeaccount'] = feeaccount;
+    p['admin'] = admin;
+    p['makersig'] = makerSignaturePacked;
+    p['takersig'] = takerSignaturePacked;
+
+    console.log(' Payload -> ' + JSON.stringify(p, null, 4));
+
+    var trxTrade = await eos.transaction('exchange', (contractuser) => {
+        contractuser.trade({
+            admin: p.admin,
+            amountbuy: p.amountbuy,
+            amountsell: p.amountsell,
+            nonce: p.nonce,
+            amount: p.amount,
+            tradenonce: p.tradenonce,
+            tokenbuy: p.tokenbuy,
+            tokensell: p.tokensell,
+            makerfee: p.makerfee,
+            takerfee: p.takerfee,
+            maker: p.maker,
+            taker: p.taker,
+            feeaccount: p.feeaccount,
+            makersig: p.makersig,
+            takersig: p.takersig
+        }, {
+            authorization: [EXCHANGE_ADMIN_ACCOUNT, feeaccount]
+        });
+    });
+    //log(trxTrade);
+    return trxTrade;
+}
+
+async function exregisteruser(account, pubkey) {
+    log('exregisteruser ' + account + ' :: ' + pubkey);
+
+    if (!ecc.isValidPublic(pubkey)) {
+        log(' Invalid pubkey!');
+        return;
+    }
+
+    const pk = ecc.PublicKey(pubkey).toBuffer();
+    var pkPacked = new pk.constructor(pk.length + 1);
+    pkPacked.set(Uint8Array.of(0), 0);
+    pkPacked.set(pk, 1);
+    var pkHex = pkPacked.toString('hex');
+    log('pkHex in bytes -> ' + pkHex);
+
+    trxRegisterUser = await eos.transaction('exchange', (contractuser) => {
+        contractuser.registeruser({
+            user: account,
+            publickey: pkHex
+        }, {
+            authorization: [account]
+        });
+    });
+    return trxRegisterUser;
 }
 
 //start EOS-API service
@@ -1089,4 +1258,6 @@ var server = app.listen(config.eosapiport, function () {
 
 module.exports.exdeposit = exdeposit;
 module.exports.exwithdraw = exwithdraw;
-module.exports.getBalance = getBalance;
+module.exports.getAllBalances = getAllBalances;
+module.exports.extrade = extrade;
+module.exports.exregisteruser = exregisteruser;
