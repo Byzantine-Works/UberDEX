@@ -1,6 +1,11 @@
 import React, {Component} from 'react';
+import $ from "jquery";
 
-const API = 'http://api.byzanti.ne:8902/ticker?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+import data from '../../app.json';
+var color = {background: data['theme_color']};
+var colors = {color: data['theme_color']};
+
+const API = 'https://api.byzanti.ne/ticker?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
 
 class EOS extends Component{
     constructor(props) {
@@ -44,8 +49,20 @@ class EOS extends Component{
                             
                             
                             
-                        {tricker.map(hit =>
-                                <tr>
+                        {tricker.map(hit =>{
+                              var apiCall='https://min-api.cryptocompare.com/data/price?fsym='+hit.symbol+'&tsyms=USD';
+                         
+                        fetch(apiCall)
+                            .then(response => response.json())
+                            .then(data => {if(data.USD){
+                               
+                            }else
+                            {
+                                $('#'+hit.symbol).hide();
+                            }});
+                            
+                        
+                              return  <tr id={hit.symbol}>
                                     <td><i className="fa fa-star"></i></td>
                                     <td><a href={'/exchange/?opt='+hit.symbol}>{hit.symbol} / EOS</a></td>
                                     <td className={hit.change < 0?'minus':'plus'}>{hit.last}</td>
@@ -53,15 +70,15 @@ class EOS extends Component{
                                     <td>{hit.high}</td>
                                     <td>{hit.low}</td>
                                     <td>{hit.volume}</td>
-                                    <td><a href={'/exchange/?opt='+hit.symbol} className="trade">Trade</a></td>
+                                    <td><a href={'/exchange/?opt='+hit.symbol} className="trade colors" style={colors}>Trade</a></td>
                                 </tr>
-                                )}
+                                })}
                                 
                         </tbody>
                     </table>
 
                     <div className="clearfix">
-                        <a href="#">View More</a>
+                        <a href="#" className="background" style={color}>View More</a>
                     </div>
 
                 </div>

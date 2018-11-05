@@ -27,7 +27,12 @@ const network = {
         if(!connected) return false;
     
         var scatter = ScatterJS.scatter;
+       
         if(scatter.identity){
+              const eosOptions = { expireInSeconds:60 };
+    
+               const eos = scatter.eos(network, Eos, eosOptions);
+          
     $('#signin').hide();
     $('#signout').css('display','inline-block');
     $('.bgs').html(scatter.identity.accounts[0].name);
@@ -55,6 +60,7 @@ function handleClickss(e){
         scatter.getIdentity(requiredFields).then(() => {
             // Always use the accounts you got back from Scatter. Never hardcode them even if you are prompting
             // the user for their account name beforehand. They could still give you a different account.
+           
             const account = scatter.identity.accounts.find(x => x.blockchain === 'eos');
     
             // You can pass in any additional options you want into the eosjs reference.
@@ -62,6 +68,7 @@ function handleClickss(e){
     
             // Get a proxy reference to eosjs which you can use to sign transactions with a user's Scatter.
             const eos = scatter.eos(network, Eos, eosOptions);
+           
     window.location.reload();
             // ----------------------------
             // Now that we have an identity,

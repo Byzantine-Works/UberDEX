@@ -3,6 +3,8 @@ import Header from './header';
 import Callaction from './callAction';
 import Footer from './footer';
 import $ from "jquery";
+import data from '../app.json';
+var color = {background: data['theme_color']};
 
 class Home extends Component{
      postSignup = (e) => {
@@ -45,7 +47,7 @@ class Home extends Component{
        
         return(
             <div className="about_page">
-                <div className="wellcomBanner">
+                <div className="wellcomBanner background" style={color}>
                     <Header />
                 </div>
                 <div className="about_wrap contactPage">
@@ -69,7 +71,7 @@ class Home extends Component{
                                     <input type="text" name="phone" id="phone" ref={(r) => this.phone = r} placeholder="Phone" />
                                 </div>
                                 <textarea placeholder="Message" name="message" ref={(r) => this.msg = r} id='msg_text'></textarea>
-                                <input type="submit" className="fr1" name="send"  onClick={this.postSignup} value="Send Message"  />
+                                <input type="submit" className="fr1 background" style={color} name="send"  onClick={this.postSignup} value="Send Message"  />
                             </form>
                             <div className="msgs" style={{'display': 'none'}}>Your Message Successfuly Send</div>
                         </div>

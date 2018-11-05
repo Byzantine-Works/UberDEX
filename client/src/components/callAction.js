@@ -1,11 +1,13 @@
 import React, {Component} from 'react';
+import data from '../app.json';
+var color = {background: data['theme_color']};
 
 class Call_action extends Component{
     render(){
        
         return(
             <div className="callAction">
-                <div className="callInner">
+                <div className="callInner background" style={color}>
                     <div className="container">
                         <form>
                             <input type="text" placeholder="Email Address" />

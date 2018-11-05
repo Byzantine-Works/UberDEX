@@ -1,5 +1,8 @@
 import React, {Component} from 'react';
 import $ from "jquery";
+import data from '../../app.json';
+var color = {background: data['theme_color']};
+var colors = {color: data['theme_color']};
 
 function handleClick(e) {
     e.preventDefault();
@@ -29,7 +32,7 @@ class tradingHead extends Component{
         
         var url = new URL(window.location.href);
         var c = url.searchParams.get("opt");
-        var API = 'http://api.byzanti.ne:8902/ticker?symbol='+c+'&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+        var API = 'https://api.byzanti.ne/ticker?symbol='+c+'&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
         fetch(API)
         .then(response => response.json())
         .then(data => {this.setState({ hits: data }); });
@@ -46,10 +49,10 @@ class tradingHead extends Component{
                 {hits.map(hit =>
                     <div className="trading clearfix">
                         <div className="lefts">
-                            <span>{hit.symbol}</span>
+                            <span className=" background" style={color} >{hit.symbol}</span>
                             <h4>{hit.symbol} / <small> EOS</small></h4>
-                            <p className="ist" onClick={handleClick}>Introduction</p>
-                            <p className="ind" onClick={handleClicks}>Introduction</p>
+                            <p className="ist colors" style={colors} onClick={handleClick}>Introduction</p>
+                            <p className="ind colors" style={colors} onClick={handleClicks}>Introduction</p>
                         </div>
                         <div className="rights">
                             <ul>
@@ -77,10 +80,6 @@ class tradingHead extends Component{
                             </ul>
                         </div>
                         <div className="openDetail clearfix">
-                            <div className="intro">
-                                <h3>Introduction</h3>
-                                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-                            </div>
                             <div className="contrct">
                                 <p><strong>Total Supply</strong>
                                 10,000,000,000</p>
