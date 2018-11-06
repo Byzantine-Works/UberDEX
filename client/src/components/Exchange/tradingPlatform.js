@@ -2,6 +2,18 @@ import React, {Component} from 'react';
 import $ from "jquery";
 import TradingViewWidget from 'react-tradingview-widget';
 
+import ScatterJS from 'scatterjs-core';
+import ScatterEOS from 'scatterjs-plugin-eosjs';
+import Eos from 'eosjs';
+
+ScatterJS.plugins( new ScatterEOS() );
+
+const network = { blockchain:'eos',
+                protocol:'https',
+                host:'proxy.eosnode.tools',
+                port:443,
+                chainId:'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906' }
+
 function handleClick(e) {
     e.preventDefault();
     var amount_two = e.target.nextSibling.id;
@@ -32,12 +44,13 @@ class tradingHead extends Component{
           orders: [],
           orderBook: [],
           orderBooks: [],
+          pairedScatter: false
         };
       }
 
 
     
-    componentDidMount() {
+    async componentDidMount() {
         
         var url = new URL(window.location.href);
         var c = url.searchParams.get("opt");
@@ -55,6 +68,32 @@ class tradingHead extends Component{
         fetch(APIS)
         .then(response => response.json())
         .then(data => {this.setState({ orderBook: data['asks'], orderBooks: data['bids'] }); });
+
+
+        // try{
+        const scatter = ScatterJS.scatter;
+        await scatter.connect("UberDEX");
+        const requiredFields = { accounts:[network] };
+        
+        await scatter.getIdentity(requiredFields);
+        if(scatter.identity.accounts[0].name) this.setState({pairedScatter: true})
+        console.log(this.state.pairedScatter)
+
+    
+        // // Check the scatter identity of the user
+        // const requiredFields = { accounts:[network] };
+        // let id = await scatter.getIdentity(requiredFields);
+        // console.log(id);
+        // const account = id.accounts.find(x => x.blockchain === 'eos');
+        // console.log("account: ", account);
+    
+        // const eosOptions = { expireInSeconds:60 }
+        
+        // // Get a proxy reference to eosjs which you can use to sign transactions with a user's Scatter.
+        // const eos = scatter.eos(network, Eos, eosOptions);
+        // } catch(err) {
+
+        // }
     }
 
 
@@ -168,7 +207,7 @@ class tradingHead extends Component{
                                     <label>Total  <span>EOS</span>
                                     </label>
                                     <input type="text"  id="sellPrice" />
-                                    <input type="submit" value="Signin to trade" />
+                                    {this.state.pairedScatter ? <input type="submit" value="Buy" /> : <input type="submit" value="Signin to trade" />}
                                 </div>
                                 <div className="red">
                                     {tricker.map(hit =>
@@ -182,7 +221,7 @@ class tradingHead extends Component{
                                     <input type="text" id="BuyPricetwo"/>
                                     <label>Total <span>EOS</span></label>
                                     <input type="text" id="sellPricetwo" />
-                                    <input type="submit" value="Signin to trade" />
+                                    {this.state.pairedScatter ? <input type="submit" value="Sell" /> : <input type="submit" value="Signin to trade" />}
                                 </div>
                             </div>
                         </div>
