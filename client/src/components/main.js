@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import {Switch, Route} from 'react-router-dom';
 import { BrowserRouter } from 'react-router-dom';
 
@@ -14,11 +14,28 @@ import traderule from './tradeRule';
 import announcements from './announcements';
 import failannouncement from './failAnnouncement';
 
-const Main = ()=> (
+class Main extends Component{
+    constructor(props) {
+        super(props);
+        this.state = {
+            scatterID: false
+        }
+        this.updateScatterID = this.updateScatterID.bind(this);
+    }
+
+    updateScatterID(id) {
+        this.setState({scatterID: id})
+    }
+
+    render() {
+        console.log(this.state.scatterID)
+        return (
+
+    
     <BrowserRouter>
         <Switch>
-            <Route exact path='/' component={ Home } />
-            <Route path='/exchange' component={ Exchange } />
+            <Route exact path='/' render={(props) => {return <Home updateScatterID={this.updateScatterID} scatterID={this.state.scatterID}/>}} />
+            <Route path='/exchange' render={(props) => {return <Exchange updateScatterID={this.updateScatterID} scatterID={this.state.scatterID}/>}}/>
             <Route path='/market' component={ Market } />
             <Route path='/support' component={ Support } />
             <Route path='/about' component={ About } />
@@ -30,7 +47,9 @@ const Main = ()=> (
             <Route path='/failannouncement' component={ failannouncement } />
         </Switch>
     </BrowserRouter>
+        )
+    }
+}
 
-);
 
 export default Main;

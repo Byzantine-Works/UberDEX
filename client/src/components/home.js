@@ -5,20 +5,28 @@ import EOS from './Home/eosTable';
 import Features from './Home/features';
 import Callaction from './callAction';
 import Footer from './footer';
+import data from '../app.json';
+var color = {background: data['theme_color']};
+var logoUrl = data['logo'];
+console.log(logoUrl);
+
 
 class Home extends Component{
+    constructor(props) {
+        super(props);
+    }
     render(){
        
         return(
-            <div className="HomePage">
-                <div className="wellcomBanner">
-                    <Header />
+            <div className="HomePage" >
+                <div className="wellcomBanner background" style={color}>
+                    <Header updateScatterID={this.props.updateScatterID}/>
                     <Banner />
                 </div>
                 <EOS />
                 <Features />
                 <Callaction />
-                <Footer />
+                <Footer updateScatterID={this.props.updateScatterID} scatterID={this.props.scatterID}/>
             </div>
         )
     }

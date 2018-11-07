@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
+    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="theme-color" content="#000000">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
@@ -43,12 +43,25 @@
 <script src="%PUBLIC_URL%/select2.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script type="text/javascript" src="%PUBLIC_URL%/jquery.fullscreen-0.4.1.min.js"></script>
+
+<script type="text/javascript" src="%PUBLIC_URL%/charting_library.min.js"></script>
+<script type="text/javascript" src="%PUBLIC_URL%/polyfills.js"></script>
+<script type="text/javascript" src="%PUBLIC_URL%/bundle.js"></script>
+
  <!-- TradingView Widget BEGIN -->
 
 <script>
 
   $(document).ready(function(){
     
+			function getParameterByName(name) {
+				name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+				var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+					results = regex.exec(location.search);
+				return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+			}
+
+		
       $('.fullscreen').click(function() {
         $('body').fullscreen();
         $('body').addClass('full');
@@ -92,12 +105,17 @@
 });
 
 $(document).ready(function(){
+  
+  var background = $('.background').attr("style");
+  var colors = $('.colors').attr("style");
 
   $(".light").click(function(event){
       event.preventDefault();
       $(this).hide();
       $('.dark').css('display', 'inline-block');
       $('.demo-big-content').css('background', '#0d1939');
+      $('.background').removeAttr("style");
+      $('.colors').removeAttr("style");
       $('body').removeClass('lightVersion');
   });
 
@@ -106,6 +124,8 @@ $(document).ready(function(){
       $(this).hide();
       $('.light').css('display', 'inline-block');
       $('.demo-big-content').css('background', '#fff');
+      $(".background").attr("style", background);
+      $(".colors").attr("style", colors);
       $('body').addClass('lightVersion');
   });
 
@@ -114,6 +134,8 @@ $(document).ready(function(){
       $(this).hide();
       $('.demo-big-content').css('background', '#0d1939');
       $('.dark').css('display', 'inline-block');
+      $('.background').removeAttr("style");
+      $('.colors').removeAttr("style");
       $('body').removeClass('lightVersion');
   });
 
@@ -122,6 +144,8 @@ $(document).ready(function(){
       $(this).hide();
       $('.light').css('display', 'inline-block');
       $('.demo-big-content').css('background', '#fff');
+      $(".background").attr("style", background);
+      $(".colors").attr("style", colors);
       $('body').addClass('lightVersion');
   });
 
