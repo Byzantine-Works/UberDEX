@@ -29,7 +29,6 @@ const network = {
 
 
 
-
 function handleClicks(e) {
     e.preventDefault();
     $('.signInPopup ').fadeOut();

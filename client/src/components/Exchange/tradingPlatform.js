@@ -292,7 +292,6 @@ class tradingHead extends Component{
         fetch(APIS)
         .then(response => response.json())
         .then(data => {this.setState({ orderBook: data['asks'], orderBooks: data['bids'] }); });
-
         fetch(orderTaker)
         .then(response => response.json())
         .then(data => {this.setState({ tacker: data }); });
