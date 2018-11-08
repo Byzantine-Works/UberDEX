@@ -30,7 +30,7 @@ export default {
 			timezone: 'Etc/UTC',
 			ticker: symbolName,
 			exchange: split_data[0],
-			minmov: 1,
+			minmov: 2,
 			pricescale: 100000000,
 			has_intraday: true,
 			intraday_multipliers: ['1', '60'],
@@ -39,8 +39,8 @@ export default {
 			data_status: 'streaming',
 		}
 
-		if (split_data[2].match(/USD|EUR|JPY|AUD|GBP|KRW|CNY/)) {
-			symbol_stub.pricescale = 100
+		if (split_data[2].match(/USD|EUR|JPY|AUD|GBP|KRW|CNY|EOS/)) {
+			symbol_stub.pricescale = 1000
 		}
 		setTimeout(function() {
 			onSymbolResolvedCallback(symbol_stub)

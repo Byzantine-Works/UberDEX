@@ -4,6 +4,16 @@ import ScatterEOS from 'scatterjs-plugin-eosjs';
 import Eos from 'eosjs';
 import $ from "jquery";
 
+function tackerViews(e) {
+    e.preventDefault();
+    var views = e.target.id;
+    $('#views'+views).fadeIn();
+}
+function closeViews(e){
+    e.preventDefault();
+    $('.tradeWrap').fadeOut();
+}
+
 
 function orderView(e) {
     e.preventDefault();
@@ -40,35 +50,19 @@ class Order extends Component{
         this.state = {
             Orders: [],
             OrderSells: [],
+            tradebook: [],
             useraccount:'',
         };
       }
 
     
     componentDidMount() {
-        
-            ScatterJS.plugins( new ScatterEOS() );
 
-            const network = {
-                blockchain:'eos',
-                protocol:'http',
-                host:'13.57.210.230',
-                eosVersion: 'bf28f8bb',
-                port:8888,
-                chainId:'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f',
-                debug: false,
-            verbose: false,
-            latency: 200
-            }
+        var url = new URL(window.location.href);
+         var c = url.searchParams.get("opt");
 
-            ScatterJS.scatter.connect('My-Apps').then(connected => {
-                if(!connected) return false;
-                var scatter =ScatterJS.scatter;
-                if(scatter.identity)
-                {
-                     this.setState({useraccount:scatter.identity.accounts[0].name});
-             
-                var API = 'https://api.byzanti.ne/ordersByUser?user='+this.state.useraccount+'&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+                var tradebook = 'https://api.byzanti.ne/tradebook?symbol='+c+'&size=10&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+                var API = 'https://api.byzanti.ne/ordersByUser?user=taker1&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
                 var OrderSell = 'https://api.byzanti.ne/orders?symbol=IQ&side=SELL&size=100&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
                 fetch(API)
                 .then(response => response.json())
@@ -76,9 +70,11 @@ class Order extends Component{
                 fetch(OrderSell)
                 .then(response => response.json())
                 .then(data => {this.setState({ OrderSells: data }); });
-                }
-              
-            });
+                
+                fetch(tradebook)
+                .then(response => response.json())
+                .then(data => {this.setState({ tradebook: data }); });
+                
            // console.logthis.state.sc
         //alert(scatter.identity.publicKey);
     }
@@ -87,6 +83,7 @@ class Order extends Component{
     render(){
         const { Orders } = this.state;
         const { OrderSells } = this.state;
+        const { tradebook } = this.state;
        
         return(
             <div>
@@ -125,11 +122,11 @@ class Order extends Component{
                             <tr>
                                 <th>Coin</th>
                                 <th>Type </th>
+                                <th>Order Id </th>
                                 <th>Entrusted Time</th>
                                 <th>Price</th>
-                                <th>Average</th>
                                 <th>Amount</th>
-                                <th>Dealt</th>
+                                <th>Timestamp</th>
                                 <th>Entrusted </th>
                                 <th>Status </th>
                                 <th>Account Name</th>
@@ -154,18 +151,26 @@ class Order extends Component{
                                     var amountToShow=order.amountSell;
                                 }
                                 
-                          return   <tr>
-                                <td className={'plus '+order.assetBuy}  id={order.orderId}  onClick={orderView} >{order.assetBuy}</td>
-                                <td id={order.orderId}  onClick={orderView}>{order.type}</td>
-                                <td id={order.orderId}  onClick={orderView}>{order.created}</td>
-                                <td id={order.orderId}  onClick={orderView}>{order.price}</td>
-                                <td id={order.orderId}  onClick={orderView}></td>
-                                <td id={order.orderId}  onClick={orderView}>{amountToShow}</td>
-                                <td id={order.orderId}  onClick={orderView}>{order.created}</td>
-                                <td id={order.orderId}  onClick={orderView}>Yes</td>
-                                <td id={order.orderId}    ><a href="javascript:void(0)" id={order.orderId} onClick={cancelOrder}>{isCancel}</a></td>
-                                <td id={order.orderId}  onClick={orderView}>{order.useraccount}</td>
-                            </tr>
+                                var url = new URL(window.location.href);
+                                var c = url.searchParams.get("opt");
+                                
+                                if(order.assetBuy==c)
+                                {
+                                    return   <tr>
+                                        <td className={'plus '+order.assetBuy}  id={order.orderId}  onClick={orderView} >{order.assetBuy}/ {order.assetSell}</td>
+                                        <td id={order.orderId}  onClick={orderView}>Buy</td>
+                                        <td id={order.orderId}  onClick={orderView}>{order.orderId}</td>
+                                        <td id={order.orderId}  onClick={orderView}>{order.created}</td>
+                                        <td id={order.orderId}  onClick={orderView}>{parseFloat(order.price).toFixed(4)}</td>
+                                        <td id={order.orderId}  onClick={orderView}>{parseFloat(amountToShow).toFixed(4)}</td>
+                                        <td id={order.orderId}  onClick={orderView}>{order.created}</td>
+                                        <td id={order.orderId}  onClick={orderView}>Yes</td>
+                                        <td id={order.orderId}    ><a href="javascript:void(0)" id={order.orderId} onClick={cancelOrder}>{isCancel}</a></td>
+                                        <td id={order.orderId}  onClick={orderView}>{order.useraccount}</td>
+                                    </tr>
+                                }
+                                
+                          
                             
                             } )}
                         </tbody>
@@ -179,21 +184,78 @@ class Order extends Component{
                             <tr>
                                 <th>Coin</th>
                                 <th>Type </th>
+                                <th>Trade ID </th>
                                 <th>Entrusted Time</th>
                                 <th>Price</th>
-                                <th>Average</th>
                                 <th>Amount</th>
-                                <th>Dealt</th>
-                                <th>Total </th>
-                                <th>Status </th>
-                                <th>Action</th>
+                                <th>Timestamp</th>
+                                <th>Entrusted </th>
+                                <th>Taker </th>
+                                <th>Maker </th>
                             </tr>
                         </thead>
                         <tbody>
+                        {tradebook.map(tradebooks =>{
+                            if(tradebooks.taker=='taker1')
+                            {
+                                return <tr>
+                                <td className={'plus '+tradebooks.assetBuy}  id={tradebooks.tradeId}  onClick={tackerViews}  >{tradebooks.assetBuy}/ {tradebooks.assetSell}</td>
+                                <td id={tradebooks.tradeId}>Sell</td>
+                                <td id={tradebooks.tradeId}>{tradebooks.tradeId}</td>
+                                <td id={tradebooks.tradeId}>{tradebooks.created}</td>
+                                <td id={tradebooks.tradeId}>{tradebooks.price}</td>
+                                <td id={tradebooks.tradeId}>{tradebooks.amountBuy}</td>
+                                <td id={tradebooks.tradeId}>{tradebooks.created}</td>
+                                <td id={tradebooks.tradeId}>Yes</td>
+                                <td id={tradebooks.tradeId}>{tradebooks.taker}</td>
+                                <td id={tradebooks.tradeId}>{tradebooks.maker}</td>
+                            </tr>
+                            }
+                            
+                        }
+                            )}
                         </tbody>
                     </table>
                 </div>
             </div>
+
+            {tradebook.map(tradebooks =>
+                    
+                    <div className="tradeWrap" id={'views'+tradebooks.tradeId}>
+                        <div className="tradeView">
+                            <a href="/" className="closeView"  onClick={closeViews}><i className="fa fa-times"></i></a>
+                            <div className="viewTop">
+                                <ul>
+                                    <li><span>Price</span>{tradebooks.price} EOS</li>
+                                    <li><span>Volume</span>{tradebooks.amountBuy} {tradebooks.assetBuy}</li>
+                                    <li><span>Total</span>{tradebooks.amountSell} EOS</li>
+                                    <li><span>Date</span> {tradebooks.created}</li>
+                                </ul>
+                            </div>
+                            <div className="viewBottom clearfix">
+                                <ul>
+                                    <li><h3>Maker</h3></li>
+                                    <li><span>EOS Account Name</span> <cite>{tradebooks.maker}</cite> </li>
+                                    <li><span>Total</span> <cite>{tradebooks.amountBuy} {tradebooks.assetBuy}</cite> </li>
+                                    <li><span>Fee</span> <cite>{tradebooks.makerFee} {tradebooks.assetBuy}</cite> </li>
+                                    <li><span>Maker Exchange</span> {tradebooks.makerExchange} <cite></cite> </li>
+                                    <li><span>Time stamp</span> <cite>{tradebooks.timestamp}</cite> </li>
+                                    <li><span>Trade Id</span> <cite className="tradeId">{tradebooks.tradeId}</cite> </li>
+                                </ul>
+                                
+                                <ul>
+                                    <li><h3>Taker</h3></li>
+                                    <li><span>EOS Account Name</span> <cite>{tradebooks.taker}</cite> </li>
+                                    <li><span>Total</span> <cite>{tradebooks.amountSell} EOS</cite> </li>
+                                    <li><span>Fee</span> <cite>{tradebooks.takerFee} EOS</cite> </li>
+                                    <li><span>Taker Exchange</span> <cite>{tradebooks.takerExchange}</cite> </li>
+                                    <li><span>Time stamp</span> <cite>{tradebooks.timestamp}</cite> </li>
+                                    <li><span>Trade Id</span> <cite className="tradeId">{tradebooks.tradeId}</cite> </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div> 
+                )}
         </div>
         )
     }
