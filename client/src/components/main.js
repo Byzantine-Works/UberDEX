@@ -13,6 +13,7 @@ import trade from './trade';
 import traderule from './tradeRule';
 import announcements from './announcements';
 import failannouncement from './failAnnouncement';
+import TransactionPage from './transactionPage';
 
 const Main = ()=> (
     <BrowserRouter>
@@ -28,6 +29,7 @@ const Main = ()=> (
     <Route path='/trade_rule' component={ traderule } />
     <Route path='/announcements' component={ announcements } />
     <Route path='/failannouncement' component={ failannouncement } />
+    <Route path='/transaction' component={ TransactionPage } />
 </Switch>
 </BrowserRouter>
 

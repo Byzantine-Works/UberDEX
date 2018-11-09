@@ -14,7 +14,10 @@ function getLanguageFromURL() {
 	const results = regex.exec(window.location.search);
 	return results === null ? null : decodeURIComponent(results[1].replace(/\+/g, ' '));
 }
-
+function reloadPage()
+{
+    window.location.reload();
+}
 function tackerView(e) {
     e.preventDefault();
     var views = e.target.id;
@@ -31,64 +34,122 @@ function handleClick(e) {
     var amount_two = e.target.nextSibling.id;
     var amount_twos = e.target.nextSibling.nextSibling.id;
     var amount = e.target.id;
+    
+     var ID = $(e.target).data('id');
+    var assetbuy = $(e.target).data('assetbuy');
+    var assetsell = $(e.target).data('assetsell');
+    var amountsell = $(e.target).data('amountsell');
+    var amountbuy = $(e.target).data('amountbuy');
+    var prices = $(e.target).data('price');
+    var maker = $(e.target).data('maker');
+    var makerexchange = $(e.target).data('makerexchange');
+    var side = $(e.target).data('side');
+    
+    document.getElementById('ID').value = ID;
+    document.getElementById('assetbuy').value = assetbuy;
+    document.getElementById('assetsell').value = assetsell;
+    document.getElementById('amountsell').value = amountsell;
+    document.getElementById('amountbuy').value = amountbuy;
+    document.getElementById('maker').value = maker;
+    document.getElementById('prices').value = prices;
+    document.getElementById('makerexchange').value = makerexchange;
+    document.getElementById('side').value = side;
+    document.getElementById('priceTwo').value = '';
+    document.getElementById('BuyPricetwos').value = '';
+    document.getElementById('BuyPricetwo').value = '';
+    document.getElementById('sellPricetwo').value = '';
   //  console.log(amount_twos);
+   $('#apiType').val('take');
     document.getElementById('price').value = amount;
     document.getElementById('buyPrices').value = amount_two;
-    //document.getElementById('sellPrice').value = amount_twos;
+    document.getElementById('buyPrice').value = amount_two;
+    document.getElementById('sellPrice').value = amount_twos;
+    
   }
   function handleBuy(e)
 {
     e.preventDefault();
      var url = new URL(window.location.href);
         var c = url.searchParams.get("opt");
-          ScatterJS.plugins( new ScatterEOS() );
-
-            const network = {
-                blockchain:'eos',
-                protocol:'http',
-                host:'13.57.210.230',
-                eosVersion: 'bf28f8bb',
-                port:8888,
-                chainId:'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f',
-                debug: false,
-            verbose: false,
-            latency: 200
-            }
-
-            ScatterJS.scatter.connect('My-Apps').then(connected => {
-                if(!connected) return false;
-                var scatter =ScatterJS.scatter;
-            if(scatter.identity)
-            {
                   var bprice= parseFloat($('#buyPrice').val());
        var sellPrice= parseFloat($('#sellPrice').val());
+       var price= parseFloat($('#price').val());
        var tps=1;
-    let datas = {
-          "side": "BUY",
-          "assetBuy": c,
-          "assetSell": "EOS",
-          "amountBuy": bprice,
-          "amountSell": 0,
-          "price": sellPrice,
-          "expires": "",
-          "type": tps,
-          "useraccount": scatter.identity.accounts[0].name
-    };
-     fetch('https://api.byzanti.ne/orderMake/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', {
+       var myuri='';
+       if($('#apiType').val()=='make')
+       {
+        var datas = {
+            "side": "BUY",
+            "assetBuy": c,
+            "assetSell": "EOS",
+            "amountBuy": bprice,
+            "amountSell": sellPrice,
+            "price": price,
+            "expires": "3d",
+            "type": tps,
+            "useraccount": 'taker1'
+      };
+    myuri='https://api.byzanti.ne/orderMake/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+   
+       }
+       else
+       {
+            var bprice= parseFloat($('#amountbuy').val());
+       var sellPrice= parseFloat($('#amountsell').val());
+       var pricess= parseFloat($('#prices').val());
+       var maker = $('#maker').val();
+       var makerexchange = $('#makerexchange').val();
+       var ids = $('#ID').val();
+       var side= $('#side').val();
+       if(side=='BUY')
+       {
+          var datas = 
+    {
+        "orderId": ids,
+        "assetBuy": 'EOS',
+        "assetSell": c,
+        "amountBuy": sellPrice,
+        "amountSell": bprice,
+        "price": pricess,
+        "taker": "taker1",
+        "maker": maker,
+        "takerExchange": "uberdex",
+        "makerExchange": makerexchange
+      };
+       }
+       else
+       {
+          var datas = 
+    {
+        "orderId": ids,
+        "assetBuy": 'EOS',
+        "assetSell":c,
+        "amountBuy": bprice,
+        "amountSell": sellPrice,
+        "price": pricess,
+        "taker": "taker1",
+        "maker": maker,
+        "takerExchange": "uberdex",
+        "makerExchange": makerexchange
+      };
+       }
+    
+      myuri='https://api.byzanti.ne/orderTake/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+       }
+  
+     fetch(myuri, {
      method: 'POST',headers: {
   //  'Accept': 'application/json',
     'Content-Type': 'application/json',
   },  body: JSON.stringify(datas)})
         .then(response => response.json())
-        .then(data => window.location.reload());
+        .then(data => {if($('#apiType').val()=='make'){ if(data.orderId){
+            
+            $('#contentToShow').html('Order Id : '+data.orderId);$('#msg').html('Success');$('.sellAlart').show();}else if(data.code){$('#contentToShow').html('Error Code : '+data.code);$('#msg').html('Error');$('.sellAlart').show();}}else{ if(data.tradeId){$('#contentToShow').html('Trade Id : '+data.tradeId+'<br />result : Created <br />BlockNumber : <a href="/transaction/?trxID='+data.transactionId+'&blocknumber='+data.blockNumber+'">'+data.blockNumber+'</a><br />TransactionId : '+data.transactionId);console.log(data);$('#msg').html('Success');$('.sellAlart').show();}else{$('#contentToShow').html('Status Code : '+data.statusCode+"<br /> Message : "+data.message+"<br /> Code : "+data.code+"<br /> Order Id : "+ids);$('#msg').html('Error');$('.sellAlart').show();}}//window.location.reload()
+      }
+        );
         
-            }
-            else
-            {
-                 $('.signInPopup ').fadeIn();
-            }
      
-    });
 }
  function handleSell(e)
 {
@@ -96,62 +157,91 @@ function handleClick(e) {
     
      var url = new URL(window.location.href);
         var c = url.searchParams.get("opt");
-          ScatterJS.plugins( new ScatterEOS() );
-
-            const network = {
-                blockchain:'eos',
-                protocol:'http',
-                host:'13.57.210.230',
-                eosVersion: 'bf28f8bb',
-                port:8888,
-                chainId:'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f',
-                debug: false,
-            verbose: false,
-            latency: 200
-            }
-
-            ScatterJS.scatter.connect('My-Apps').then(connected => {
-                if(!connected) return false;
-                var scatter =ScatterJS.scatter;
-            if(scatter.identity)
-            {
-                  var bprice= parseFloat($('#BuyPricetwo').val());
-       var sellPrice= parseFloat($('#sellPricetwo').val());
+        var price= parseFloat($('#priceTwo').val());
+        var bprice= parseFloat($('#BuyPricetwo').val());
+        var sellPrice= parseFloat($('#sellPricetwo').val());
+      
+        var tps=1;
+        var myuri='';
+        if($('#apiType').val()=='make')
+        {
+            var datas = {
+                "side": "SELL",
+                "assetBuy": "EOS",
+                "assetSell": c,
+                "amountBuy": bprice,
+                "amountSell": sellPrice,
+                "price": price,
+                "expires": "3d",
+                "type": tps,
+                "useraccount": 'taker1'
+          };
+     myuri='https://api.byzanti.ne/ordermake/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+        }
+        else
+        {
+               var bprice= parseFloat($('#amountbuy').val());
+       var sellPrice= parseFloat($('#amountsell').val());
+       var pricess= parseFloat($('#prices').val());
+       var maker = $('#maker').val();
+       var makerexchange = $('#makerexchange').val();
+       var ids = $('#ID').val();
+      var side= $('#side').val();
+       if(side=='BUY')
+       {
+          var datas = 
+    {
+        "orderId": ids,
+        "assetBuy": 'EOS',
+        "assetSell":c,
+        "amountBuy": sellPrice,
+        "amountSell": bprice,
+        "price": pricess,
+        "taker": "taker1",
+        "maker": maker,
+        "takerExchange": "uberdex",
+        "makerExchange": makerexchange
+      };
+       }
+       else
+       {
+          var datas = 
+    {
+        "orderId": ids,
+        "assetBuy": c,
+        "assetSell":'EOS',
+        "amountBuy": sellPrice,
+        "amountSell": bprice,
+        "price": pricess,
+        "taker": "taker1",
+        "maker": maker,
+        "takerExchange": "uberdex",
+        "makerExchange": makerexchange
+      };
+       }
+    
+      myuri='https://api.byzanti.ne/orderTake/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+        }
      
-       var tps=1;
-    let datas = {
-          "side": "SELL",
-          "assetBuy": "EOS",
-          "assetSell": c,
-          "amountBuy": 0,
-          "amountSell": bprice,
-          "price": sellPrice,
-          "expires": "",
-          "type": tps,
-          "useraccount": scatter.identity.accounts[0].name
-    };
-     fetch('https://api.byzanti.ne/orderMake/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', {
+      
+     fetch(myuri, {
      method: 'POST',headers: {
   //  'Accept': 'application/json',
     'Content-Type': 'application/json',
   },  body: JSON.stringify(datas)})
         .then(response => response.json())
-        .then(data => window.location.reload()
+        .then(data => {if($('#apiType').val()=='make'){ if(data.orderId){
+            $('#contentToShow').html('Order Id : '+data.orderId);$('#msg').html('Success');$('.sellAlart').show();}else if(data.code){$('#contentToShow').html('Error Code : '+data.code);$('#msg').html('Error');$('.sellAlart').show();}}else{ if(data.tradeId){$('#contentToShow').html('Trade Id : '+data.tradeId+'<br />result : Created <br />BlockNumber : <a href="/transaction/?trxID='+data.transactionId+'&blocknumber='+data.blockNumber+'">'+data.blockNumber+'</a><br />TransactionId : '+data.transactionId);console.log(data);$('#msg').html('Success');$('.sellAlart').show();}else{$('#contentToShow').html('Status Code : '+data.statusCode+"<br /> Message : "+data.message+"<br /> Code : "+data.code+"<br /> Order Id : "+ids);$('#msg').html('Error');$('.sellAlart').show();}}//window.location.reload()
+       }
     );
         
-            }
-            else
-            {
-                $('.signInPopup ').fadeIn();
-            }
-     
-    });
 }
 function changeSellPrice1(e)
 {
      e.preventDefault();
     var price= parseFloat(e.target.value);
     var sellPrice= parseFloat($('#price').val());
+    $('#apiType').val('make');
     $('#sellPrice').val(price*sellPrice);
 }
 function changeSellPrice(e)
@@ -160,7 +250,7 @@ function changeSellPrice(e)
     var price= parseFloat(e.target.value);
     var sellPrice= parseFloat($('#price').val());
     $('#buyPrice').val(price/sellPrice);
-    
+    $('#apiType').val('make');
 }
 function changeBuyPrice1(e)
 {
@@ -168,6 +258,7 @@ function changeBuyPrice1(e)
      var price= parseFloat(e.target.value);
     var sellPrice= parseFloat($('#priceTwo').val());
     $('#sellPricetwo').val(price*sellPrice);
+    $('#apiType').val('make');
 }
 function changeBuyPrice(e)
 {
@@ -175,15 +266,42 @@ function changeBuyPrice(e)
      var price= parseFloat(e.target.value);
     var sellPrice= parseFloat($('#priceTwo').val());
     $('#BuyPricetwo').val(price/sellPrice);
+    $('#apiType').val('make');
 }
 function handleClicks(e) {
     e.preventDefault();
     var amount_four = e.target.nextSibling.id;
     var amount_fours = e.target.nextSibling.nextSibling.id;
     var amounts = e.target.id;
+
+    var ID = $(e.target).data('id');
+    var assetbuy = $(e.target).data('assetbuy');
+    var assetsell = $(e.target).data('assetsell');
+    var amountsell = $(e.target).data('amountsell');
+    var amountbuy = $(e.target).data('amountbuy');
+    var prices = $(e.target).data('price');
+    var maker = $(e.target).data('maker');
+    var makerexchange = $(e.target).data('makerexchange');
+    var side = $(e.target).data('side');
+    
+    document.getElementById('ID').value = ID;
+    document.getElementById('assetbuy').value = assetbuy;
+    document.getElementById('assetsell').value = assetsell;
+    document.getElementById('amountsell').value = amountsell;
+    document.getElementById('amountbuy').value = amountbuy;
+    document.getElementById('maker').value = maker;
+    document.getElementById('prices').value = prices;
+    document.getElementById('makerexchange').value = makerexchange;
+    document.getElementById('side').value = side;
     document.getElementById('priceTwo').value = amounts;
     document.getElementById('BuyPricetwos').value = amount_four;
-   // document.getElementById('sellPricetwo').value = amount_fours;
+    document.getElementById('BuyPricetwo').value = amount_four;
+    document.getElementById('sellPricetwo').value = amount_fours;
+    $('#apiType').val('take');
+     document.getElementById('price').value = '';
+    document.getElementById('buyPrices').value = '';
+    document.getElementById('buyPrice').value = '';
+    document.getElementById('sellPrice').value = '';
   }
  var url = new URL(window.location.href);
      var     c = url.searchParams.get("opt");
@@ -191,7 +309,7 @@ class tradingHead extends Component{
      
 	static defaultProps = {
 		symbol: 'EOS:'+c+'/USD',
-		interval: '15',
+		interval: '60',
 		containerId: 'tv_chart_container',
 		libraryPath: '/charting_library/',
 		chartsStorageUrl: 'https://saveload.tradingview.com',
@@ -211,7 +329,9 @@ class tradingHead extends Component{
           orders: [],
           orderBook: [],
           orderBooks: [],
+          orderBookss: [],
           tacker: [],
+          blc: [],
           apil:'SEED',
         };
       }
@@ -219,6 +339,8 @@ class tradingHead extends Component{
 
     
     componentDidMount() {
+      /*   var url = new URL(window.location.href);
+        console.log(url.href.substr(url.href.lastIndexOf('/') + 1));*/
         const widgetOptions = {
 			debug: false,
 			symbol: this.props.symbol,
@@ -260,6 +382,7 @@ class tradingHead extends Component{
          var c = url.searchParams.get("opt");
       
         var API = 'https://api.byzanti.ne/ticker?symbol='+c+'&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+        var APISs = 'https://api.byzanti.ne/orderBook?symbol='+c+'&side=BUY&size=150&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
         var APIS = 'https://api.byzanti.ne/orderBook?symbol='+c+'&side=BUY&size=11&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
         var APISS = 'https://api.byzanti.ne/orders?symbol='+c+'&side=BUY&size=22&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
         var orderTaker = 'https://api.byzanti.ne/tradebook?symbol='+c+'&size=100&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
@@ -275,10 +398,18 @@ class tradingHead extends Component{
         .then(response => response.json())
         .then(data => {this.setState({ orderBook: data['asks'], orderBooks: data['bids'] }); });
         
+        fetch(APISs)
+        .then(response => response.json())
+        .then(data => {this.setState({ orderBookss: data['asks'], orderBookss: data['bids'] }); });
+        
         fetch(orderTaker)
         .then(response => response.json())
         .then(data => {this.setState({ tacker: data }); });
 
+        fetch('https://api.byzanti.ne/exbalance?account=taker1&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N')
+        .then(response => response.json())
+        .then(data => {this.setState({blc:(data[0].amount/10000)}); });
+      
     }
 
 
@@ -287,7 +418,9 @@ class tradingHead extends Component{
         const { orders } = this.state;
         const { orderBook } = this.state;
         const { orderBooks } = this.state;
+        const { orderBookss } = this.state;
         const { tacker } = this.state;
+        const { blc } = this.state;
        
         return(
             <div className="tradingCenter">
@@ -312,16 +445,16 @@ class tradingHead extends Component{
                                     <tbody>
                                         {orderBooks.map(bids => 
                                             <tr>
-                                                <td className='minus' id={bids.price}  onClick={handleClicks}>{bids.price}</td>
-                                                <td id={bids.amountBuy}>{bids.amountBuy}</td>
-                                                <td id={bids.amountSell}>{bids.amountSell}</td>
+                                                <td className='minus' id={bids.price} data-id={bids.orderId} data-assetbuy={bids.assetSell} data-assetsell={bids.assetBuy} data-amountsell={bids.amountBuy} data-amountbuy={bids.amountSell} data-price={bids.price} data-maker={bids.useraccount} data-makerexchange={bids.source} data-side={bids.side}   onClick={handleClicks}>{parseFloat(bids.price).toFixed(4)}</td>
+                                                <td id={bids.amountBuy}>{parseFloat(bids.amountBuy).toFixed(4)}</td>
+                                                <td id={bids.amountSell}>{parseFloat(bids.amountSell).toFixed(4)}</td>
                                             </tr>
                                         )}
                                         {orderBook.map(ask => 
                                             <tr>
-                                                <td className='plus' id={ask.price}  onClick={handleClick}>{ask.price}</td>
-                                                <td id={ask.amountSell}>{ask.amountSell}</td>
-                                                <td id={ask.amountBuy}>{ask.amountBuy}</td>
+                                                <td className='plus' id={ask.price} data-id={ask.orderId} data-assetbuy={ask.assetSell} data-assetsell={ask.assetBuy} data-amountsell={ask.amountBuy} data-amountbuy={ask.amountSell} data-price={ask.price} data-maker={ask.useraccount} data-makerexchange={ask.source} data-side={ask.side} onClick={handleClick}>{parseFloat(ask.price).toFixed(4)}</td>
+                                                <td id={ask.amountSell}>{parseFloat(ask.amountSell).toFixed(4)}</td>
+                                                <td id={ask.amountBuy}>{parseFloat(ask.amountBuy).toFixed(4)}</td>
                                             </tr>
                                         )}
                                         
@@ -329,7 +462,7 @@ class tradingHead extends Component{
                                 </table>
                             </div>
                             <div id="tabs-2">
-                            <table>
+                            <table className="tableScroll">
                                     <thead>
                                         <tr>
                                             <th>Price(EOS)</th>
@@ -339,18 +472,18 @@ class tradingHead extends Component{
                                     </thead>
                                     
                                     <tbody>
-                                        {orderBook.map(ask => 
+                                        {orderBookss.map(ask => 
                                             <tr>
-                                                <td className='plus' id={ask.price}  onClick={handleClick}>{ask.price}</td>
-                                                <td id={ask.amountSell}>{ask.amountSell}</td>
-                                                <td id={ask.amountBuy}>{ask.amountBuy}</td>
+                                                <td className='plus' id={ask.price}  onClick={handleClick}>{parseFloat(ask.price).toFixed(4)}</td>
+                                                <td id={ask.amountSell}>{parseFloat(ask.amountSell).toFixed(4)}</td>
+                                                <td id={ask.amountBuy}>{parseFloat(ask.amountBuy).toFixed(4)}</td>
                                             </tr>
                                         )}
                                     </tbody>
                                 </table>
                             </div>
                             <div id="tabs-3">
-                            <table>
+                            <table className="tableScroll">
                                     <thead>
                                         <tr>
                                             <th>Price(EOS)</th>
@@ -361,11 +494,11 @@ class tradingHead extends Component{
                                     
                                    
                                     <tbody>
-                                        {orderBooks.map(bids => 
+                                        {orderBookss.map(bids => 
                                             <tr>
-                                                <td className='minus' id={bids.price}  onClick={handleClicks}>{bids.price}</td>
-                                                <td id={bids.amountBuy}>{bids.amountBuy}</td>
-                                                <td id={bids.amountSell}>{bids.amountSell}</td>
+                                                <td className='minus' id={bids.price}  onClick={handleClicks}>{parseFloat(bids.price).toFixed(4)}</td>
+                                                <td id={bids.amountBuy}>{parseFloat(bids.amountBuy).toFixed(4)}</td>
+                                                <td id={bids.amountSell}>{parseFloat(bids.amountSell).toFixed(4)}</td>
                                             </tr>
                                         )}
                                     </tbody>
@@ -382,35 +515,45 @@ class tradingHead extends Component{
                             <div className="clearfix">
                                 <div>
                                     {tricker.map(hit =>
-                                        <h6>Buy {hit.symbol} <span>Balance:0.0000 EOS</span></h6>
+                                        <h6>Buy {hit.symbol} <span>Balance:{this.state.blc}</span></h6>
                                     )}
-                                    <label>Price <span>EOS</span> </label>
-                                    <input type="text" id="price" />
+                                    <label>Price <span></span> </label>
+                                    <input type="number" id="price" />
                                     <label>Amount {tricker.map(hit =>
                                         <span>{hit.symbol} </span>
                                     )}</label>
                                      <input type="hidden" id="buyPrices"  />
                                    
-                                    <input type="text" id="buyPrice" onChange={changeSellPrice1} />
+                                    <input type="number" id="buyPrice" onChange={changeSellPrice1} />
                                     <label>Total  <span>EOS</span>
                                     </label>
-                                    <input type="text"  id="sellPrice" onChange={changeSellPrice} />
+                                    <input type="number"  id="sellPrice" onChange={changeSellPrice} />
                                     <input type="submit" value="Signin to trade" onClick={handleBuy} className="background" style={color} />
                                 </div>
                                 <div className="red">
                                     {tricker.map(hit =>
                                         <h6>Sell {hit.symbol} <span>Balance:0.0000 EOS</span></h6>
                                     )}
-                                    <label>Price <span>EOS</span> </label>
-                                    <input type="text"  id="priceTwo" />
+                                    <label>Price <span></span> </label>
+                                    <input type="number"  id="priceTwo" />
                                     <label>Amount {tricker.map(hit =>
                                         <span>{hit.symbol} </span>
                                     )}</label>
                                     <input type="hidden" id="BuyPricetwos"/>
-                                    
-                                    <input type="text" id="BuyPricetwo"  onChange={changeBuyPrice1} />
+
+                                    <input type="hidden" id="ID"/>
+                                    <input type="hidden" id="assetbuy"/>
+                                    <input type="hidden" id="assetsell"/>
+                                    <input type="hidden" id="amountsell"/>
+                                    <input type="hidden" id="amountbuy"/>
+                                    <input type="hidden" id="prices"/>
+                                    <input type="hidden" id="maker"/>
+                                    <input type="hidden" id="makerexchange"/>
+                                    <input type="hidden" id="side"/>
+                                    <input type="hidden" id="apiType" />
+                                    <input type="number" id="BuyPricetwo"  onChange={changeBuyPrice1} />
                                     <label>Total <span>EOS</span></label>
-                                    <input type="text" id="sellPricetwo" onChange={changeBuyPrice} />
+                                    <input type="number" id="sellPricetwo" onChange={changeBuyPrice} />
                                     <input type="submit"  onClick={handleSell} value="Signin to trade" />
                                 </div>
                             </div>
@@ -474,6 +617,14 @@ class tradingHead extends Component{
                             </div>
                         </div> 
                     )}
+
+                    <div className="sellAlart">
+                        <div className="innrs">
+                            <h3 id="msg"></h3>
+                            <p id="contentToShow"></p>
+                            <a href="javascript:void(0)" onClick={reloadPage} className="closeView">Ok</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         )
