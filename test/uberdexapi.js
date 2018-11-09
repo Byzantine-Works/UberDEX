@@ -26,6 +26,7 @@ var mode = process.env.MODE;
 //mode = 'localtestnet';
 
 var eosNetwork;
+
 var MAKER_PRIV_KEY; //Priv key from .env for Maker actor
 var TAKER_PRIV_KEY; //Priv key from .env for Taker actor
 //Account defs
@@ -49,12 +50,18 @@ if (mode == undefined || mode == 'byzantinetestnet') {
     //Local Testnet Account defs
     EXCHANGE_ACCOUNT = config.byzantinetestnetaccount.EXCHANGE_ACCOUNT;
     EXCHANGE_ADMIN_ACCOUNT = config.byzantinetestnetaccount.ADMIN_ACCOUNT;
+    ADMIN_ACCOUNT = config.byzantinetestnetaccount.ADMIN_ACCOUNT;
     LEDGER_ACCOUNT = config.byzantinetestnetaccount.LEDGER_ACCOUNT;
     MAKER_ACCOUNT = config.byzantinetestnetaccount.MAKER_ACCOUNT;
     TAKER_ACCOUNT = config.byzantinetestnetaccount.TAKER_ACCOUNT;
     eosTokenContract = config.byzantinetestnetaccount.eosTokenContract;
     eosExchangeContract = config.byzantinetestnetaccount.eosExchangeContract;
 }
+
+const chainId = config.localtestnet.chainId;
+const httpEndpoint = config.localtestnet.httpEndpoint;
+const exchangeAccount = "exchange";
+const exchangeAdminAccount = "admin";
 
 eos = Eos(eosNetwork);
 const uint64_size = 8;
