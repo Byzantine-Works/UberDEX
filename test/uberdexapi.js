@@ -5,6 +5,8 @@ const eosapiram = require("commander");
 const BN = require("bignumber.js");
 const Eos = require("eosjs");
 const assert = require('assert');
+const exchangeABI = require("./exchangeABI");
+
 
 //Express related
 const express = require('express');
@@ -1273,6 +1275,92 @@ async function getExBalances(account) {
     //return trxGetExBalance;
 }
 
+//offline scatter based withdrawal with admin sig and user-scatter-arb-sig
+async function exOfflineWithdrawal(
+    user,
+    token,
+    amount,
+    nonce,
+    headers,
+    userSignature,
+) {
+    return await sendOfflineWithdrawal(user, token, parseFloat(amount), nonce, headers, userSignature);
+}
+
+async function sendOfflineWithdrawal(user, token, amount, nonce, headers, userSignature) {
+    var extendedAsset;
+    //simply deal with IQ specifics for now
+    //TODO deal with different contracts and precisions here
+    if (token.indexOf("IQ") > -1) {
+        extendedAsset = (amount).toFixed(3) + " " + token + "@everipediaiq";
+    } else if (token.indexOf("EOS") > -1) {
+        extendedAsset = (amount).toFixed(4) + " " + token + "@eosio.token";
+    } else throw new Error(token + " is currently not available for withdrawals!!!");
+
+    const withdrawParams = {
+        from: user,
+        nonce,
+        quantity: extendedAsset,
+        admin: ADMIN_ACCOUNT
+    };
+
+    const offlineEos = Eos({
+        chainId,
+        httpEndpoint,
+        keyProvider: [process.env.ADMIN_KEY],
+        transactionHeaders: headers
+    });
+    const offlineOptions = {
+        broadcast: false,
+        sign: true,
+        authorization: [{
+                actor: user,
+                permission: 'active'
+            },
+            {
+                actor: ADMIN_ACCOUNT,
+                permission: 'active'
+            }
+        ],
+    };
+    await offlineEos.fc.abiCache.abi(
+        EXCHANGE_ACCOUNT,
+        exchangeABI.abi
+
+    );
+    const offlineContract = await offlineEos.contract(EXCHANGE_ACCOUNT);
+    const offlineWithdraw = await offlineContract.withdraw(withdrawParams, offlineOptions);
+    const offlineTransaction = offlineWithdraw.transaction;
+    //offlineTransaction.signatures.push(withdrawTransaction.signatures[0]);
+    offlineTransaction.signatures.push(userSignature);
+    console.log('offlineWithdraw:', offlineWithdraw);
+    console.log('offlineWithdraw.transaction.actions:', offlineWithdraw.transaction.transaction.actions[0]);
+
+    const dispatchEos = Eos({
+        chainId,
+        httpEndpoint,
+        keyProvider: [process.env.ADMIN_KEY]
+    });
+    const dispatchOptions = {
+        authorization: [{
+                actor: user,
+                permission: 'active'
+            },
+            {
+                actor: ADMIN_ACCOUNT,
+                permission: 'active'
+            }
+        ],
+        broadcast: true,
+        debug: true,
+        sign: true,
+        keyProvider: [process.env.ADMIN_KEY]
+    };
+
+    const result = await dispatchEos.pushTransaction(offlineTransaction);
+    console.log('result:', result);
+}
+
 //start EOS-API service
 var server = app.listen(process.env.EOS_API_PORT, function () {
     //var host = process.env.host;//os.hostname();
@@ -1288,3 +1376,4 @@ module.exports.getAllBalances = getAllBalances;
 module.exports.getExBalances = getExBalances;
 module.exports.extrade = extrade;
 module.exports.exregisteruser = exregisteruser;
+module.exports.exOfflineWithdrawal = exOfflineWithdrawal;
