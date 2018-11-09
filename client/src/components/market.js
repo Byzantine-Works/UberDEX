@@ -1,25 +1,29 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Header from './header';
 import EOS from './Home/eosMarket';
 import Callaction from './callAction';
 import Footer from './footer';
 import data from '../app.json';
-var color = {background: data['theme_color']};
+var color = { background: data['theme_color'] };
 
-class Home extends Component{
-    render(){
-       
-        return(
+class Market extends Component {
+    constructor(props) {
+        super(props);
+    }
+    render() {
+        console.log(this.props)
+
+        return (
             <div className="marketPage">
                 <div className="wellcomBanner background" style={color}>
-                    <Header />
+                    <Header updateScatterID={this.props.updateScatterID} scatterID={this.props.scatterID} />
                 </div>
                 <EOS />
                 <Callaction />
-                <Footer updateScatterID={this.props.updateScatterID} scatterID={this.props.scatterID}/>
+                <Footer updateScatterID={this.props.updateScatterID} scatterID={this.props.scatterID} />
             </div>
         )
     }
 }
 
-export default Home;
+export default Market;

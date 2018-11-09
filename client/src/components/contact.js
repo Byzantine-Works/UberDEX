@@ -6,7 +6,10 @@ import $ from "jquery";
 import data from '../app.json';
 var color = {background: data['theme_color']};
 
-class Home extends Component{
+class Contact extends Component{
+    constructor(props) {
+        super(props);
+    }
      postSignup = (e) => {
     e.preventDefault();
      let data = {
@@ -48,7 +51,7 @@ class Home extends Component{
         return(
             <div className="about_page">
                 <div className="wellcomBanner background" style={color}>
-                    <Header />
+                <Header updateScatterID={this.props.updateScatterID} scatterID={this.props.scatterID}/>
                 </div>
                 <div className="about_wrap contactPage">
                     <div className="container clearfix">
@@ -78,10 +81,10 @@ class Home extends Component{
                     </div>
                 </div>
                 <Callaction />
-                <Footer />
+                <Footer updateScatterID={this.props.updateScatterID} scatterID={this.props.scatterID}/>
             </div>
         )
     }
 }
 
-export default Home;
+export default Contact;

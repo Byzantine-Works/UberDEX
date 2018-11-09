@@ -18,7 +18,7 @@ class Home extends Component{
         return(
             <div className="marketPage">
                 <div className="wellcomBanner background" style={color}>
-                    <Header />
+                    <Header updateScatterID={this.props.updateScatterID} scatterID={this.props.scatterID}/>
                 </div>
                 <Trading />
                 <TradingCenter scatterID={this.props.scatterID} updateScatterID={this.props.updateScatterID}/>

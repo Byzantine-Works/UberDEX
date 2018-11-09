@@ -20,7 +20,7 @@ class Home extends Component{
         return(
             <div className="HomePage" >
                 <div className="wellcomBanner background" style={color}>
-                    <Header updateScatterID={this.props.updateScatterID}/>
+                    <Header updateScatterID={this.props.updateScatterID} scatterID={this.props.scatterID}/>
                     <Banner />
                 </div>
                 <EOS />

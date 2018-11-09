@@ -6,6 +6,7 @@ import $ from "jquery";
 import ScatterJS from 'scatterjs-core';
 import ScatterEOS from 'scatterjs-plugin-eosjs';
 import Eos from 'eosjs';
+// import { Api, JsonRpc, RpcError, JsSignatureProvider } from 'eosjs';
 
 ScatterJS.plugins( new ScatterEOS() );
 
@@ -17,7 +18,7 @@ ScatterJS.plugins( new ScatterEOS() );
 
 const network = {
                     blockchain:'eos',
-                    protocol:'http',
+                    protocol:'https://cors-anywhere.herokuapp.com/http',
                     host:'13.52.54.111',
                     eosVersion: 'bf28f8bb',
                     port:8888,
@@ -26,6 +27,7 @@ const network = {
                     verbose: false,
                     latency: 200
                 }
+
 
 
 
@@ -44,10 +46,12 @@ class Footer extends Component{
     }
 
     async handleClickss(e){
-        console.log(this.props)
         e.preventDefault();
-        const scatter = ScatterJS.scatter;
+        let scatter = ScatterJS.scatter;
+        scatter = scatter.isExtension ? window.ScatterJS.scatter : scatter;
+        console.log(scatter);
         let connected = await scatter.connect("UberDEX");
+        console.log(connected)
     
     
         // If the user does not have Scatter or it is Locked or Closed this will return false;
@@ -56,24 +60,23 @@ class Footer extends Component{
         // Check the scatter identity of the user
         const requiredFields = { accounts:[network] };
         let id = await scatter.getIdentity(requiredFields);
-        console.log("id: ", id);
+
         const account = id.accounts.find(x => x.blockchain === 'eos');
-        console.log("account: ", account);
     
         const eosOptions = { expireInSeconds:60 }
 
+        this.props.updateScatterID(scatter)
         const eos = scatter.eos(network, Eos, eosOptions)
-
-        this.props.updateScatterID(true)
-        console.log("Scatter ID in components: ", this.props.scatterID.ScatterId);
+        console.log("Scatter eos: ", eos);
         
         // Get a proxy reference to eosjs which you can use to sign transactions with a user's Scatter.
         // const eos = scatter.eos(network, Eos, eosOptions);
         if(scatter.identity){
+            
             $('#signin').hide();
             $('#signout').css('display','inline-block');
             $('.bgs').html(scatter.identity.accounts[0].name);
-            $('.signInPopup ').fadeIn();
+            $('.signInPopup ').fadeOut();
         } else {
             $('#signin').css('display','inline-block');
             $('#signout').hide();

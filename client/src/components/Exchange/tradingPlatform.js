@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import Datafeed from '../TVChartContainer/api/index';
 import $ from "jquery";
-import ScatterJS from 'scatterjs-core';
-import ScatterEOS from 'scatterjs-plugin-eosjs';
 import Eos from 'eosjs';
 
 import data from '../../app.json';
@@ -25,7 +23,7 @@ function closeView(e){
     $('.tradeWrap').fadeOut();
 }
 
-ScatterJS.plugins( new ScatterEOS() );
+// ScatterJS.plugins( new ScatterEOS() );
 
 const network = {
                 blockchain:'eos',
@@ -36,7 +34,8 @@ const network = {
                 chainId:'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f',
                 debug: false,
                 verbose: false,
-                latency: 200
+                latency: 200,
+                sign: true
             }
 // const network = { blockchain:'eos',
 //             protocol:'https',
@@ -56,55 +55,13 @@ function handleClick(e) {
   }
 
 
-async function handleBuy(e) {
-    e.preventDefault();
-    var url = new URL(window.location.href);
-    var c = url.searchParams.get("opt");
-    let scatter = ScatterJS.scatter;
-    let hash = scatter.identity.hash;
-    
-    // let trans = await scatter.eos(network, Eos).transfer('ideos', 'reddy', '0.0001 EOS', 'test uberDEX');
-    if(scatter.identity){
-       var bprice= parseFloat($('#buyPrice').val());
-       var sellPrice= parseFloat($('#sellPrice').val());
-       var tps=1;
-       let datas = {
-          "side": "BUY",
-          "assetBuy": c,
-          "assetSell": "EOS",
-          "amountBuy": bprice,
-          "amountSell": 0,
-          "price": sellPrice,
-          "expires": "",
-          "type": tps,
-          "hash": hash,
-          "useraccount": scatter.identity.accounts[0].name
-    };
-    console.log("datas: ", datas)
-     fetch('https://api.byzanti.ne/orderMake/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', {
-     method: 'POST',headers: {
-  //  'Accept': 'application/json',
-    'Content-Type': 'application/json',
-  },  body: JSON.stringify(datas)})
-        .then(response => {
-            response.json()
-            console.log("response: ", response);
-        })
-        // .then(data => window.location.reload());
-        
-            }
-            else {
-                $('.signInPopup ').fadeIn();
-                }
-     
-}
+
  function handleSell(e)
 {
     e.preventDefault();
     
      var url = new URL(window.location.href);
         var c = url.searchParams.get("opt");
-          ScatterJS.plugins( new ScatterEOS() );
 
             const network = {
                 blockchain:'eos',
@@ -117,7 +74,7 @@ async function handleBuy(e) {
             verbose: false,
             latency: 200
             }
-            let scatter = ScatterJS.scatter;
+            let scatter = this.props.scatterID
 
             if(scatter.identity) {
                 var bprice= parseFloat($('#BuyPricetwo').val());
@@ -232,7 +189,126 @@ class tradingHead extends Component{
         };
 
         this.signIn = this.signIn.bind(this);
+        this.handleBuy = this.handleBuy.bind(this);
+        this.deposit = this.deposit.bind(this);
+        this.withdraw = this.withdraw.bind(this);
+        this.registerUser = this.registerUser.bind(this);
       }
+
+      async registerUser() {
+        var myBuffer = [];
+        var str = 'EOS8JiHBp5d8dwAVWsK4BqWztDxv6YGpL4m5zazcjk5GJ4tX7omjY';
+        var buffer = new Buffer(str, 'utf16le');
+        for (var i = 0; i < buffer.length; i++) {
+            myBuffer.push(buffer[i]);
+        }
+        const eosOptions = { expireInSeconds:60 }
+        const eos = this.props.scatterID.eos(network, Eos, eosOptions);
+        const action = [{
+            account: 'exchange',
+            name: 'registeruser',
+            authorization: [{
+                actor: 'ideos',
+                permission: 'active'
+            }], data :
+            {
+                user: 'ideos',
+                publickey: myBuffer
+            }
+        }]
+        let dep = await eos.transaction({ actions: action})
+        console.log(dep);
+
+      }
+
+      async deposit() {
+          const eosOptions = { expireInSeconds:60 }
+          const eos = this.props.scatterID.eos(network, Eos, eosOptions)
+          let dep = await eos.transfer('ideos', 'exchange', '0.0001 EOS', 'deposit');
+          console.log("dep: ", dep)
+
+      }
+
+      async withdraw() {
+        const eosOptions = { expireInSeconds:60 }
+        const scatter = this.props.scatterID;
+        const eos = scatter.eos(network, Eos, eosOptions);
+        const action = {
+                from: 'ideos',
+                amount: '0.1000 EOS@ideos'
+            };
+         let acts = [{
+            account: 'exchange',
+            name: 'withdraw',
+            authorization: [{
+                actor: 'ideos',
+                permission: 'active'
+            }],
+            action
+        }]
+        let signature = await scatter.getArbitrarySignature(scatter.identity.publicKey, action.toString(), "test UberDEX withdraw", false);
+        // let w = await eos.transaction({ actions: acts});
+       
+        // action.sig = signature;
+        // let withdrawApi = await fetch('https://api.byzanti.ne/exwithdraw/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', {
+        //     method: 'POST',
+        //     headers: {
+        //  //  'Accept': 'application/json',
+        //    'Content-Type': 'application/json'
+        // },  
+        //     body: JSON.stringify(action)});
+
+         console.log("withdraw ", eos);
+
+
+      }
+
+      async handleBuy(e) {
+        e.preventDefault();
+        var url = new URL(window.location.href);
+        var c = url.searchParams.get("opt");
+        let scatter = this.props.scatterID;
+        // let hash = scatter.identity;
+        // console.log(hash);
+        // let eos = scatter.eos(network, Eos)
+        // console.log(ScatterJS);
+        
+        // let trans = await scatter.eos(network, Eos).transfer('ideos', 'reddy', '0.0001 EOS', 'test uberDEX');
+        if(scatter.identity){
+           var bprice= parseFloat($('#buyPrice').val());
+           var sellPrice= parseFloat($('#sellPrice').val());
+           var tps=1;
+           let datas = {
+              "side": "BUY",
+              "assetBuy": c,
+              "assetSell": "EOS",
+              "amountBuy": bprice,
+              "amountSell": 0,
+              "price": sellPrice,
+              "expires": "",
+              "type": tps,
+              "useraccount": scatter.identity.accounts[0].name
+        };
+        let signature = await scatter.getArbitrarySignature(scatter.identity.publicKey, datas.toString(), "test UberDEX buy", false);
+
+        datas.hash = signature;
+        console.log("datas: ", datas)
+         fetch('https://api.byzanti.ne/orderMake/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', {
+         method: 'POST',headers: {
+      //  'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },  body: JSON.stringify(datas)})
+            .then(response => {
+                response.json()
+                console.log("response: ", response);
+            })
+            
+                }
+                else {
+                    $('.signInPopup ').fadeIn();
+                    }
+         
+    }
 
 
     
@@ -291,7 +367,9 @@ class tradingHead extends Component{
         
         fetch(APIS)
         .then(response => response.json())
-        .then(data => {this.setState({ orderBook: data['asks'], orderBooks: data['bids'] }); });
+        .then(data => {
+            this.setState({ orderBook: data['asks'], orderBooks: data['bids'] }); });
+
         fetch(orderTaker)
         .then(response => response.json())
         .then(data => {this.setState({ tacker: data }); });
@@ -300,14 +378,14 @@ class tradingHead extends Component{
         // try{f
         console.log("scatterID: ", this.props.scatterID);
         if(this.props.scatterID){
-            const scatter = ScatterJS.scatter;
+            const scatter = this.props.scatterID;
             await scatter.connect("UberDEX");
             const requiredFields = { accounts:[network] };
             
             await scatter.getIdentity(requiredFields);
             if(scatter.identity.accounts[0].name) this.setState({pairedScatter: true})
             console.log(this.state.pairedScatter);
-            console.log(scatter.eos(network, Eos))
+            // console.log(scatter.eos(network, Eos))
             $('#signin').hide();
             $('#signout').css('display','inline-block');
             $('.bgs').html(scatter.identity.accounts[0].name);
@@ -319,33 +397,7 @@ class tradingHead extends Component{
 
     async signIn(e){
         e.preventDefault();
-        const scatter = ScatterJS.scatter;
-        let connected = await scatter.connect("UberDEX");
-    
-    
-        // If the user does not have Scatter or it is Locked or Closed this will return false;
-        if(!connected) return false;
-    
-        // Check the scatter identity of the user
-        const requiredFields = { accounts:[network] };
-        let id = await scatter.getIdentity(requiredFields);
-        console.log("id: ", id);
-        const account = id.accounts.find(x => x.blockchain === 'eos');
-        console.log("account: ", account);
-    
-        const eosOptions = { expireInSeconds:60 }
-        
-        // Get a proxy reference to eosjs which you can use to sign transactions with a user's Scatter.
-        // const eos = scatter.eos(network, Eos, eosOptions);
-        if(scatter.identity){
-            $('#signin').hide();
-            $('#signout').css('display','inline-block');
-            $('.bgs').html(scatter.identity.accounts[0].name);
-        } else {
-            $('#signin').css('display','inline-block');
-            $('#signout').hide();
-        }
-        this.props.updateScatterID(true)
+        $('.signInPopup ').fadeIn();
     }
 
 
@@ -465,7 +517,7 @@ class tradingHead extends Component{
                                     <label>Total  <span>EOS</span>
                                     </label>
                                     <input type="text"  id="sellPrice" />
-                                    {this.props.scatterID ? <input type="submit" value="Buy" onClick={handleBuy}/> : <input type="submit" value="Signin to trade" onClick={this.signIn}/>}
+                                    {this.props.scatterID ? <input type="submit" value="Buy" onClick={this.handleBuy}/> : <input type="submit" value="Signin to trade" onClick={this.signIn}/>}
                                     {/* <input type="text"  id="sellPrice" onChange={changeSellPrice} /> */}
                                 </div> 
                                 <div className="red">
@@ -482,7 +534,7 @@ class tradingHead extends Component{
                                     <input type="text" id="BuyPricetwo"  onChange={changeBuyPrice1} />
                                     <label>Total <span>EOS</span></label>
                                     <input type="text" id="sellPricetwo" />
-                                    {this.props.scatterID ? <input type="submit" value="Sell" onClick={handleSell}/> : <input type="submit" value="Signin to trade" onClick={this.signIn}/>}
+                                    {this.props.scatterID ? <input type="submit" value="Sell" onClick={this.withdraw}/> : <input type="submit" value="Signin to trade" onClick={this.signIn}/>}
                                     {/* <input type="text" id="sellPricetwo" onChange={changeBuyPrice} /> */}
                                 </div>
                             </div>
