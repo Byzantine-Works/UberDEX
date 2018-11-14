@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import Header from './header';
 import Footer from './footer';
 import data from '../app.json';
+import $ from "jquery";
+
 var color = {background: data['theme_color']};
 var logoUrl = data['logo'];
 console.log(logoUrl);
@@ -15,6 +17,8 @@ class Home extends Component{
           transaction: [],
           transactionTrx: [],
           transactionReceipt: [],
+          colors: [],
+          logo: [],
         };
       }
 
@@ -35,18 +39,26 @@ class Home extends Component{
    'Content-Type': 'application/json',
  },  body: JSON.stringify(datas)})
        .then(response => response.json())
-       .then(data => {console.log(data);this.setState({transaction:data});this.setState({transactionTrx:data.trx.trx});this.setState({transactionReceipt:data.trx.receipt});}
+       .then(datas => {console.log(datas.trx.trx.actions[0]);this.setState({transaction:datas});this.setState({transactionTrx:datas.trx.trx});this.setState({transactionReceipt:datas.trx.receipt});
+       $('#actionAmount').html(datas.trx.trx.actions[0].data.amount);$('#actionBuy').html(datas.trx.trx.actions[0].data.amountbuy);$('#actionSell').html(datas.trx.trx.actions[0].data.amountsell);$('#actionMaker').html(datas.trx.trx.actions[0].data.maker);$('#actionMakerfee').html(datas.trx.trx.actions[0].data.makerfee);
+       $('#actionTaker').html(datas.trx.trx.actions[0].data.taker);$('#actionTakerfee').html(datas.trx.trx.actions[0].data.takerfee);$('#actionHex').html(datas.trx.trx.actions[0].hex_data);}
    );
+
+   fetch('https://uberdex-admin.herokuapp.com/getColors')
+   .then(response => response.json())
+   .then(data => {this.setState({colors:data.theme_color}); this.setState({logo:'https://uberdex-admin.herokuapp.com/images/byzantine/'+data.logo}); });
+
 
 }
     render(){
         const { transaction } = this.state;
         const { transactionTrx } = this.state;
         const { transactionReceipt } = this.state;
-        
+        const { colors } = this.state;
+       // console.log(this.state.transactionTrx.actions[0]);
         return(
             <div className="HomePage" >
-                <div className="wellcomBanner background" style={color}>
+                <div className="wellcomBanner background"  style={{'background': this.state.colors}}>
                     <Header />
                 </div>
                 <div class="transactionPage">
@@ -54,8 +66,18 @@ class Home extends Component{
                         <div className="transTop">
                             <h3>Transaction Id <span>{this.state.transaction.id}</span></h3>
                             <cite>executed</cite> <cite>Irreversible</cite>
+                            <p>Block Number <span>{this.state.transaction.block_num}</span></p>
                             <p>Block Time <span>{this.state.transaction.block_time}</span></p>
                             <p>Expiration Time<span>{this.state.transactionTrx.expiration}</span></p>
+                            <p>Amount <span id="actionAmount"></span></p>
+                            <p>Amount Buy <span id="actionBuy"></span></p>
+                            <p>Amount Sell <span id="actionSell"></span></p>
+                            <p>Maker <span id="actionMaker"></span></p>
+                            <p>Maker Fee <span id="actionMakerfee"></span></p>
+                            <p>Taker <span id="actionTaker"></span></p>
+                            <p>Taker Fee <span id="actionTakerfee"></span></p>
+                            <p>Hex Data <span id="actionHex" style={{'word-break': 'break-word'}}></span></p>
+                            
                             <ul>
                                 <li>Ref
                                     <span>{this.state.transactionTrx.ref_block_num}</span>

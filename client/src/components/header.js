@@ -13,7 +13,7 @@ var logoUrl = '/img/'+data['logo'];
 function handlePublic(e){
     e.preventDefault();
      var scatter =ScatterJS.scatter;
-     alert(scatter.identity.publicKey);
+     if(scatter.identity){   alert(scatter.identity.publicKey);}
 //console.log(scatter.identity.publicKey);
 }
 
@@ -30,17 +30,29 @@ function handleSignout(e){
   
 
 class Header extends Component{
-    
- 
-       
-    render(){
-       
+    constructor(props) {
+    super(props);
+
+    this.state = {
+        colors: [],
+        logo: [],
+    };
+  }
+
+componentDidMount() {
+   
+    fetch('https://uberdex-admin.herokuapp.com/getColors')
+    .then(response => response.json())
+    .then(data => {this.setState({colors:data.theme_color}); this.setState({logo:'https://uberdex-admin.herokuapp.com/images/byzantine/'+data.logo}); });
+}
+render(){
+    const { logo } = this.state;   
   
         return(
             <div className="header ">
                 <div className="container clearfix">
                     <div className="logo">
-                        <a href="/"><img src={logoUrl} className="App-logo" alt="logo" /></a>
+                        <a href="/"><img src={this.state.logo} className="App-logo" alt="logo" /></a>
                     </div>
                     <div className="menuSections">
                         <nav>
