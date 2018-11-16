@@ -68,19 +68,20 @@ class Footer extends Component{
         this.props.updateScatterID(scatter)
         const eos = scatter.eos(network, Eos, eosOptions)
         console.log("Scatter eos: ", eos);
+        $('.signInPopup ').fadeOut();
         
         // Get a proxy reference to eosjs which you can use to sign transactions with a user's Scatter.
         // const eos = scatter.eos(network, Eos, eosOptions);
-        if(scatter.identity){
+        // if(scatter.identity){
             
-            $('#signin').hide();
-            $('#signout').css('display','inline-block');
-            $('.bgs').html(scatter.identity.accounts[0].name);
-            $('.signInPopup ').fadeOut();
-        } else {
-            $('#signin').css('display','inline-block');
-            $('#signout').hide();
-        }
+        //     $('#signin').hide();
+        //     $('#signout').css('display','inline-block');
+        //     $('.bgs').html(scatter.identity.accounts[0].name);
+        //    
+        // } else {
+        //     $('#signin').css('display','inline-block');
+        //     $('#signout').hide();
+        // }
     }
 
 

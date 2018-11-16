@@ -38,7 +38,7 @@ table {	border-collapse: collapse; border-spacing: 0; }
 -------------------------------------------------------------------*/
 .orderD table tr td a{text-decoration:none; color:#000;}
 .wellcomBanner {
-  background: #414141;
+  background: #091128;
 }
 
 .container {
@@ -2128,8 +2128,299 @@ div#tv_chart_container iframe {
   margin-left: -58px;
 }
 
+.tradingCenter .center .calculator input[type="number"] {
+  background: #0d1939;
+  border: 1px solid #091128;
+}
+
+.lightVersion .tradingCenter .center .calculator input[type="number"] {
+  border-radius: 23px;
+  height: 40px;
+  background: #fff;
+  border: 1px solid #eaeaea;
+  -webkit-rtl-ordering: unset;
+}
+
+.tradingCenter .center .calculator input[type="number"] {
+  font-family: 'Calibri', sans-serif;
+  width: 100%;
+  padding: 8px 10px;
+  margin-bottom: 13px;
+  box-sizing: border-box;
+  border: 1px solid #eaeaea;
+  outline: 0px !important;
+  color: #9c9c9c;
+}
+
+.lightVersion .EOStable table tr th { color:#464646; }
+.lightVersion .EOStable table tr td {color: #464646;}
+.lightVersion .EOStable table tr td a { color:#464646; }
+.lightVersion .EOStable table tr td.minus { color:#fd3f3f; }
+.lightVersion .EOStable table tr td.plus  { color:#39bf0f; }
+.lightVersion .tradingHead .trading .rights ul li p {
+  color: #464646;
+}
+
+.lightVersion .tradingHead .trading .rights ul li {
+  color: #464646;
+}
+
+.lightVersion .tradingCenter .lefts table tr th {
+  color: #464646;
+}
+
+.lightVersion .tradingCenter .lefts table tr td {
+  color: #464646;
+}
+
+.lightVersion .tradingCenter .lefts table tr td.minus { color:#fd3f3f; }
+.lightVersion .tradingCenter .lefts table tr td.plus  { color:#39bf0f; }
+
+.lightVersion .orderTacker table thead tr th, .lightVersion .orderTacker table tbody tr td {
+  color: #464646;
+}
+
+.lightVersion .orderTacker table tr td.plus.EOS { color:#fd3f3f; }
+.lightVersion .orderTacker table tbody tr td.plus  { color:#39bf0f; }
 
 
+.lightVersion .tradingCenter .center .calculator label {
+  color: #464646;
+}
+
+.lightVersion .tradingCenter .center .calculator input[type="number"] {
+  color: #464646;
+  font-size: 17px;
+}
+
+.lightVersion .tradingCenter .center .calculator h6 span {
+  color: #464646;
+}
+
+.lightVersion .orderD table thead tr th, .lightVersion .orderD table tbody tr td {
+  color: #464646;
+}
+
+.lightVersion .orderD table tbody tr td.plus  { color:#39bf0f; }
+.lightVersion .orderD table tbody tr td.EOS { color:#fd3f3f; }
+.sellAlart {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    background: rgba(0, 0, 0, 0.34);
+    width: 100%;
+    height: 100%;
+    z-index: 99999999999;
+    display: none;
+}
+
+.sellAlart .innrs {
+  background: #fff;
+  width: 700px;
+  padding: 20px 30px;
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -370px;
+  margin-top: -100px;
+}
+
+.sellAlart .innrs h3 {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0px;
+    line-height: normal;
+    margin-bottom: 9px;
+    font-family: 'Calibri', sans-serif;
+}
+
+.sellAlart .innrs p {
+    font-size: 16px;
+    margin: 0px;
+    line-height: normal;
+    margin-bottom: 9px;
+    font-family: 'Calibri', sans-serif;
+}
+
+.sellAlart .innrs a {
+    background: #319db8;
+    font-size: 16px;
+    margin: 0px;
+    line-height: normal;
+    margin-bottom: 9px;
+    font-family: 'Calibri', sans-serif;
+    display: inline-block;
+    font-weight: bold;
+    padding: 8px 46px;
+    text-decoration: none;
+    color: #fff;
+    border-radius: 25px;
+}
+.orderD .openOrder tr th:first-child, .orderD .openOrder tr th:nth-child(2) {
+    width: 0.5%;
+}
+.orderD table tbody tr td {
+  font-size: 12px;
+}
+
+.tradingCenter .lefts table {
+    height: 947px;
+    display: block;
+    overflow: auto;
+}
+
+.tradingCenter .lefts table th, .tradingCenter .lefts table td {
+    width: 1%;
+}
+.transactionPage {
+    background: #fbfbfb;
+    padding: 60px 0px;
+}
+
+.transactionPage .transTop {
+    background: #efefef;
+    padding: 20px 30px;
+}
+
+.transactionPage .transTop h3 {
+    font-family: 'Calibri', sans-serif;
+    margin: 0px;
+    border-bottom: 1px solid #bbb;
+    line-height: normal;
+    font-weight: bold;
+    font-size: 18px;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.transactionPage .transTop h3 span {
+    display: block;
+    font-size: 19px;
+    font-weight: 400;
+    margin-top: 7px;
+}
+
+.transactionPage .transTop 
+ cite {
+    color: #319db8;
+    display: inline-block;
+    padding: 8px 25px;
+    font-family: 'Calibri', sans-serif;
+    font-size: 20px;
+    border: 2px solid #319db8;
+    border-radius: 6px;
+    font-weight: bold;
+    margin-right: 10px;
+    margin-bottom: 26px;
+    line-height: normal;
+}
+
+.transactionPage .transTop p {
+    font-weight: bold;
+    font-family: 'Calibri', sans-serif;
+    color: #319db8;
+    font-size: 19px;
+}
+
+.transactionPage .transTop p span {
+    display: block;
+    color: #000;
+    font-weight: 400;
+    font-size: 17px;
+}
+
+.transactionPage .transTop ul {
+    display: flex;
+}
+
+.transactionPage .transTop ul li {
+    width: 100%;
+    font-weight: bold;
+    font-family: 'Calibri', sans-serif;
+    font-size: 18px;
+}
+
+.transactionPage .transTop ul li span {
+    display: block;
+    font-weight: 400;
+}
+
+.transactionPage .transBottom {
+    padding: 40px 0px;
+}
+
+.transactionPage .transBottom h3 {
+    font-family: 'Calibri', sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0px 0px 10px;
+    color: #464646;
+}
+
+.transactionPage .transBottom table {
+    width: 100%;
+    text-align: left;
+    font-family: 'Calibri', sans-serif;
+}
+
+.transactionPage .transBottom table tr th {
+    background: #efefef;
+    padding: 10px 20px;
+    font-weight: bold;
+    font-size: 19px;
+}
+
+.transactionPage .transBottom table tr td {
+    background: #f7f7f7;
+    padding: 17px 20px;
+    font-size: 17px;
+    border-bottom: 2px solid #efefef;
+}
+
+.transactionPage .transBottom table tr td span {
+    color: #3e3e3e;
+    padding: 6px 25px;
+    font-family: 'Calibri', sans-serif;
+    font-size: 20px;
+    border: 2px solid #3e3e3e;
+    border-radius: 6px;
+    font-weight: bold;
+    margin-right: 10px;
+    margin-bottom: 26px;
+    line-height: normal;
+    display: block;
+    width: 100px;
+    margin: 15px 0px;
+    text-align: center;
+}
+
+.transactionPage .transBottom table tr td p {
+    font-size: 16px;
+    margin-bottom: 3px;
+    color: #3e3e3e;
+}
+
+.sellAlart .innrs {
+  text-align: left;
+  border-radius: 10px;
+}
+
+.sellAlart .innrs h3 {
+  color: #319db8;
+}
+
+.sellAlart .innrs p {
+  line-height: 31px;
+  font-size: 15px;
+}
+
+.sellAlart .innrs p a {
+  color: #000;
+  background: none;
+  padding: 0px;
+  text-decoration: underline;
+}
 
 @media only screen and (max-width: 600px)
 {
@@ -2250,5 +2541,381 @@ div#tv_chart_container iframe {
     display: none;
 }
 
+
+
+
+
+
+
+
+
+.tradingHead .trading .lefts {
+  width: 100%;
 }
 
+.tradingHead .trading .rights {
+  width: 100%;
+}
+
+.tradingHead .trading .rights ul {
+  display: block;
+}
+
+.tradingHead .trading .rights ul li {
+  box-sizing: border-box;
+  margin-bottom: 10px;
+  margin-left: 0px;
+}
+
+.tradingCenter .lefts {
+  width: 100%;
+  margin-bottom: 5px;
+}
+
+.tradingCenter .center {
+  width: 100%;
+}
+
+div#tv_chart_container iframe {
+  margin-left: 0px;
+}
+
+.calculator {
+  width: 100%;
+}
+
+.orderTacker {
+  width: 100%;
+}
+
+.tradingCenter .center .calculator .clearfix div {
+  width: 100%;
+}
+
+.orderD .openOrder tr th, .orderD .openOrder tr td {
+  min-width: 83px;
+}
+
+.orderD table {
+  display: block;
+  overflow: auto;
+}
+
+.orderD table tr th, .orderD table tr td {
+  min-width: 83px;
+}
+.openDetail .contrct p {
+  width: 41%;
+  text-align: left;
+  margin-bottom: 14px !important;
+}
+.tradeWrap .tradeView {
+  width: 300px;
+  margin-left: -150px;
+  height: 400px;
+  overflow: auto;
+  padding: 10px;
+}
+
+.tradeWrap .tradeView .viewTop ul {
+  display: block;
+}
+
+.tradeWrap .tradeView .viewTop ul li {
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  margin: 0px 0px 10px;
+}
+
+.tradeWrap .tradeView .viewBottom ul {
+  width: 100%;
+  border: 0px;
+  margin-bottom: 20px;
+}
+.orderWrap .orderView {
+  width: 300px;
+  margin-left: -150px;
+  height: 421px;
+  overflow: auto;
+}
+
+.sellAlart .innrs {
+  width: 300px;
+  margin-left: -150px;
+  box-sizing: border-box;
+  top: 40%;
+}
+.contactPage .leftDetails {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.contactPage .rightName {
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+.signInPopup .inners {
+  width: 90%;
+  left: 5%;
+  margin: 0px;
+  top: 20%;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow: auto;
+}
+.EOStable table tr td, .EOStable table tr th {
+  min-width: 82px;
+  padding: 20px 9px;
+}
+
+.EOStable table tr td:first-child, .EOStable table tr th:first-child {
+  min-width: 10px;
+}
+
+}
+
+.AccountPage {
+  background-color: rgb(247, 247, 247);
+  color: #464646;
+}
+
+.accountContainer {
+  width: 1170px;
+  margin: 0 auto;
+  background-color: rgb(247, 247, 247);
+}
+
+.visualizerContainer {
+  display: grid;
+  grid-template-areas: 
+  "a b c"
+  "d e f"
+  "g h i";
+  gap: 30px;
+  border-color: rgb(150, 150, 150);
+  padding: 30px;
+  margin-top: 20px;
+  background-color: white;
+  box-shadow: 0 0 8px #ddd;
+}
+
+.visualizerContainer #net, #cpu, #ram {
+  border-radius: 10px;
+  cursor: pointer;
+  padding: 5px 15px;
+}
+
+.visualizerContainer #available, #staked, #redeem {
+  padding: 5px 15px;
+
+}
+
+.visualizerContainer div #full {
+  width: 300px;
+  height: 30px;
+  background-color: rgba(0, 0, 0, 0.11);
+  border-radius: 20px;
+}
+
+.visualizerContainer div #full div {
+  height: 29px;
+  margin-left: 0.6px;
+  margin-top: 0.5px;
+  border-radius: 20px;
+
+}
+
+.visualizerContainer #available {
+  grid-area: d;
+};
+
+.visualizerContainer #staked {
+  grid-area: e;
+}
+
+.visualizerContainer #redeeming {
+  grid-area: f;
+}
+
+.visualizerContainer #ram {
+  grid-area: g;
+}
+
+.visualizerContainer #cpu {
+  grid-area: h;
+}
+
+.visualizerContainer #net {
+  grid-area: i;
+}
+
+.visualizerContainer .generalBal{
+  padding: 15px 20px;
+  float: right;
+  grid-area: c;
+  text-align: right;
+}
+
+.visualizerContainer .generalBal button {
+  height: 50px;
+  width: 180px;
+  border-radius: 10px;
+  background-color: transparent;
+  padding: 5px;
+  border: solid;
+  font-size: 14px;
+
+}
+
+.visualizerContainer h2 {
+  width: 280px;
+
+}
+
+.visualizerContainer .generalBal button:focus {
+  outline: none;
+
+}
+
+.walletContainer {
+  background-color: white;
+  margin-top: 50px;
+  padding: 20px;
+  box-shadow: 0 0 8px #ddd;
+}
+
+.walletContainer a {
+  color: #3796f4;
+  text-decoration: none;
+}
+
+.walletContainer table {
+  width: 100%;
+}
+
+.walletContainer table tr {
+  height: 45px;
+  border-bottom: 1px solid;
+  border-bottom-color: rgba(128, 128, 128, 0.466);
+;
+}
+
+.walletContainer table tr td {
+  padding: 20px 40px;
+}
+
+.ToolContainer {
+  padding: 100px 50px;
+  border-color: rgb(150, 150, 150);
+  padding: 20px;
+  margin-top: 20px;
+  background-color: white;
+  box-shadow: 0 0 8px #ddd;
+}
+
+.Tool {
+  margin: 0 auto;
+  width: 430px;
+}
+
+.Tool button {
+  width: 190px;
+  height: 40px;
+  border: solid;
+  border-width: 1px;
+  border-radius: 5px;
+  padding: 10px 15px;
+  font-size: 17px;
+  margin: 10px;
+  background-color: white;
+}
+
+.Tool #confirm {
+  margin-left: 10px;
+  width: 100px
+}
+
+.Tool input {
+  height: 30px;
+  width: 250px;
+  border-radius: 5px; 
+  margin: 10px;
+  border: solid;
+  border-width: 1px;
+}
+
+.Tool #mortgageCPU, #redeemCPU {
+  background-color: rgba(107, 118, 180, 0.308);
+  cursor: pointer;
+  border-color: #6B76B4;
+  color:#777
+
+}
+
+.Tool #mortgageCPU:focus, #redeemCPU:focus {
+  outline: none;
+}
+
+.Tool #mortgageNET, #redeemNET {
+  background-color: rgba(33, 145, 160, 0.308);
+  cursor: pointer;
+  border-color: #2191A0;
+  color:#777
+
+}
+
+.Tool #mortgageNET:focus, #redeemNET:focus {
+  outline: none;
+}
+
+.Tool #buyRAM, #sellRAM {
+  cursor: pointer;
+  color:#777
+}
+
+.Tool #buyRAM, #sellRAM:focus {
+  outline: none;
+}
+
+.Tool #buyRAM {
+  background-color: rgba(79, 180, 48, 0.308);
+  border-color: #4EB430;
+}
+
+.Tool #sellRAM {
+  background-color: #fd3f3f5d;
+  border-color: #fd3f3f;
+
+}
+
+.Tool #mortgageRAM:focus, #redeemRAM:focus {
+  outline: none;
+}
+
+.ToolContainer #bal {
+  text-align: right;
+  color: rgb(79, 180, 48)
+}
+
+.ToolContainer .returnButton {
+  background-color: white;
+  border: solid;
+  border-radius: 5px;
+  height: 35px;
+  width: 100px;
+  border-width: 0.7px;
+  cursor: pointer;
+  border-color: rgba(119, 119, 119, 0.644);
+  color: rgba(119, 119, 119, 0.603);
+}
+
+.ToolContainer .returnButton:focus {
+  outline: none;
+}
+
+.ToolContainer .returnButton:hover {
+  background-color: #3795f427;
+  border-color: #3795f4;
+  color: #3795f4;
+}

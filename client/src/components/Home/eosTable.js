@@ -6,6 +6,35 @@ var color = {background: data['theme_color']};
 
 const API = 'https://api.byzanti.ne/ticker?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
 var apiCall = '';
+ function searchMarket(e)
+      {
+        e.preventDefault();
+       var search=e.target.value;
+       search= search.toLowerCase();
+       if(search.length<2)
+       {
+          $('table tbody tr td:nth-child(2)').each(function(i,v){
+      $('table tbody tr').eq(i).show();
+    });
+     
+       }
+       else
+       {
+           $('table tbody tr td:nth-child(2)').each(function(i,v){
+       if($(this).html().toLowerCase().indexOf(search)>0)
+       {
+        $('table tbody tr').eq(i).show();
+       }
+       else
+       {
+         $('table tbody tr').eq(i).hide();
+       }
+    });
+       }
+      
+    //   console.log( $('.table tbody tr').html());
+ 
+      }
 class Home_banner extends Component{
     constructor(props) {
         super(props);
@@ -14,11 +43,13 @@ class Home_banner extends Component{
           tricker: []
         };
       }
+       
       componentDidMount() {
         fetch(API)
           .then(response => response.json())
           .then(data => this.setState({ tricker: data }));
       }
+    
     render(){
         const { tricker } = this.state;
         
@@ -28,7 +59,7 @@ class Home_banner extends Component{
                     <div className="tableTop clearfix">
                         <form>
                             <i className="fa fa-search"></i>
-                            <input type="text" placeholder="Search" />
+                            <input type="text" placeholder="Search" id="searchMarket" onChange={searchMarket} />
                         </form>
                         <p><i className="fa fa-star"></i> Favorites</p>
                     </div>
@@ -59,7 +90,7 @@ class Home_banner extends Component{
                                
                             }else
                             {
-                                $('#'+hit.symbol).hide();
+                                $('#'+hit.symbol).remove();
                             }});
                             return    <tr id={hit.symbol}>
                                     <td><i className="fa fa-star"></i></td>

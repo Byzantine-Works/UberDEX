@@ -2,17 +2,25 @@ import React, {Component} from 'react';
 import Datafeed from '../TVChartContainer/api/index';
 import $ from "jquery";
 import Eos from 'eosjs';
+import openSocket from 'socket.io-client';
+import ecc from 'eosjs-ecc'
 
 import data from '../../app.json';
 var color = {background: data['theme_color']};
 var colors = {color: data['theme_color']};
+
+// Socket initialized to fetch nonce.
+const socket = openSocket('http://api.byzanti.ne:9090/');
 
 function getLanguageFromURL() {
 	const regex = new RegExp('[\\?&]lang=([^&#]*)');
 	const results = regex.exec(window.location.search);
 	return results === null ? null : decodeURIComponent(results[1].replace(/\+/g, ' '));
 }
-
+function reloadPage()
+{
+    window.location.reload();
+}
 function tackerView(e) {
     e.preventDefault();
     var views = e.target.id;
@@ -37,89 +45,228 @@ const network = {
                 latency: 200,
                 sign: true
             }
-// const network = { blockchain:'eos',
-//             protocol:'https',
-//             host:'proxy.eosnode.tools',
-//             port:443,
-//             chainId:'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906' }
+
+// const network = {
+//                  keyProvider: '5JgoxYfndKYwQQNiEzkfAAXwvSu1FxZQsnHXNXr2myNAF5mJrgH',// private key
+//                 httpEndpoint: 'https://cors-anywhere.herokuapp.com/http://13.52.54.111:8888',
+//                 chainId: 'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f'
+//             }
 
 function handleClick(e) {
     e.preventDefault();
     var amount_two = e.target.nextSibling.id;
     var amount_twos = e.target.nextSibling.nextSibling.id;
     var amount = e.target.id;
+    
+     var ID = $(e.target).data('id');
+    var assetbuy = $(e.target).data('assetbuy');
+    var assetsell = $(e.target).data('assetsell');
+    var amountsell = $(e.target).data('amountsell');
+    var amountbuy = $(e.target).data('amountbuy');
+    var prices = $(e.target).data('price');
+    var maker = $(e.target).data('maker');
+    var makerexchange = $(e.target).data('makerexchange');
+    var side = $(e.target).data('side');
+    
+    document.getElementById('ID').value = ID;
+    document.getElementById('assetbuy').value = assetbuy;
+    document.getElementById('assetsell').value = assetsell;
+    document.getElementById('amountsell').value = amountsell;
+    document.getElementById('amountbuy').value = amountbuy;
+    document.getElementById('maker').value = maker;
+    document.getElementById('prices').value = prices;
+    document.getElementById('makerexchange').value = makerexchange;
+    document.getElementById('side').value = side;
+    document.getElementById('priceTwo').value = '';
+    document.getElementById('BuyPricetwos').value = '';
+    document.getElementById('BuyPricetwo').value = '';
+    document.getElementById('sellPricetwo').value = '';
   //  console.log(amount_twos);
+   $('#apiType').val('take');
     document.getElementById('price').value = amount;
     document.getElementById('buyPrices').value = amount_two;
-    //document.getElementById('sellPrice').value = amount_twos;
+    document.getElementById('buyPrice').value = amount_two;
+    document.getElementById('sellPrice').value = amount_twos;
+    
   }
-
-
-
- function handleSell(e)
+  function handleBuy(e)
 {
     e.preventDefault();
+     var url = new URL(window.location.href);
+        var c = url.searchParams.get("opt");
+                  var bprice= parseFloat($('#buyPrice').val());
+       var sellPrice= parseFloat($('#sellPrice').val());
+       var price= parseFloat($('#price').val());
+       var tps=1;
+       var myuri='';
+       if($('#apiType').val()=='make')
+       {
+        var datas = {
+            "side": "BUY",
+            "assetBuy": c,
+            "assetSell": "EOS",
+            "amountBuy": bprice,
+            "amountSell": sellPrice,
+            "price": price,
+            "expires": "3d",
+            "type": tps,
+            "useraccount": 'taker1'
+      };
+    myuri='https://api.byzanti.ne/orderMake/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+   
+       }
+       else
+       {
+            var bprice= parseFloat($('#amountbuy').val());
+       var sellPrice= parseFloat($('#amountsell').val());
+       var pricess= parseFloat($('#prices').val());
+       var maker = $('#maker').val();
+       var makerexchange = $('#makerexchange').val();
+       var ids = $('#ID').val();
+       var side= $('#side').val();
+       if(side=='BUY')
+       {
+          var datas = 
+    {
+        "orderId": ids,
+        "assetBuy": 'EOS',
+        "assetSell": c,
+        "amountBuy": sellPrice,
+        "amountSell": bprice,
+        "price": pricess,
+        "taker": "taker1",
+        "maker": maker,
+        "takerExchange": "uberdex",
+        "makerExchange": makerexchange
+      };
+       }
+       else
+       {
+          var datas = 
+    {
+        "orderId": ids,
+        "assetBuy": 'EOS',
+        "assetSell":c,
+        "amountBuy": bprice,
+        "amountSell": sellPrice,
+        "price": pricess,
+        "taker": "taker1",
+        "maker": maker,
+        "takerExchange": "uberdex",
+        "makerExchange": makerexchange
+      };
+       }
+    
+      myuri='https://api.byzanti.ne/orderTake/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+       }
+  
+     fetch(myuri, {
+     method: 'POST',headers: {
+  //  'Accept': 'application/json',
+    'Content-Type': 'application/json',
+  },  body: JSON.stringify(datas)})
+        .then(response => response.json())
+        .then(data => {if($('#apiType').val()=='make'){ if(data.orderId){
+            
+            $('#contentToShow').html('Order Id : '+data.orderId);$('#msg').html('Success');$('.sellAlart').show();}else if(data.code){$('#contentToShow').html('Error Code : '+data.code);$('#msg').html('Error');$('.sellAlart').show();}}else{ if(data.tradeId){$('#contentToShow').html('Trade Id : '+data.tradeId+'<br />result : Created <br />BlockNumber : <a href="/transaction/?trxID='+data.transactionId+'&blocknumber='+data.blockNumber+'">'+data.blockNumber+'</a><br />TransactionId : '+data.transactionId);console.log(data);$('#msg').html('Success');$('.sellAlart').show();}else{$('#contentToShow').html('Status Code : '+data.statusCode+"<br /> Message : "+data.message+"<br /> Code : "+data.code+"<br /> Order Id : "+ids);$('#msg').html('Error');$('.sellAlart').show();}}//window.location.reload()
+      }
+        );
+        
+     
+}
+ function handleSell(e) {
+    e.preventDefault();
+    // let scatter = this.props.scatterID
+
+    // if(scatter.identity) 
     
      var url = new URL(window.location.href);
         var c = url.searchParams.get("opt");
-
-            const network = {
-                blockchain:'eos',
-                protocol:'http',
-                host:'13.57.210.230',
-                eosVersion: 'bf28f8bb',
-                port:8888,
-                chainId:'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f',
-                debug: false,
-            verbose: false,
-            latency: 200
-            }
-            let scatter = this.props.scatterID
-
-            if(scatter.identity) {
-                var bprice= parseFloat($('#BuyPricetwo').val());
-                var sellPrice= parseFloat($('#sellPricetwo').val());
-                
-                let hash = scatter.identity.hash;
+        var price= parseFloat($('#priceTwo').val());
+        var bprice= parseFloat($('#BuyPricetwo').val());
+        var sellPrice= parseFloat($('#sellPricetwo').val());
+      
+        var tps=1;
+        var myuri='';
+        if($('#apiType').val()=='make')
+        {
+            var datas = {
+                "side": "SELL",
+                "assetBuy": "EOS",
+                "assetSell": c,
+                "amountBuy": bprice,
+                "amountSell": sellPrice,
+                "price": price,
+                "expires": "3d",
+                "type": tps,
+                "useraccount": 'taker1'
+          };
+     myuri='https://api.byzanti.ne/ordermake/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+        }
+        else
+        {
+               var bprice= parseFloat($('#amountbuy').val());
+       var sellPrice= parseFloat($('#amountsell').val());
+       var pricess= parseFloat($('#prices').val());
+       var maker = $('#maker').val();
+       var makerexchange = $('#makerexchange').val();
+       var ids = $('#ID').val();
+      var side= $('#side').val();
+       if(side=='BUY')
+       {
+          var datas = 
+    {
+        "orderId": ids,
+        "assetBuy": 'EOS',
+        "assetSell":c,
+        "amountBuy": sellPrice,
+        "amountSell": bprice,
+        "price": pricess,
+        "taker": "taker1",
+        "maker": maker,
+        "takerExchange": "uberdex",
+        "makerExchange": makerexchange
+      };
+       }
+       else
+       {
+          var datas = 
+    {
+        "orderId": ids,
+        "assetBuy": c,
+        "assetSell":'EOS',
+        "amountBuy": sellPrice,
+        "amountSell": bprice,
+        "price": pricess,
+        "taker": "taker1",
+        "maker": maker,
+        "takerExchange": "uberdex",
+        "makerExchange": makerexchange
+      };
+       }
+    
+      myuri='https://api.byzanti.ne/orderTake/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+        }
      
-                var tps=1;
-                let datas = {
-                        "side": "SELL",
-                        "assetBuy": "EOS",
-                        "assetSell": c,
-                        "amountBuy": 0,
-                        "amountSell": bprice,
-                        "price": sellPrice,
-                        "expires": "",
-                        "type": tps,
-                        "hash": hash,
-                        "useraccount": scatter.identity.accounts[0].name
-                    };
-     fetch('https://api.byzanti.ne/orderMake/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', {
+      
+     fetch(myuri, {
      method: 'POST',headers: {
     //  'Accept': 'application/json',
     'Content-Type': 'application/json',
   },  body: JSON.stringify(datas)})
-        .then(response => {
-            response.json();
-            console.log(response);
-        })
-        // .then(data => window.location.reload()
-    // );
+        .then(response => response.json())
+        .then(data => {if($('#apiType').val()=='make'){ if(data.orderId){
+            $('#contentToShow').html('Order Id : '+data.orderId);$('#msg').html('Success');$('.sellAlart').show();}else if(data.code){$('#contentToShow').html('Error Code : '+data.code);$('#msg').html('Error');$('.sellAlart').show();}}else{ if(data.tradeId){$('#contentToShow').html('Trade Id : '+data.tradeId+'<br />result : Created <br />BlockNumber : <a href="/transaction/?trxID='+data.transactionId+'&blocknumber='+data.blockNumber+'">'+data.blockNumber+'</a><br />TransactionId : '+data.transactionId);console.log(data);$('#msg').html('Success');$('.sellAlart').show();}else{$('#contentToShow').html('Status Code : '+data.statusCode+"<br /> Message : "+data.message+"<br /> Code : "+data.code+"<br /> Order Id : "+ids);$('#msg').html('Error');$('.sellAlart').show();}}//window.location.reload()
+       }
+    );
         
-            }
-            else
-            {
-                $('.signInPopup ').fadeIn();
-            }
-     
-    // });
 }
 function changeSellPrice1(e)
 {
      e.preventDefault();
     var price= parseFloat(e.target.value);
     var sellPrice= parseFloat($('#price').val());
+    $('#apiType').val('make');
     $('#sellPrice').val(price*sellPrice);
 }
 function changeSellPrice(e)
@@ -128,7 +275,7 @@ function changeSellPrice(e)
     var price= parseFloat(e.target.value);
     var sellPrice= parseFloat($('#price').val());
     $('#buyPrice').val(price/sellPrice);
-    
+    $('#apiType').val('make');
 }
 function changeBuyPrice1(e)
 {
@@ -136,6 +283,7 @@ function changeBuyPrice1(e)
      var price= parseFloat(e.target.value);
     var sellPrice= parseFloat($('#priceTwo').val());
     $('#sellPricetwo').val(price*sellPrice);
+    $('#apiType').val('make');
 }
 function changeBuyPrice(e)
 {
@@ -143,6 +291,7 @@ function changeBuyPrice(e)
      var price= parseFloat(e.target.value);
     var sellPrice= parseFloat($('#priceTwo').val());
     $('#BuyPricetwo').val(price/sellPrice);
+    $('#apiType').val('make');
 }
 
 
@@ -151,19 +300,45 @@ function handleClicks(e) {
     var amount_four = e.target.nextSibling.id;
     var amount_fours = e.target.nextSibling.nextSibling.id;
     var amounts = e.target.id;
+
+    var ID = $(e.target).data('id');
+    var assetbuy = $(e.target).data('assetbuy');
+    var assetsell = $(e.target).data('assetsell');
+    var amountsell = $(e.target).data('amountsell');
+    var amountbuy = $(e.target).data('amountbuy');
+    var prices = $(e.target).data('price');
+    var maker = $(e.target).data('maker');
+    var makerexchange = $(e.target).data('makerexchange');
+    var side = $(e.target).data('side');
+    
+    document.getElementById('ID').value = ID;
+    document.getElementById('assetbuy').value = assetbuy;
+    document.getElementById('assetsell').value = assetsell;
+    document.getElementById('amountsell').value = amountsell;
+    document.getElementById('amountbuy').value = amountbuy;
+    document.getElementById('maker').value = maker;
+    document.getElementById('prices').value = prices;
+    document.getElementById('makerexchange').value = makerexchange;
+    document.getElementById('side').value = side;
     document.getElementById('priceTwo').value = amounts;
     document.getElementById('BuyPricetwos').value = amount_four;
-   // document.getElementById('sellPricetwo').value = amount_fours;
+    document.getElementById('BuyPricetwo').value = amount_four;
+    document.getElementById('sellPricetwo').value = amount_fours;
+    $('#apiType').val('take');
+     document.getElementById('price').value = '';
+    document.getElementById('buyPrices').value = '';
+    document.getElementById('buyPrice').value = '';
+    document.getElementById('sellPrice').value = '';
   }
 
 
- var url = new URL(window.location.href);
+var url = new URL(window.location.href);
 var c = url.searchParams.get("opt");
 class tradingHead extends Component{
      
 	static defaultProps = {
 		symbol: 'EOS:'+c+'/USD',
-		interval: '15',
+		interval: '60',
 		containerId: 'tv_chart_container',
 		libraryPath: '/charting_library/',
 		chartsStorageUrl: 'https://saveload.tradingview.com',
@@ -184,7 +359,9 @@ class tradingHead extends Component{
           orderBook: [],
           orderBooks: [],
           pairedScatter: false,
+          orderBookss: [],
           tacker: [],
+          blc: [],
           apil:'SEED',
         };
 
@@ -193,6 +370,7 @@ class tradingHead extends Component{
         this.deposit = this.deposit.bind(this);
         this.withdraw = this.withdraw.bind(this);
         this.registerUser = this.registerUser.bind(this);
+        this.checkBalance = this.checkBalance.bind(this);
       }
 
       async registerUser() {
@@ -221,21 +399,57 @@ class tradingHead extends Component{
 
       }
 
+      async checkBalance() {
+        const eos = this.props.scatterID.eos(network, Eos)
+        // const eos = Eos(network);
+        var trxGetExBalance = await eos.transaction('exchange', (contractuser) => {
+            contractuser.getbalances({
+                owner: 'ideos'
+            }, {
+                authorization: ['ideos']
+            });
+        });
+        console.log("get balance: ", trxGetExBalance);
+      }
+
       async deposit() {
           const eosOptions = { expireInSeconds:60 }
           const eos = this.props.scatterID.eos(network, Eos, eosOptions)
-          let dep = await eos.transfer('ideos', 'exchange', '0.0001 EOS', 'deposit');
-          console.log("dep: ", dep)
-
+          let dep = await eos.transfer('ideos', 'exchange', '3.0000 EOS', 'deposit');
+          console.log("dep: ", dep);
       }
 
       async withdraw() {
-        const eosOptions = { expireInSeconds:60 }
+        const eosOptions = { expireInSeconds:60 };
         const scatter = this.props.scatterID;
+
         const eos = scatter.eos(network, Eos, eosOptions);
+        let info = await eos.getInfo({})
+        const expireInSeconds = 600;
+        let chainDate = new Date(info.head_block_time + 'Z')
+        let expiration = new Date(chainDate.getTime() + expireInSeconds * 1000)
+        expiration = expiration.toISOString().split('.')[0]
+
+        let block = await eos.getBlock(info.last_irreversible_block_num)
+
+        // let transactionHeaders = {
+        //     expiration: new Date(new Date(info.head_block_time + 'Z').getTime() + expireInSeconds * 1000).toISOString().split('.')[0],
+        //     ref_block_num: info.last_irreversible_block_num & 0xFFFF,
+        //     ref_block_prefix: block.ref_block_prefix
+        // }
+
+        let randChannel = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        socket.emit('user', ["FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N", randChannel]);
+    
+        await socket.on(randChannel, async (data) => {
+            // let data = 156;
+            console.log("nonce: ", data)
+            console.log("public key: ", scatter.identity.publicKey);
+
         const action = {
                 from: 'ideos',
-                amount: '0.1000 EOS@ideos'
+                quantity: '1.1111 EOS@eosio.token',
+                nonce: data
             };
          let acts = [{
             account: 'exchange',
@@ -246,53 +460,93 @@ class tradingHead extends Component{
             }],
             action
         }]
-        let signature = await scatter.getArbitrarySignature(scatter.identity.publicKey, action.toString(), "test UberDEX withdraw", false);
-        // let w = await eos.transaction({ actions: acts});
-       
-        // action.sig = signature;
-        // let withdrawApi = await fetch('https://api.byzanti.ne/exwithdraw/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', {
-        //     method: 'POST',
-        //     headers: {
-        //  //  'Accept': 'application/json',
-        //    'Content-Type': 'application/json'
-        // },  
-        //     body: JSON.stringify(action)});
+        let actionTrans = {
+            contract:'exchange',
+            action:'userwithdraw',
+            params:['ideos', '1.1111 EOS@eosio.token', data]
+        }
 
-         console.log("withdraw ", eos);
+        console.log(scatter.identity.accounts[0])
+        let transaction = await scatter.createTransaction('eos', [actionTrans], scatter.identity.accounts[0], network);
+        console.log(transaction.transaction.actions[0].data);
+        
+        let transactionHeaders = {
+            expiration: transaction.transaction.expiration,
+            ref_block_num: transaction.transaction.ref_block_num,
+            ref_block_prefix: transaction.transaction.ref_block_prefix,
+            delay_sec: 369
+        };
+
+        let signature = await scatter.getArbitrarySignature(scatter.identity.publicKey, JSON.stringify(action));
+        // let w = await eos.transaction({ actions: acts});
+
+        let payload = {};
+        payload.user = 'ideos';
+        payload.token = 'EOS';
+        payload.amount = 1.1111;
+        payload.nonce = data;
+        payload.signature = signature;
+        payload.headers  = transactionHeaders;
+        console.log("payload: ", payload);
+
+
+        let withdrawApi = await fetch('https://api.byzanti.ne/exwithdrawscatter/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', {
+            method: 'POST',
+            headers: {
+         //  'Accept': 'application/json',
+           'Content-Type': 'application/json'
+        },  
+            body: JSON.stringify(payload)
+        });
+
+         console.log("withdraw ", withdrawApi);
+    });
 
 
       }
 
       async handleBuy(e) {
-        e.preventDefault();
         var url = new URL(window.location.href);
         var c = url.searchParams.get("opt");
         let scatter = this.props.scatterID;
         // let hash = scatter.identity;
         // console.log(hash);
-        // let eos = scatter.eos(network, Eos)
+        let eos = scatter.eos(network, Eos);
+        console.log("scatter: ", scatter);
+        
+    
         // console.log(ScatterJS);
         
         // let trans = await scatter.eos(network, Eos).transfer('ideos', 'reddy', '0.0001 EOS', 'test uberDEX');
-        if(scatter.identity){
            var bprice= parseFloat($('#buyPrice').val());
-           var sellPrice= parseFloat($('#sellPrice').val());
-           var tps=1;
-           let datas = {
-              "side": "BUY",
-              "assetBuy": c,
-              "assetSell": "EOS",
-              "amountBuy": bprice,
-              "amountSell": 0,
-              "price": sellPrice,
-              "expires": "",
-              "type": tps,
-              "useraccount": scatter.identity.accounts[0].name
-        };
-        let signature = await scatter.getArbitrarySignature(scatter.identity.publicKey, datas.toString(), "test UberDEX buy", false);
+           var eosAm= parseFloat($('#sellPrice').val());
+           var price = parseFloat($('#price').val());
 
-        datas.hash = signature;
-        console.log("datas: ", datas)
+           console.log(c, bprice, eosAm);
+           var tps=1;
+           let randChannel = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+           socket.emit('user', ["FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N", randChannel]);
+           await socket.on(randChannel, async (data) => {
+
+           let datas = {
+              side: "BUY",
+              assetBuy: c,
+              assetSell: "EOS",
+              amountBuy: bprice,
+              amountSell: eosAm,
+              price: price,
+              type: 2,
+            //   expires: new Date(new Date(info.head_block_time + 'Z').getTime() + 60 * 1000).toISOString().split('.')[0],
+              nonce: data,
+              useraccount: scatter.identity.accounts[0].name
+            };
+       
+        let hash = await ecc.sha256(datas);
+        let signature = await scatter.getArbitrarySignature(scatter.identity.publicKey, JSON.stringify(hash), "test UberDEX buy", false);
+
+        datas.hash = hash; 
+        datas.signature = signature;
+
          fetch('https://api.byzanti.ne/orderMake/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', {
          method: 'POST',headers: {
       //  'Accept': 'application/json',
@@ -302,11 +556,16 @@ class tradingHead extends Component{
                 response.json()
                 console.log("response: ", response);
             })
-            
-                }
-                else {
-                    $('.signInPopup ').fadeIn();
-                    }
+            .then(() => {
+                fetch(`https://api.byzanti.ne/ordersByUser?user=${this.props.scatterID.identity.accounts[0].name}&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`)
+                .then(response => response.json())
+                .then(data => {
+                    this.props.updateOpenOrders({ openOrders: data });
+                    console.log("orders: ", data);
+                });
+
+            })
+        });
          
     }
 
@@ -353,26 +612,35 @@ class tradingHead extends Component{
         var url = new URL(window.location.href);
          var c = url.searchParams.get("opt");
       
-        var API = 'https://api.byzanti.ne/ticker?symbol='+c+'&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
-        var APIS = 'https://api.byzanti.ne/orderBook?symbol='+c+'&side=BUY&size=11&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
-        var APISS = 'https://api.byzanti.ne/orders?symbol='+c+'&side=BUY&size=22&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+        var ticker = 'https://api.byzanti.ne/ticker?symbol='+c+'&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+        var orderBook150 = 'https://api.byzanti.ne/orderBook?symbol='+c+'&side=BUY&size=150&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+        var orderBook11 = 'https://api.byzanti.ne/orderBook?symbol='+c+'&side=BUY&size=11&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+        var orders = 'https://api.byzanti.ne/orders?symbol='+c+'&side=BUY&size=22&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
         var orderTaker = 'https://api.byzanti.ne/tradebook?symbol='+c+'&size=100&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
-        fetch(API)
+        var balance = 'https://api.byzanti.ne/exbalance?account=taker1&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+        fetch(ticker)
         .then(response => response.json())
         .then(data => {this.setState({ tricker: data }); });
         
-        fetch(APISS)
+        fetch(orders)
         .then(response => response.json())
         .then(data => {this.setState({ orders: data }); });
         
-        fetch(APIS)
+        fetch(orderBook11)
         .then(response => response.json())
-        .then(data => {
-            this.setState({ orderBook: data['asks'], orderBooks: data['bids'] }); });
-
+        .then(data => {this.setState({ orderBook: data['asks'], orderBooks: data['bids'] }); });
+        
+        fetch(orderBook150)
+        .then(response => response.json())
+        .then(data => {this.setState({ orderBookss: data['asks'], orderBookss: data['bids'] }); });
+        
         fetch(orderTaker)
         .then(response => response.json())
         .then(data => {this.setState({ tacker: data }); });
+
+        fetch(balance)
+        .then(response => response.json())
+        .then(data => {this.setState({blc:(data[0].amount/10000)}); });
 
 
         // try{f
@@ -383,6 +651,9 @@ class tradingHead extends Component{
             const requiredFields = { accounts:[network] };
             
             await scatter.getIdentity(requiredFields);
+            const eosOptions = { expireInSeconds:60 }
+            const eos = this.props.scatterID.eos(network, Eos, eosOptions)
+            console.log("eos scatter: ", eos);
             if(scatter.identity.accounts[0].name) this.setState({pairedScatter: true})
             console.log(this.state.pairedScatter);
             // console.log(scatter.eos(network, Eos))
@@ -398,10 +669,9 @@ class tradingHead extends Component{
     async signIn(e){
         e.preventDefault();
         $('.signInPopup ').fadeIn();
+
+      
     }
-
-
-    
 
 
     render(){
@@ -409,7 +679,9 @@ class tradingHead extends Component{
         const { orders } = this.state;
         const { orderBook } = this.state;
         const { orderBooks } = this.state;
+        const { orderBookss } = this.state;
         const { tacker } = this.state;
+        const { blc } = this.state;
        
         return(
             <div className="tradingCenter">
@@ -434,16 +706,16 @@ class tradingHead extends Component{
                                     <tbody>
                                         {orderBooks.map(bids => 
                                             <tr>
-                                                <td className='minus' id={bids.price}  onClick={handleClicks}>{bids.price}</td>
-                                                <td id={bids.amountBuy}>{bids.amountBuy}</td>
-                                                <td id={bids.amountSell}>{bids.amountSell}</td>
+                                                <td className='minus' id={bids.price} data-id={bids.orderId} data-assetbuy={bids.assetSell} data-assetsell={bids.assetBuy} data-amountsell={bids.amountBuy} data-amountbuy={bids.amountSell} data-price={bids.price} data-maker={bids.useraccount} data-makerexchange={bids.source} data-side={bids.side}   onClick={handleClicks}>{parseFloat(bids.price).toFixed(4)}</td>
+                                                <td id={bids.amountBuy}>{parseFloat(bids.amountBuy).toFixed(4)}</td>
+                                                <td id={bids.amountSell}>{parseFloat(bids.amountSell).toFixed(4)}</td>
                                             </tr>
                                         )}
                                         {orderBook.map(ask => 
                                             <tr>
-                                                <td className='plus' id={ask.price}  onClick={handleClick}>{ask.price}</td>
-                                                <td id={ask.amountSell}>{ask.amountSell}</td>
-                                                <td id={ask.amountBuy}>{ask.amountBuy}</td>
+                                                <td className='plus' id={ask.price} data-id={ask.orderId} data-assetbuy={ask.assetSell} data-assetsell={ask.assetBuy} data-amountsell={ask.amountBuy} data-amountbuy={ask.amountSell} data-price={ask.price} data-maker={ask.useraccount} data-makerexchange={ask.source} data-side={ask.side} onClick={handleClick}>{parseFloat(ask.price).toFixed(4)}</td>
+                                                <td id={ask.amountSell}>{parseFloat(ask.amountSell).toFixed(4)}</td>
+                                                <td id={ask.amountBuy}>{parseFloat(ask.amountBuy).toFixed(4)}</td>
                                             </tr>
                                         )}
                                         
@@ -451,7 +723,7 @@ class tradingHead extends Component{
                                 </table>
                             </div>
                             <div id="tabs-2">
-                            <table>
+                            <table className="tableScroll">
                                     <thead>
                                         <tr>
                                             <th>Price(EOS)</th>
@@ -461,18 +733,18 @@ class tradingHead extends Component{
                                     </thead>
                                     
                                     <tbody>
-                                        {orderBook.map(ask => 
+                                        {orderBookss.map(ask => 
                                             <tr>
-                                                <td className='plus' id={ask.price}  onClick={handleClick}>{ask.price}</td>
-                                                <td id={ask.amountSell}>{ask.amountSell}</td>
-                                                <td id={ask.amountBuy}>{ask.amountBuy}</td>
+                                                <td className='plus' id={ask.price}  onClick={handleClick}>{parseFloat(ask.price).toFixed(4)}</td>
+                                                <td id={ask.amountSell}>{parseFloat(ask.amountSell).toFixed(4)}</td>
+                                                <td id={ask.amountBuy}>{parseFloat(ask.amountBuy).toFixed(4)}</td>
                                             </tr>
                                         )}
                                     </tbody>
                                 </table>
                             </div>
                             <div id="tabs-3">
-                            <table>
+                            <table className="tableScroll">
                                     <thead>
                                         <tr>
                                             <th>Price(EOS)</th>
@@ -483,11 +755,11 @@ class tradingHead extends Component{
                                     
                                    
                                     <tbody>
-                                        {orderBooks.map(bids => 
+                                        {orderBookss.map(bids => 
                                             <tr>
-                                                <td className='minus' id={bids.price}  onClick={handleClicks}>{bids.price}</td>
-                                                <td id={bids.amountBuy}>{bids.amountBuy}</td>
-                                                <td id={bids.amountSell}>{bids.amountSell}</td>
+                                                <td className='minus' id={bids.price}  onClick={handleClicks}>{parseFloat(bids.price).toFixed(4)}</td>
+                                                <td id={bids.amountBuy}>{parseFloat(bids.amountBuy).toFixed(4)}</td>
+                                                <td id={bids.amountSell}>{parseFloat(bids.amountSell).toFixed(4)}</td>
                                             </tr>
                                         )}
                                     </tbody>
@@ -504,34 +776,44 @@ class tradingHead extends Component{
                             <div className="clearfix">
                                 <div>
                                     {tricker.map(hit =>
-                                        <h6>Buy {hit.symbol} <span>Balance:0.0000 EOS</span></h6>
+                                        <h6>Buy {hit.symbol} <span>Balance:{this.state.blc}</span></h6>
                                     )}
-                                    <label>Price <span>EOS</span> </label>
-                                    <input type="text" id="price" />
+                                    <label>Price <span></span> </label>
+                                    <input type="number" id="price" />
                                     <label>Amount {tricker.map(hit =>
                                         <span>{hit.symbol} </span>
                                     )}</label>
                                      <input type="hidden" id="buyPrices"  />
                                    
-                                    <input type="text" id="buyPrice" onChange={changeSellPrice1} />
+                                    <input type="number" id="buyPrice" onChange={changeSellPrice1} />
                                     <label>Total  <span>EOS</span>
                                     </label>
                                     <input type="text"  id="sellPrice" />
-                                    {this.props.scatterID ? <input type="submit" value="Buy" onClick={this.handleBuy}/> : <input type="submit" value="Signin to trade" onClick={this.signIn}/>}
+                                    {this.props.scatterID ? <input type="submit" value="Buy" onClick={this.checkBalance}/> : <input type="submit" value="Signin to trade" onClick={this.signIn}/>}
                                     {/* <input type="text"  id="sellPrice" onChange={changeSellPrice} /> */}
                                 </div> 
                                 <div className="red">
                                     {tricker.map(hit =>
                                         <h6>Sell {hit.symbol} <span>Balance:0.0000 EOS</span></h6>
                                     )}
-                                    <label>Price <span>EOS</span> </label>
-                                    <input type="text"  id="priceTwo" />
+                                    <label>Price <span></span> </label>
+                                    <input type="number"  id="priceTwo" />
                                     <label>Amount {tricker.map(hit =>
                                         <span>{hit.symbol} </span>
                                     )}</label>
                                     <input type="hidden" id="BuyPricetwos"/>
-                                    
-                                    <input type="text" id="BuyPricetwo"  onChange={changeBuyPrice1} />
+
+                                    <input type="hidden" id="ID"/>
+                                    <input type="hidden" id="assetbuy"/>
+                                    <input type="hidden" id="assetsell"/>
+                                    <input type="hidden" id="amountsell"/>
+                                    <input type="hidden" id="amountbuy"/>
+                                    <input type="hidden" id="prices"/>
+                                    <input type="hidden" id="maker"/>
+                                    <input type="hidden" id="makerexchange"/>
+                                    <input type="hidden" id="side"/>
+                                    <input type="hidden" id="apiType" />
+                                    <input type="number" id="BuyPricetwo"  onChange={changeBuyPrice1} />
                                     <label>Total <span>EOS</span></label>
                                     <input type="text" id="sellPricetwo" />
                                     {this.props.scatterID ? <input type="submit" value="Sell" onClick={this.withdraw}/> : <input type="submit" value="Signin to trade" onClick={this.signIn}/>}
@@ -598,6 +880,14 @@ class tradingHead extends Component{
                             </div>
                         </div> 
                     )}
+
+                    <div className="sellAlart">
+                        <div className="innrs">
+                            <h3 id="msg"></h3>
+                            <p id="contentToShow"></p>
+                            <a href="javascript:void(0)" onClick={reloadPage} className="closeView">Ok</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         )

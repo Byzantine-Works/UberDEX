@@ -13,6 +13,8 @@ import trade from './trade';
 import traderule from './tradeRule';
 import announcements from './announcements';
 import failannouncement from './failAnnouncement';
+import TransactionPage from './transactionPage';
+import Account from './account';
 
 class Main extends Component{
     constructor(props) {
@@ -45,6 +47,8 @@ class Main extends Component{
             <Route path='/trade_rule' component={ traderule } />
             <Route path='/announcements' component={ announcements } />
             <Route path='/failannouncement' component={ failannouncement } />
+            <Route path='/transaction' component={ TransactionPage } />
+            <Route path='/account' component={(props) => {return <Account updateScatterID={this.updateScatterID} scatterID={this.state.scatterID}/>}} />
         </Switch>
     </BrowserRouter>
         )

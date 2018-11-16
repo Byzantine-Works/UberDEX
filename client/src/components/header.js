@@ -63,9 +63,9 @@ class Header extends Component {
         ScatterJS.scatter.forgetIdentity();
         this.props.updateScatterID(false);
         console.log(this.props.scatterID);
-        $('#signin').css('display', 'inline-block');
-        $('#signout').hide();
-        $('.bgs').html("Get started");
+        // $('#signin').css('display', 'inline-block');
+        // $('#signout').hide();
+        // $('.bgs').html("Get started");
     }
 
 
@@ -109,9 +109,17 @@ class Header extends Component {
                                 <li><Link to="/exchange/?opt=IQ">Exchange</Link></li>
                                 <li><Link to="/market">Markets</Link></li>
                                 <li><Link to="/contact">Supports</Link></li>
-                                <li id="signin"><a href="/" onClick={handleClick}>Sign In</a></li>
-                                <li id="signout"><a href="/" onClick={this.handleSignout}>Sign out</a></li>
-                                <li><a href="/" className="bgs" onClick={handlePublic}>Get Started</a></li>
+                                {this.props.scatterID ? 
+                                    <span>
+                                        <li id="signout"><a href="/" onClick={this.handleSignout}>Sign out</a></li>
+                                        <li><Link to="/account" className="bgs">{this.props.scatterID.identity.accounts[0].name}</Link></li>
+                                    </span>
+                                :
+                                    <span>
+                                        <li id="signin"><a href="/" onClick={handleClick}>Sign In</a></li>
+                                        <li><a className="bgs" onClick={handlePublic}>Get Started</a></li>
+                                    </span>
+                            }
                             </ul>
                         </nav>
                         <div className="othersOptions">

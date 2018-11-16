@@ -10,7 +10,17 @@ var color = {background: data['theme_color']};
 
 class Home extends Component{
     constructor(props) {
-        super(props)
+        super(props);
+        this.state = {
+            openOrders : false,
+        }
+
+        this.updateOpenOrders = this.updateOpenOrders.bind(this);
+
+    }
+
+    updateOpenOrders(newOrders){
+        this.setState({openOrders: newOrders})
 
     }
     render(){
@@ -21,8 +31,8 @@ class Home extends Component{
                     <Header updateScatterID={this.props.updateScatterID} scatterID={this.props.scatterID}/>
                 </div>
                 <Trading />
-                <TradingCenter scatterID={this.props.scatterID} updateScatterID={this.props.updateScatterID}/>
-                <Order updateScatterID={this.props.updateScatterID}/>
+                <TradingCenter updateOpenOrders={this.updateOpenOrders} scatterID={this.props.scatterID} updateScatterID={this.props.updateScatterID}/>
+                <Order scatterID={this.props.scatterID} updateScatterID={this.props.updateScatterID} openOrders={this.state.openOrders}/>
                 <Callaction />
                 <Footer updateScatterID={this.props.updateScatterID} scatterID={this.props.scatterID}/>
             </div>
