@@ -9,20 +9,31 @@ var color = {background: data['theme_color']};
 
 class Support extends Component{
     constructor(props) {
-        super(props);
-    }
-    render(){
-        console.log("this.props: ", this.props)
-       
+    super(props);
+
+    this.state = {
+        colors: [],
+        logo: [],
+    };
+  }
+
+componentDidMount() {
+   
+    fetch('https://uberdex-admin.herokuapp.com/getColors')
+    .then(response => response.json())
+    .then(data => {this.setState({colors:data.theme_color}); this.setState({logo:'https://uberdex-admin.herokuapp.com/images/byzantine/'+data.logo}); });
+}
+render(){
+    const { colors } = this.state;
         return(
             <div className="supportPage">
-                <div className="wellcomBanner background" style={color}>
-                <Header updateScatterID={this.props.updateScatterID} scatterID={this.props.scatterID}/>
+                <div className="wellcomBanner background" style={{'background': this.state.colors}}>
+                    <Header updateScatterID={this.props.updateScatterID} scatterID={this.props.scatterID}/>
                 </div>
-                <TVChartContainer />
+                    <TVChartContainer />
                 
-                <Callaction />
-                <Footer updateScatterID={this.props.updateScatterID} scatterID={this.props.scatterID}/>
+                    <Callaction />
+                    <Footer updateScatterID={this.props.updateScatterID} scatterID={this.props.scatterID}/>
             </div>
         )
     }

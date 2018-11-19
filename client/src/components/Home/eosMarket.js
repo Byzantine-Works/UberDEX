@@ -13,12 +13,18 @@ class EOS extends Component{
     
         this.state = {
           tricker: [],
+          colors: [],
+          logo: [],
         };
       }
       componentDidMount() {
         fetch(API)
           .then(response => response.json())
           .then(data => this.setState({ tricker: data }));
+
+          fetch('https://uberdex-admin.herokuapp.com/getColors')
+          .then(response => response.json())
+          .then(data => {this.setState({colors:data.theme_color}); this.setState({logo:'https://uberdex-admin.herokuapp.com/images/byzantine/'+data.logo}); });
       }
     render(){
         const { tricker } = this.state;
@@ -70,7 +76,7 @@ class EOS extends Component{
                                     <td>{hit.high}</td>
                                     <td>{hit.low}</td>
                                     <td>{hit.volume}</td>
-                                    <td><a href={'/exchange/?opt='+hit.symbol} className="trade colors" style={colors}>Trade</a></td>
+                                    <td><a href={'/exchange/?opt='+hit.symbol} className="trade colors"  style={{'color': this.state.colors}}>Trade</a></td>
                                 </tr>
                                 })}
                                 
@@ -78,7 +84,7 @@ class EOS extends Component{
                     </table>
 
                     <div className="clearfix">
-                        <a href="#" className="background" style={color}>View More</a>
+                        <a href="#" className="background"  style={{'background': this.state.colors}}>View More</a>
                     </div>
 
                 </div>

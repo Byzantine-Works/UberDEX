@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
-import Header from './header';
-import Trading from './Exchange/trading';
 import TradingCenter from './Exchange/tradingPlatform';
-import Order from './Exchange/order';
-import Callaction from './callAction';
 import Footer from './footer';
+import Header from './header';
+import Order from './Exchange/order.js';
+import Trading from './Exchange/trading.js';
 import data from '../app.json';
+
 var color = {background: data['theme_color']};
 
 class Home extends Component{
@@ -27,13 +27,12 @@ class Home extends Component{
      
         return(
             <div className="marketPage">
-                <div className="wellcomBanner background" style={color}>
+                {/* <div className="wellcomBanner background" style={color}>
                     <Header updateScatterID={this.props.updateScatterID} scatterID={this.props.scatterID}/>
-                </div>
-                <Trading />
+                </div> */}
+                {/* <Trading /> */}
                 <TradingCenter updateOpenOrders={this.updateOpenOrders} scatterID={this.props.scatterID} updateScatterID={this.props.updateScatterID}/>
-                <Order scatterID={this.props.scatterID} updateScatterID={this.props.updateScatterID} openOrders={this.state.openOrders}/>
-                <Callaction />
+                {/* <Order scatterID={this.props.scatterID} updateScatterID={this.props.updateScatterID} openOrders={this.state.openOrders}/> */}
                 <Footer updateScatterID={this.props.updateScatterID} scatterID={this.props.scatterID}/>
             </div>
         )

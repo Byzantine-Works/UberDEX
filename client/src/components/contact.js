@@ -9,6 +9,10 @@ var color = {background: data['theme_color']};
 class Contact extends Component{
     constructor(props) {
         super(props);
+        this.state = {
+            colors: [],
+            logo: [],
+        };
     }
      postSignup = (e) => {
     e.preventDefault();
@@ -19,7 +23,7 @@ class Contact extends Component{
         msg: this.msg.value,
          
     };
-    fetch('http://localhost:5000/sendEmail/', {
+    fetch('https://uberdex-admin.herokuapp.com/sendEmail/', {
     method: 'POST',
         headers: {
         'Accept': 'application/json',
@@ -46,8 +50,16 @@ class Contact extends Component{
     
     }));
   }
-    render(){
-       
+
+
+componentDidMount() {
+ 
+  fetch('https://uberdex-admin.herokuapp.com/getColors')
+  .then(response => response.json())
+  .then(data => {this.setState({colors:data.theme_color}); this.setState({logo:'https://uberdex-admin.herokuapp.com/images/byzantine/'+data.logo}); });
+}
+render(){
+  const { colors } = this.state;
         return(
             <div className="about_page">
                 <div className="wellcomBanner background" style={color}>
@@ -74,7 +86,7 @@ class Contact extends Component{
                                     <input type="text" name="phone" id="phone" ref={(r) => this.phone = r} placeholder="Phone" />
                                 </div>
                                 <textarea placeholder="Message" name="message" ref={(r) => this.msg = r} id='msg_text'></textarea>
-                                <input type="submit" className="fr1 background" style={color} name="send"  onClick={this.postSignup} value="Send Message"  />
+                                <input type="submit" className="fr1 background"  style={{'background': this.state.colors}} name="send"  onClick={this.postSignup} value="Send Message"  />
                             </form>
                             <div className="msgs" style={{'display': 'none'}}>Your Message Successfuly Send</div>
                         </div>

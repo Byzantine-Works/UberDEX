@@ -22,7 +22,7 @@
     -->
     <title>UberDex</title>
   </head>
-  <body class="lightVersion">
+  <body class="darkVersion">
     <noscript>
       You need to enable JavaScript to run this app.
     </noscript>
@@ -53,6 +53,7 @@
 <script>
 
   $(document).ready(function(){
+        $('.demo-big-content').addClass('darkVersion');
       
       $('.fullscreen').click(function() {
         $('body').fullscreen();
@@ -101,43 +102,41 @@ $(document).ready(function(){
   var background = $('.background').attr("style");
   var colors = $('.colors').attr("style");
 
-  $(".light").click(function(event){
-      event.preventDefault();
-      $(this).hide();
-      $('.dark').css('display', 'inline-block');
-      $('.demo-big-content').css('background', '#0d1939');
-      $('.background').removeAttr("style");
-      $('.colors').removeAttr("style");
-      $('body').removeClass('lightVersion');
-  });
-
   $(".dark").click(function(event){
       event.preventDefault();
       $(this).hide();
       $('.light').css('display', 'inline-block');
-      $('.demo-big-content').css('background', '#fff');
-      $(".background").attr("style", background);
-      $(".colors").attr("style", colors);
-      $('body').addClass('lightVersion');
+      $('body').addClass('darkVersion');
+      $('body').removeClass('lightVersion');
   });
 
-  $(".full .light").click(function(event){
+  $(".light").click(function(event){
       event.preventDefault();
       $(this).hide();
-      $('.demo-big-content').css('background', '#0d1939');
       $('.dark').css('display', 'inline-block');
-      $('.background').removeAttr("style");
-      $('.colors').removeAttr("style");
-      $('body').removeClass('lightVersion');
+      $('.demo-big-content').removeClass('darkVersion');
+      $('body').removeClass('darkVersion');
+      $('body').addClass('lightVersion');
   });
 
   $(".full .dark").click(function(event){
       event.preventDefault();
       $(this).hide();
       $('.light').css('display', 'inline-block');
+      $('.demo-big-content').css('background', 'none');
+      $('.demo-big-content').addClass('darkVersion');
+      $('body').removeClass('lightVersion');
+      $('body').addClass('darkVersion');
+  });
+
+  $(".full .light").click(function(event){
+      event.preventDefault();
+      $(this).hide();
+      $('.dark').css('display', 'inline-block');
+      $('.demo-big-content').removeClass('darkVersion');
+      $('.demo-big-content').addClass('lightss');
       $('.demo-big-content').css('background', '#fff');
-      $(".background").attr("style", background);
-      $(".colors").attr("style", colors);
+      $('body').removeClass('darkVersion');
       $('body').addClass('lightVersion');
   });
 

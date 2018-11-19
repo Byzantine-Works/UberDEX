@@ -31,7 +31,7 @@ class Wallet extends Component{
                                     <td>{sym.amount}</td>
                                     <td>0.0000</td>
                                     <td>{sym.eosEquivalent}</td>
-                                    <td><a id={sym.token} onClick={(e)=>this.props.changeView("withdraw", e.target.id)}>Withdraw</a>/<a id={sym.token}  onClick={(e)=>this.props.changeView("deposit", e.target.id)}>Deposit</a></td>
+                                    <td><a id={sym.token} onClick={(e)=>this.props.changeView("withdraw", e.target.id)}>Withdraw</a> / <a id={sym.token}  onClick={(e)=>this.props.changeView("deposit", e.target.id)}>Deposit</a></td>
                                     <td>{sym.chainBal}</td>
                                     <td>{sym.chainBalEquivalent}</td>
                                 </tr>
@@ -46,7 +46,7 @@ class Wallet extends Component{
                                         <td>0.0000</td>
                                         <td>0.0000</td>
                                         <td>0.0000</td>
-                                        <td><a onClick={this.withdraw}>Withdraw</a>/<a onClick={this.deposit}>Deposit</a></td>
+                                        <td><a onClick={this.withdraw}>Withdraw</a> / <a onClick={this.deposit}>Deposit</a></td>
                                         <td>0.0000</td>
                                         <td>0.0000</td>
                                     </tr>

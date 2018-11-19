@@ -133,150 +133,67 @@ class Order extends Component{
                     </div> 
                 )}
                 
-            <div className="orderD">
-                <div className="container clearfix">
+            <div className="myOrders">
                         
-                    <h3>Open Orders</h3>
-                    <table className="openOrder">
-                        <thead>
-                    
-                            <tr>
-                                <th>Coin</th>
-                                <th>Type </th>
-                                <th>Order Id </th>
-                                <th>Entrusted Time</th>
-                                <th>Price</th>
-                                <th>Amount</th>
-                                <th>Timestamp</th>
-                                <th>Entrusted </th>
-                                <th>Status </th>
-                                <th>Account Name</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {Orders.map(order =>{
-                                if(order.cancelled=='1')
-                                {
-                                    var isCancel='Cancelled';
-                                }
-                                else
-                                {
-                                    var isCancel='Active';
-                                }
-                                if(order.amountBuy>0)
-                                {
-                                    var amountToShow=order.amountBuy;
-                                }
-                                else
-                                {
-                                    var amountToShow=order.amountSell;
-                                }
-                                
-                                var url = new URL(window.location.href);
-                                var c = url.searchParams.get("opt");
-                                
-                                if(order.assetBuy==c)
-                                {
-                                    return   <tr>
-                                        <td className={'plus '+order.assetBuy}  id={order.orderId}  onClick={orderView} >{order.assetBuy}/ {order.assetSell}</td>
-                                        <td id={order.orderId}  onClick={orderView}>Buy</td>
-                                        <td id={order.orderId}  onClick={orderView}>{order.orderId}</td>
-                                        <td id={order.orderId}  onClick={orderView}>{order.created}</td>
-                                        <td id={order.orderId}  onClick={orderView}>{parseFloat(order.price).toFixed(4)}</td>
-                                        <td id={order.orderId}  onClick={orderView}>{parseFloat(amountToShow).toFixed(4)}</td>
-                                        <td id={order.orderId}  onClick={orderView}>{order.created}</td>
-                                        <td id={order.orderId}  onClick={orderView}>Yes</td>
-                                        <td id={order.orderId}    ><a href="javascript:void(0)" id={order.orderId} onClick={cancelOrder}>{isCancel}</a></td>
-                                        <td id={order.orderId}  onClick={orderView}>{order.useraccount}</td>
-                                    </tr>
-                                }
-                                
-                          
-                            
-                            } )}
-                        </tbody>
-                    </table>
-                    
-
-                    <h3>Orders History</h3>
-                    <table>
-                        <thead>
-                    
-                            <tr>
-                                <th>Coin</th>
-                                <th>Type </th>
-                                <th>Trade ID </th>
-                                <th>Entrusted Time</th>
-                                <th>Price</th>
-                                <th>Amount</th>
-                                <th>Timestamp</th>
-                                <th>Entrusted </th>
-                                <th>Taker </th>
-                                <th>Maker </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        {tradebook.map(tradebooks =>{
-                            if(tradebooks.taker=='taker1')
+                <h3>Open Orders</h3>
+                <table className="openOrder">
+                    <thead>
+                
+                        <tr>
+                            <th>Coin</th>
+                            <th>Type </th>
+                            <th>Order Id </th>
+                            <th>Entrusted Time</th>
+                            <th>Price</th>
+                            <th>Amount</th>
+                            <th>Entrusted </th>
+                            <th>Status </th>
+                            <th>Account Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {Orders.map(order =>{
+                            if(order.cancelled=='1')
                             {
-                                return <tr>
-                                <td className={'plus '+tradebooks.assetBuy}  id={tradebooks.tradeId}  onClick={tackerViews}  >{tradebooks.assetBuy}/ {tradebooks.assetSell}</td>
-                                <td id={tradebooks.tradeId}>Sell</td>
-                                <td id={tradebooks.tradeId}>{tradebooks.tradeId}</td>
-                                <td id={tradebooks.tradeId}>{tradebooks.created}</td>
-                                <td id={tradebooks.tradeId}>{tradebooks.price}</td>
-                                <td id={tradebooks.tradeId}>{tradebooks.amountBuy}</td>
-                                <td id={tradebooks.tradeId}>{tradebooks.created}</td>
-                                <td id={tradebooks.tradeId}>Yes</td>
-                                <td id={tradebooks.tradeId}>{tradebooks.taker}</td>
-                                <td id={tradebooks.tradeId}>{tradebooks.maker}</td>
-                            </tr>
+                                var isCancel='Cancelled';
+                            }
+                            else
+                            {
+                                var isCancel='Active';
+                            }
+                            if(order.amountBuy>0)
+                            {
+                                var amountToShow=order.amountBuy;
+                            }
+                            else
+                            {
+                                var amountToShow=order.amountSell;
                             }
                             
-                        }
-                            )}
-                        </tbody>
-                    </table>
-                </div>
+                            var url = new URL(window.location.href);
+                            var c = url.searchParams.get("opt");
+                            
+                            if(order.assetBuy==c || order.assetSell==c)
+                            {
+                                return   <tr>
+                                    <td className={'plus '+order.assetBuy}  id={order.orderId}  onClick={orderView} >{order.assetBuy}</td>
+                                    <td id={order.orderId}  onClick={orderView}>{order.side}</td>
+                                    <td id={order.orderId}  onClick={orderView}>{order.orderId}</td>
+                                    <td id={order.orderId}  onClick={orderView}>{order.created}</td>
+                                    <td id={order.orderId}  onClick={orderView}>{parseFloat(order.price).toFixed(4)}</td>
+                                    <td id={order.orderId}  onClick={orderView}>{parseFloat(amountToShow).toFixed(4)}</td>
+                                    <td id={order.orderId}  onClick={orderView}>Yes</td>
+                                    <td id={order.orderId}    ><a href="javascript:void(0)" id={order.orderId} onClick={cancelOrder}>{isCancel}</a></td>
+                                    <td id={order.orderId}  onClick={orderView}>{order.useraccount}</td>
+                                </tr>
+                            }
+                            
+                        
+                        
+                        } )}
+                    </tbody>
+                </table>
             </div>
-
-            {tradebook.map(tradebooks =>
-                    
-                    <div className="tradeWrap" id={'views'+tradebooks.tradeId}>
-                        <div className="tradeView">
-                            <a href="/" className="closeView"  onClick={closeViews}><i className="fa fa-times"></i></a>
-                            <div className="viewTop">
-                                <ul>
-                                    <li><span>Price</span>{tradebooks.price} EOS</li>
-                                    <li><span>Volume</span>{tradebooks.amountBuy} {tradebooks.assetBuy}</li>
-                                    <li><span>Total</span>{tradebooks.amountSell} EOS</li>
-                                    <li><span>Date</span> {tradebooks.created}</li>
-                                </ul>
-                            </div>
-                            <div className="viewBottom clearfix">
-                                <ul>
-                                    <li><h3>Maker</h3></li>
-                                    <li><span>EOS Account Name</span> <cite>{tradebooks.maker}</cite> </li>
-                                    <li><span>Total</span> <cite>{tradebooks.amountBuy} {tradebooks.assetBuy}</cite> </li>
-                                    <li><span>Fee</span> <cite>{tradebooks.makerFee} {tradebooks.assetBuy}</cite> </li>
-                                    <li><span>Maker Exchange</span> {tradebooks.makerExchange} <cite></cite> </li>
-                                    <li><span>Time stamp</span> <cite>{tradebooks.timestamp}</cite> </li>
-                                    <li><span>Trade Id</span> <cite className="tradeId">{tradebooks.tradeId}</cite> </li>
-                                </ul>
-                                
-                                <ul>
-                                    <li><h3>Taker</h3></li>
-                                    <li><span>EOS Account Name</span> <cite>{tradebooks.taker}</cite> </li>
-                                    <li><span>Total</span> <cite>{tradebooks.amountSell} EOS</cite> </li>
-                                    <li><span>Fee</span> <cite>{tradebooks.takerFee} EOS</cite> </li>
-                                    <li><span>Taker Exchange</span> <cite>{tradebooks.takerExchange}</cite> </li>
-                                    <li><span>Time stamp</span> <cite>{tradebooks.timestamp}</cite> </li>
-                                    <li><span>Trade Id</span> <cite className="tradeId">{tradebooks.tradeId}</cite> </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div> 
-                )}
         </div>
         )
     }
