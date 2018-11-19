@@ -502,9 +502,10 @@ table {	border-collapse: collapse; border-spacing: 0; }
   border-color: #fff;
 }
 .lightVersion .wellcomBanner {
-  background-image: -webkit-linear-gradient(68deg,#0ca6bb,#0e9aad 18%,#359db9 30%,#59a0c5 47%,#7296c9 72%,rgba(141,122,218,.81)),-webkit-linear-gradient(270deg,#049cb0,#049cb0);
-  background-image: linear-gradient(22deg,#0ca6bb,#0e9aad 18%,#359db9 30%,#59a0c5 47%,#7296c9 72%,rgba(141,122,218,.81)),linear-gradient(180deg,#049cb0,#049cb0);
+  /* background-image: -webkit-linear-gradient(68deg,#0ca6bb,#0e9aad 18%,#359db9 30%,#59a0c5 47%,#7296c9 72%,rgba(141,122,218,.81)),-webkit-linear-gradient(270deg,#049cb0,#049cb0); */
+  /* background-image: linear-gradient(22deg,#0ca6bb,#0e9aad 18%,#359db9 30%,#59a0c5 47%,#7296c9 72%,rgba(141,122,218,.81)),linear-gradient(180deg,#049cb0,#049cb0); */
   background-position: 0 0,0 0;
+  background: rgb(14, 156, 175);
 }
 
 .EOStable div a {
@@ -1115,7 +1116,7 @@ body {
 }
 
 .wellcomBanner {
-  box-shadow: 0px 0px 13px -2px #000;
+  /* box-shadow: 0px 0px 13px -2px #000; */
   position: relative;
   z-index: 999;
 }
