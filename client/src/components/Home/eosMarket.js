@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import $ from "jquery";
+import { Link } from 'react-router-dom';
 
 import data from '../../app.json';
 var color = {background: data['theme_color']};
@@ -70,13 +71,13 @@ class EOS extends Component{
                         
                               return  <tr id={hit.symbol}>
                                     <td><i className="fa fa-star"></i></td>
-                                    <td><a href={'/exchange/?opt='+hit.symbol}>{hit.symbol} / EOS</a></td>
+                                    <td><Link to={'/exchange/?opt='+hit.symbol}>{hit.symbol} / EOS</Link></td>
                                     <td className={hit.change < 0?'minus':'plus'}>{hit.last}</td>
                                     <td className={hit.change < 0?'minus':'plus'}>{hit.change}</td>
                                     <td>{hit.high}</td>
                                     <td>{hit.low}</td>
                                     <td>{hit.volume}</td>
-                                    <td><a href={'/exchange/?opt='+hit.symbol} className="trade colors"  style={{'color': this.state.colors}}>Trade</a></td>
+                                    <td><Link to={'/exchange/?opt='+hit.symbol} className="trade colors"  style={{'color': this.state.colors}}>Trade</Link></td>
                                 </tr>
                                 })}
                                 

@@ -72,7 +72,7 @@ class Header extends Component {
 
 
     async componentDidMount() {
-            console.log(this.props.scatterID)
+       
     
             if (this.props.scatterID) {
                 const scatter = ScatterJS.scatter;;
