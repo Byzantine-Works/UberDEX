@@ -28,8 +28,8 @@ class NetManager extends Component{
                 <div className="Tool">
                     <h4>NET manager</h4>
                     <ul><button id="mortgageNET" style={this.state.mortgage ? styleFocus : null} onClick={() => this.setState({mortgage: true})}>Mortgage</button> <button id="redeemNET" style={this.state.mortgage ? null : styleFocus} onClick={() => this.setState({mortgage: false})}>Redeem</button></ul>
-                    <ul><input onChange={this.loadData}></input>EOS <button id="confirm" onClick={this.sendData}>Confirm</button></ul>
-                    <ul>{this.state.mortgage ? <span>Balance: {this.props.balance} EOS</span> : <span>Redeemable: {this.props.redeem.toFixed(4)} EOS</span>}</ul>
+                    <ul><input onChange={this.loadData} type="number"></input>EOS <button id="confirm" onClick={this.sendData}>Confirm</button></ul>
+                    <ul id="bal">{this.state.mortgage ? <span>Balance: {this.props.balance} EOS</span> : <span>Redeemable: {this.props.redeem.toFixed(4)} EOS</span>}</ul>
                     <ul>Resources can be redeemed at any time, EOS will be returned to your account in 3 days. Transfer or vote will cost some CPU and NET resources.</ul>
                 </div>
             </div>

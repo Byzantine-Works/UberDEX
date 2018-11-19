@@ -34,9 +34,9 @@ class CpuManager extends Component{
                     </ul>
 
                     <ul>
-                        <input onChange={this.loadData}></input>EOS <button id="confirm" onClick={this.sendData}>Confirm</button>
+                        <input onChange={this.loadData} type="number"></input>EOS <button id="confirm" onClick={this.sendData}>Confirm</button>
                     </ul>
-                    <ul>
+                    <ul id="bal">
                         {this.state.mortgage ? <span>Balance: {this.props.balance} EOS</span> : <span>Redeemable: {this.props.redeem.toFixed(4)} EOS</span>}
                     </ul>
                     <ul>

@@ -30,7 +30,7 @@ class Main extends Component{
         return (
         <Switch>
             <Route exact path='/' render={(props) => {return <Home updateScatterID={this.updateScatterID} scatterID={this.state.scatterID}/>}} />
-            <Route path='/exchange' render={(props) => {return <Exchange updateScatterID={this.updateScatterID} scatterID={this.state.scatterID}/>}}/>
+            <Route path='/exchange' render={(props) => {return <Exchange scatterEOS={this.props.scatterEOS} updateScatterID={this.updateScatterID} scatterID={this.state.scatterID}/>}}/>
             <Route path='/market' component={(props) => {return <Market updateScatterID={this.updateScatterID} scatterID={this.state.scatterID}/>}} />
             <Route path='/support' component={(props) => {return <Support updateScatterID={this.updateScatterID} scatterID={this.state.scatterID}/>}} />
             <Route path='/about' component={ About } />
@@ -41,7 +41,7 @@ class Main extends Component{
             <Route path='/announcements' component={ announcements } />
             <Route path='/failannouncement' component={ failannouncement } />
             <Route path='/transaction' component={ TransactionPage } />
-            <Route path='/account' component={(props) => {return <Account updateScatterID={this.updateScatterID} scatterID={this.state.scatterID}/>}} />
+            <Route path='/account' component={(props) => {return <Account scatterEOS={this.props.scatterEOS} updateScatterID={this.updateScatterID} scatterID={this.props.scatterID}/>}} />
         </Switch>
 
   

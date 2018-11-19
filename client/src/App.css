@@ -3927,7 +3927,7 @@ div#tv_chart_container iframe {
 }
 }
 .AccountPage {
-  background-color: rgb(247, 247, 247);
+  /* background-color: rgb(247, 247, 247); */
   color: #464646;
   margin-top: 0px;
 }
@@ -3939,7 +3939,7 @@ div#tv_chart_container iframe {
 .accountContainer {
   width: 1170px;
   margin: 0 auto;
-  background-color: rgb(247, 247, 247);
+  /* background-color: rgb(247, 247, 247); */
 }
 
 .darkVersion .accountContainer {
@@ -4102,9 +4102,15 @@ div#tv_chart_container iframe {
   box-shadow: 0 0 8px #ddd;
 }
 
+.darkVersion .ToolContainer {
+  background-color: #646769;
+  box-shadow: none;
+  color: white;
+}
+
 .Tool {
   margin: 0 auto;
-  width: 430px;
+  width: 450px;
   margin-bottom: 60px;
 }
 
@@ -4132,6 +4138,11 @@ div#tv_chart_container iframe {
   margin: 10px;
   border: solid;
   border-width: 1px;
+  padding : 0px 5px;
+}
+
+.Tool input:focus{
+  outline: none;
 }
 
 .Tool #mortgageCPU, #redeemCPU {
@@ -4151,7 +4162,10 @@ div#tv_chart_container iframe {
   cursor: pointer;
   border-color: #2191A0;
   color:#777
+}
 
+.darkVersion .Tool #mortgageNET, #redeemNET, #redeemCPU, #mortgageCPU {
+  color: white;
 }
 
 .Tool #mortgageNET:focus, #redeemNET:focus {
@@ -4178,6 +4192,11 @@ div#tv_chart_container iframe {
 
 }
 
+.darkVersion .Tool #buyRAM, #sellRAM {
+  color: white;
+}
+
+
 .Tool #mortgageRAM:focus, #redeemRAM:focus {
   outline: none;
 }
@@ -4199,7 +4218,7 @@ div#tv_chart_container iframe {
 }
 
 .ToolContainer .returnButton {
-  background-color: white;
+  background-color: transparent;
   border: solid;
   border-radius: 5px;
   height: 35px;
@@ -4208,6 +4227,13 @@ div#tv_chart_container iframe {
   cursor: pointer;
   border-color: rgba(119, 119, 119, 0.644);
   color: rgba(119, 119, 119, 0.603);
+}
+
+
+
+.darkVersion .ToolContainer .returnButton {
+  border-color: white;
+  color: white;
 }
 
 .ToolContainer .returnButton:focus {
@@ -4219,4 +4245,8 @@ div#tv_chart_container iframe {
   border-color: #3795f4;
   color: #3795f4;
 }
+
+
+
+
 

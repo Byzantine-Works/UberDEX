@@ -4,7 +4,7 @@ import lodash from 'lodash';
 import {Switch, Route} from 'react-router-dom';
 import { BrowserRouter } from 'react-router-dom';
 import openSocket from 'socket.io-client';
-import Visualizer from './visualizer';
+import Visualizer from './Account/visualizer';
 import Wallet from './Account/wallet';
 import RamManager from './Account/rammanager';
 import CpuManager from './Account/cpumanager';
@@ -12,26 +12,31 @@ import NetManager from './Account/netmanager';
 import Withdraw from './Account/withdraw';
 import Deposit from './Account/deposit';
 
-import Header from './header';
-import Footer from './footer';
 import  Eos from 'eosjs';
 import data from '../app.json';
 var color = {background: data['theme_color']};
 
 const socket = openSocket('http://api.byzanti.ne:9090/');
 
-const network = {
-    blockchain:'eos',
-    protocol:'https://cors-anywhere.herokuapp.com/http',
-    host:'13.52.54.111',
-    eosVersion: 'bf28f8bb',
-    port:8888,
-    chainId:'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f',
-    debug: false,
-    verbose: false,
-    latency: 200,
-    sign: true
-}
+// const network = {
+//     blockchain:'eos',
+//     protocol:'https://cors-anywhere.herokuapp.com/http',
+//     host:'13.52.54.111',
+//     eosVersion: 'bf28f8bb',
+//     port:8888,
+//     chainId:'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f',
+//     debug: false,
+//     verbose: false,
+//     latency: 200,
+//     sign: true
+// }
+
+const network = { blockchain:'eos',
+                protocol:'https',
+                host:'proxy.eosnode.tools',
+                port:443,
+                chainId:'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906' }
+
 
 class Account extends Component{
     constructor(props) {
@@ -146,7 +151,7 @@ class Account extends Component{
 
     async manageRam(buy, value) {
         console.log(arguments);
-        const eos = this.props.scatterID.eos(network, Eos);
+        const eos = this.props.scatterEOS;
         let resp;
         if(buy){
             value = Number(value).toFixed(4) + ' EOS'
@@ -166,7 +171,7 @@ class Account extends Component{
     /*Actions performed on the chain : Deposit, Withdraw, Delegate*/
 
     async delegate(resource, mortgage, value) {
-        const eos = this.props.scatterID.eos(network, Eos);
+        const eos = this.props.scatterEOS;
         console.log(arguments);
         // const options = {
         //     method: 'POST',
@@ -215,7 +220,7 @@ class Account extends Component{
 
     async deposit(quantity, symbol) {
         const eosOptions = { expireInSeconds:60 }
-        const eos = this.props.scatterID.eos(network, Eos, eosOptions)
+        const eos = this.props.scatterEOS;
         let dep = await eos.transfer(this.props.scatterID.identity.accounts[0].name, 'exchange', Number(quantity).toFixed(4)+' '+symbol, 'deposit');
         console.log("dep: ", dep);
     }
@@ -224,7 +229,7 @@ class Account extends Component{
       const eosOptions = { expireInSeconds:60 };
       const scatter = this.props.scatterID;
 
-      const eos = scatter.eos(network, Eos, eosOptions);
+      const eos = this.props.scatterEOS;
       let info = await eos.getInfo({})
       const expireInSeconds = 600;
       let chainDate = new Date(info.head_block_time + 'Z')
@@ -320,13 +325,13 @@ class Account extends Component{
 
 
     render() {
-        console.log()
+        console.log(this.props.scatterEOS)
         return (
             <div className="AccountPage">
                 <div className="accountContainer">
                     {this.state.resources ? <Visualizer accountName={this.state.accountName} resources={this.state.resources} changeView={this.changeView} view={this.state.view}/> : null}
                     {this.state.symbols && this.state.view === 'wallet' ? <Wallet symbols={this.state.symbols} balance={this.state.balance} resources={this.state.resources} deposit={this.deposit} withdraw={this.withdraw} changeView={this.changeView}/> : null}
-                    {this.state.view === 'ram' ? <RamManager balance={this.state.resources.liquidBalance/10000} redeem={this.state.resources.staked/10000} manageRam={this.manageRam} changeView={this.changeView}/> : null}
+                    {this.state.view === 'ram' ? <RamManager scatterEOS={this.props.scatterEOS} balance={this.state.resources.liquidBalance/10000} redeem={this.state.resources.staked/10000} manageRam={this.manageRam} changeView={this.changeView}/> : null}
                     {this.state.view === 'cpu' ? <CpuManager balance={this.state.resources.liquidBalance/10000} redeem={this.state.resources.cpuWeight/10000} delegate={this.delegate} changeView={this.changeView}/> : null}
                     {this.state.view === 'net' ? <NetManager balance={this.state.resources.liquidBalance/10000} redeem={this.state.resources.netWeight/10000} delegate={this.delegate} changeView={this.changeView}/> : null}
                     {this.state.view === 'withdraw' ? <Withdraw balance={this.state.balance} withdraw={this.withdraw}  symbView={this.state.symbView} changeView={this.changeView}/>: null}
