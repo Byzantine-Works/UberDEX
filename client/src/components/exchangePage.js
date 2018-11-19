@@ -33,7 +33,6 @@ class Home extends Component{
                 {/* <Trading /> */}
                 <TradingCenter updateOpenOrders={this.updateOpenOrders} scatterID={this.props.scatterID} updateScatterID={this.props.updateScatterID}/>
                 {/* <Order scatterID={this.props.scatterID} updateScatterID={this.props.updateScatterID} openOrders={this.state.openOrders}/> */}
-                <Footer updateScatterID={this.props.updateScatterID} scatterID={this.props.scatterID}/>
             </div>
         )
     }

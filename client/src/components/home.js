@@ -33,13 +33,11 @@ class Home extends Component{
             return(
                 <div className="HomePage" >
                     <div className="wellcomBanner background" style={{'background': this.state.colors}}>
-                        <Header updateScatterID={this.props.updateScatterID} scatterID={this.props.scatterID}/>
                         <Banner />
                     </div>
                         <EOS />
                         <Features />
                         <Callaction />
-                        <Footer updateScatterID={this.props.updateScatterID} scatterID={this.props.scatterID}/>
                     </div>
         )
     }

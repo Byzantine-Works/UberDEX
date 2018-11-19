@@ -27,13 +27,9 @@ render(){
     const { colors } = this.state;
         return(
             <div className="supportPage">
-                <div className="wellcomBanner background" style={{'background': this.state.colors}}>
-                    <Header updateScatterID={this.props.updateScatterID} scatterID={this.props.scatterID}/>
-                </div>
                     <TVChartContainer />
-                
                     <Callaction />
-                    <Footer updateScatterID={this.props.updateScatterID} scatterID={this.props.scatterID}/>
+    
             </div>
         )
     }

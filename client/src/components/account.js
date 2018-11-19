@@ -5,12 +5,12 @@ import {Switch, Route} from 'react-router-dom';
 import { BrowserRouter } from 'react-router-dom';
 import openSocket from 'socket.io-client';
 import Visualizer from './visualizer';
-import Wallet from './wallet';
-import RamManager from './rammanager';
-import CpuManager from './cpumanager';
-import NetManager from './netmanager';
-import Withdraw from './withdraw';
-import Deposit from './deposit';
+import Wallet from './Account/wallet';
+import RamManager from './Account/rammanager';
+import CpuManager from './Account/cpumanager';
+import NetManager from './Account/netmanager';
+import Withdraw from './Account/withdraw';
+import Deposit from './Account/deposit';
 
 import Header from './header';
 import Footer from './footer';
@@ -323,9 +323,6 @@ class Account extends Component{
         console.log()
         return (
             <div className="AccountPage">
-                <div className="wellcomBanner background" style={color}>
-                    <Header updateScatterID={this.props.updateScatterID} scatterID={this.props.scatterID}/>
-                </div>
                 <div className="accountContainer">
                     {this.state.resources ? <Visualizer accountName={this.state.accountName} resources={this.state.resources} changeView={this.changeView} view={this.state.view}/> : null}
                     {this.state.symbols && this.state.view === 'wallet' ? <Wallet symbols={this.state.symbols} balance={this.state.balance} resources={this.state.resources} deposit={this.deposit} withdraw={this.withdraw} changeView={this.changeView}/> : null}
@@ -336,8 +333,6 @@ class Account extends Component{
                     {this.state.view === 'deposit' ? <Deposit balance={this.state.balance} deposit={this.deposit}  symbView={this.state.symbView} changeView={this.changeView}/>: null}
 
                 </div>
-
-                <Footer updateScatterID={this.props.updateScatterID} scatterID={this.props.scatterID}/>
             </div>
 
         )

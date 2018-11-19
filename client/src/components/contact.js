@@ -62,9 +62,6 @@ render(){
   const { colors } = this.state;
         return(
             <div className="about_page">
-                <div className="wellcomBanner background" style={color}>
-                <Header updateScatterID={this.props.updateScatterID} scatterID={this.props.scatterID}/>
-                </div>
                 <div className="about_wrap contactPage">
                     <div className="container clearfix">
                         <div className="leftDetails">
@@ -93,7 +90,6 @@ render(){
                     </div>
                 </div>
                 <Callaction />
-                <Footer updateScatterID={this.props.updateScatterID} scatterID={this.props.scatterID}/>
             </div>
         )
     }

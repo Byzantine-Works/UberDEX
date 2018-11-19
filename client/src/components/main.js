@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Switch, Route} from 'react-router-dom';
 import { BrowserRouter } from 'react-router-dom';
 
+import Header from './header';
 import Home from './home';
 import Exchange from './exchangePage';
 import Market from './market';
@@ -20,21 +21,13 @@ class Main extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            scatterID: false
+            
         }
-        this.updateScatterID = this.updateScatterID.bind(this);
-    }
-
-    updateScatterID(id) {
-        this.setState({scatterID: id})
     }
 
     render() {
-        console.log(this.state.scatterID)
-        return (
 
-    
-    <BrowserRouter>
+        return (
         <Switch>
             <Route exact path='/' render={(props) => {return <Home updateScatterID={this.updateScatterID} scatterID={this.state.scatterID}/>}} />
             <Route path='/exchange' render={(props) => {return <Exchange updateScatterID={this.updateScatterID} scatterID={this.state.scatterID}/>}}/>
@@ -50,7 +43,8 @@ class Main extends Component{
             <Route path='/transaction' component={ TransactionPage } />
             <Route path='/account' component={(props) => {return <Account updateScatterID={this.updateScatterID} scatterID={this.state.scatterID}/>}} />
         </Switch>
-    </BrowserRouter>
+
+  
         )
     }
 }

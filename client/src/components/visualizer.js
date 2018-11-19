@@ -16,7 +16,7 @@ class Visualizer extends Component{
             <span className="empty"></span>
             <span className="generalBal">
                 {/* <ul><button className="resourcesManagement">Resources Management</button></ul> */}
-                <ul><h3>{this.props.resources.liquidBalance/10000} EOS</h3></ul>
+                <ul><h3>{(this.props.resources.liquidBalance + this.props.resources.staked)/10000} EOS</h3></ul>
             </span>
             
                 <div id="available">

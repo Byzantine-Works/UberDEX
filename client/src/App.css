@@ -3928,6 +3928,11 @@ div#tv_chart_container iframe {
 .AccountPage {
   background-color: rgb(247, 247, 247);
   color: #464646;
+  margin-top: 0px;
+}
+
+.darkVersion .AccountPage {
+  background: none;
 }
 
 .accountContainer {
@@ -3936,6 +3941,11 @@ div#tv_chart_container iframe {
   background-color: rgb(247, 247, 247);
 }
 
+.darkVersion .accountContainer {
+  background: none;
+}
+
+/* #646769 */
 .visualizerContainer {
   display: grid;
   grid-template-areas: 
@@ -3948,6 +3958,13 @@ div#tv_chart_container iframe {
   margin-top: 20px;
   background-color: white;
   box-shadow: 0 0 8px #ddd;
+  font-weight: bold;
+}
+
+.darkVersion .visualizerContainer {
+  background-color: #646769;
+  color: white;
+  box-shadow: none;
 }
 
 .visualizerContainer #net, #cpu, #ram {
@@ -4032,8 +4049,16 @@ div#tv_chart_container iframe {
   background-color: white;
   margin-top: 50px;
   margin-bottom: 30px;
-  padding: 30px;
   box-shadow: 0 0 8px #ddd;
+  font-size: 16px;
+}
+
+.darkVersion .walletContainer {
+  background-color: #646769;
+  color: white;
+  box-shadow: none;
+
+
 }
 
 .walletContainer a {
@@ -4045,6 +4070,16 @@ div#tv_chart_container iframe {
   width: 100%;
 }
 
+.walletContainer table thead {
+  width: 100%;
+  font-weight: bold;
+  background: #ecececb0;
+}
+
+.darkVersion .walletContainer table thead {
+    background: #52565a;
+} 
+
 .walletContainer table tr {
   height: 45px;
   border-bottom: 1px solid;
@@ -4053,8 +4088,8 @@ div#tv_chart_container iframe {
 }
 
 .walletContainer table tr td {
-  padding: 20px 20px;
-  width: 70px;
+  padding: 20px 10px;
+  width: 90px;
 }
 
 .ToolContainer {

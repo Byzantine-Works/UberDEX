@@ -26,12 +26,8 @@ render(){
     const { colors } = this.state;
         return(
             <div className="marketPage">
-                <div className="wellcomBanner background" style={{'background': this.state.colors}}>
-                    <Header updateScatterID={this.props.updateScatterID} scatterID={this.props.scatterID} />
-                </div>
                 <EOS />
                 <Callaction />
-                <Footer updateScatterID={this.props.updateScatterID} scatterID={this.props.scatterID} />
             </div>
         )
     }

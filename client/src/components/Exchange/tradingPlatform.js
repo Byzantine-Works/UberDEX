@@ -929,33 +929,6 @@ refresh_data() {
        
         return(
             <div>
-                
-            <div className="wellcomBanner background"   style={{'background': this.state.colors}}>
-                <div className="header  headerInners">
-                    <div className="logo">
-                        <a href="/"><img src={this.state.logo} className="App-logo" alt="logo" /></a>
-                    </div>
-                    <div className="menuSections">
-                        <nav>
-                            <ul>
-                                <li><a href="/exchange/?opt=IQ">Exchange</a></li>
-                                <li><a href="/market">Markets</a></li>
-                                <li><a href="/contact">Supports</a></li>
-                                <li id="signin"><a href="/"  onClick={handlesign}>Sign In</a></li>
-                                <li id="signout"><a href="/"  onClick={handleSignout}>Sign out</a></li>
-                                <li><a href="/" className="bgs"  onClick={handlePublic}>Get Started</a></li>
-                            </ul>
-                        </nav>
-                        <div className="othersOptions">
-                            <a href="/" className="fullscreen"><i className="fa fa-expand-arrows-alt"> </i></a>
-                            <a href="/" className="smallscreen"><i className="fa fa-expand-arrows-alt"> </i></a>
-                            <a href="#" className="lightT" onClick={handlelight}><i className="fa fa-lightbulb"> </i></a>
-                            <a href="#" className="darkt" onClick={handledark}><i className="fa fa-lightbulb"> </i></a>
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
             <div className="tradingCenter">
             <div className="tradingInner clearfix">
 
