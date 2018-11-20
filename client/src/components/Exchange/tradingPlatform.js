@@ -209,8 +209,8 @@ function handleClick(e) {
        var price= parseFloat($('#price').val());
        var tps=1;
        var myuri='';
-       if($('#apiType').val()=='make')
-       {
+       console.log($('#apiType').val());
+       if($('#apiType').val()=='make') {
         var datas = {
             "side": "BUY",
             "assetBuy": c,
@@ -222,13 +222,11 @@ function handleClick(e) {
             "type": tps,
             "useraccount": 'taker1'
       };
-    myuri='https://api.byzanti.ne/orderMake/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+        myuri='https://api.byzanti.ne/orderMake/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
    
-       }
-       else
-       {
+       } else {
             var bprice= parseFloat($('#amountbuy').val());
-       var sellPrice= parseFloat($('#amountsell').val());
+            var sellPrice= parseFloat($('#amountsell').val());
        var pricess= parseFloat($('#prices').val());
        var maker = $('#maker').val();
        var makerexchange = $('#makerexchange').val();
@@ -471,7 +469,7 @@ function closeOrder(e){
     $('.orderWrap').fadeOut();
 }
 
-function cancelOrder(e){
+function cancelOrder(e) {
     e.preventDefault();
      var order_id = e.target.id;
      $('#view'+order_id).fadeOut();
@@ -486,8 +484,7 @@ function cancelOrder(e){
   },  body: JSON.stringify(datas)})
         .then(response => response.json())
         .then(data => window.location.reload());
-        
-}
+    }
 
 class tradingHead extends Component{
      
@@ -976,7 +973,9 @@ refresh_data() {
                                 <label>Total  <span>EOS</span>
                                 </label>
                                 <input type="number"  id="sellPrice" onChange={changeSellPrice} />
-                                <input type="submit" value="Signin to trade" onClick={handleBuy} className="background"   style={{'background': this.state.colors}} />
+                                {this.props.scatterID ? 
+                                    <input type="submit" value="Buy" onClick={handleBuy} className="background" style={{'background': this.state.colors}} />
+                                    : <input type="submit" value="Signin to trade" onClick={handleBuy} className="background"   style={{'background': this.state.colors}} />}
                             </div>
 
                             <div id="tabs2">
@@ -1003,7 +1002,10 @@ refresh_data() {
                                 <input type="number" id="BuyPricetwo"  onChange={changeBuyPrice1} />
                                 <label>Total <span>EOS</span></label>
                                 <input type="number" id="sellPricetwo" onChange={changeBuyPrice} />
-                                <input type="submit"  onClick={handleSell} value="Signin to trade" />
+                                {this.props.scatterID ? 
+                                    <input type="submit" value="Sell" onClick={handleSell} className="background" style={{'background': this.state.colors}} />
+                                    : <input type="submit" value="Signin to trade" onClick={handleSell} className="background"   style={{'background': this.state.colors}} />}
+
                             </div>
                         </div>
                         </div>

@@ -18,24 +18,24 @@ var color = {background: data['theme_color']};
 
 const socket = openSocket('http://api.byzanti.ne:9090/');
 
-// const network = {
-//     blockchain:'eos',
-//     protocol:'https://cors-anywhere.herokuapp.com/http',
-//     host:'13.52.54.111',
-//     eosVersion: 'bf28f8bb',
-//     port:8888,
-//     chainId:'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f',
-//     debug: false,
-//     verbose: false,
-//     latency: 200,
-//     sign: true
-// }
+const network = {
+    blockchain:'eos',
+    protocol:'https://cors-anywhere.herokuapp.com/http',
+    host:'13.52.54.111',
+    eosVersion: 'bf28f8bb',
+    port:8888,
+    chainId:'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f',
+    debug: false,
+    verbose: false,
+    latency: 200,
+    sign: true
+}
 
-const network = { blockchain:'eos',
-                protocol:'https',
-                host:'proxy.eosnode.tools',
-                port:443,
-                chainId:'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906' }
+// const network = { blockchain:'eos',
+//                 protocol:'https',
+//                 host:'proxy.eosnode.tools',
+//                 port:443,
+//                 chainId:'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906' }
 
 
 class Account extends Component{
@@ -59,11 +59,13 @@ class Account extends Component{
     async getResources(){
 
         let response = await axios(`https://api.byzanti.ne/getAccount/${this.state.accountName}?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`)
+        console.log("resposne: ", response);
         response = response.data;
     
         let resources = {
             liquidBalance: Number(response.core_liquid_balance.split(' ')[0])*10000,
             staked: response.voter_info.staked,
+            redeeming: Number(response.refund_request.cpu_amount.split(' ')[0]) + Number(response.refund_request.net_amount.split(' ')[0]),
             ram_quota: response.ram_quota,
             ram_usage: response.ram_usage,
             netWeight: response.net_weight,
@@ -154,8 +156,8 @@ class Account extends Component{
         const eos = this.props.scatterEOS;
         let resp;
         if(buy){
-            value = Number(value).toFixed(4) + ' EOS'
-            resp = await eos.buyram(this.props.scatterID.identity.accounts[0].name, this.props.scatterID.identity.accounts[0].name, value);
+            value = Number(value)
+            resp = await eos.buyrambytes(this.props.scatterID.identity.accounts[0].name, this.props.scatterID.identity.accounts[0].name, value);
         } else {
             value = Number(value)
             resp = await eos.sellram(this.props.scatterID.identity.accounts[0].name, value);
@@ -230,19 +232,7 @@ class Account extends Component{
       const scatter = this.props.scatterID;
 
       const eos = this.props.scatterEOS;
-      let info = await eos.getInfo({})
-      const expireInSeconds = 600;
-      let chainDate = new Date(info.head_block_time + 'Z')
-      let expiration = new Date(chainDate.getTime() + expireInSeconds * 1000)
-      expiration = expiration.toISOString().split('.')[0]
 
-      let block = await eos.getBlock(info.last_irreversible_block_num)
-
-      // let transactionHeaders = {
-      //     expiration: new Date(new Date(info.head_block_time + 'Z').getTime() + expireInSeconds * 1000).toISOString().split('.')[0],
-      //     ref_block_num: info.last_irreversible_block_num & 0xFFFF,
-      //     ref_block_prefix: block.ref_block_prefix
-      // }
 
       let randChannel = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
       socket.emit('user', ["FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N", randChannel]);
@@ -254,7 +244,7 @@ class Account extends Component{
 
       const action = {
               from: 'ideos',
-              quantity: '1.1111 EOS@eosio.token',
+              quantity: '1.1111 EOS',
               nonce: data
           };
        let acts = [{
@@ -272,16 +262,7 @@ class Account extends Component{
           params:['ideos', '1.1111 EOS@eosio.token', data]
       }
 
-      console.log(scatter.identity.accounts[0])
-      let transaction = await scatter.createTransaction('eos', [actionTrans], scatter.identity.accounts[0], network);
-      console.log(transaction.transaction.actions[0].data);
-      
-      let transactionHeaders = {
-          expiration: transaction.transaction.expiration,
-          ref_block_num: transaction.transaction.ref_block_num,
-          ref_block_prefix: transaction.transaction.ref_block_prefix,
-          delay_sec: 369
-      };
+
 
       let signature = await scatter.getArbitrarySignature(scatter.identity.publicKey, JSON.stringify(action));
       // let w = await eos.transaction({ actions: acts});
@@ -292,6 +273,32 @@ class Account extends Component{
       payload.amount = 1.1111;
       payload.nonce = data;
       payload.signature = signature;
+
+    //   let info = await eos.getInfo({})
+    //   const expireInSeconds = 3600;
+    //   let chainDate = new Date(info.head_block_time + 'Z')
+    //   let expiration = new Date(chainDate.getTime() + expireInSeconds * 1000)
+    //   expiration = expiration.toISOString().split('.')[0]
+
+    //   let block = await eos.getBlock(info.last_irreversible_block_num)
+
+    //   let transactionHeaders = {
+    //       expiration: new Date(new Date(info.head_block_time + 'Z').getTime() + expireInSeconds * 1000).toISOString().split('.')[0],
+    //       ref_block_num: info.last_irreversible_block_num & 0xFFFF,
+    //       ref_block_prefix: block.ref_block_prefix
+    //   }
+
+    console.log(scatter.identity.accounts[0])
+    let transaction = await scatter.createTransaction('eos', [actionTrans], scatter.identity.accounts[0], network);
+    console.log(transaction.transaction.actions[0].data);
+    
+    let transactionHeaders = {
+        expiration: transaction.transaction.expiration,
+        ref_block_num: transaction.transaction.ref_block_num,
+        ref_block_prefix: transaction.transaction.ref_block_prefix,
+        delay_sec: 3600
+    };
+
       payload.headers  = transactionHeaders;
       console.log("payload: ", payload);
 

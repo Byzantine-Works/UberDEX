@@ -34,7 +34,7 @@ class Withdraw extends Component{
                     <h4>Withdraw</h4>
                     <ul><input onChange={this.loadData} type="number"></input>{this.props.symbView} <button id="confirm" onClick={this.sendData}>Confirm</button></ul>
                     <ul id="bal" style={this.state.value > bal.amount ? {color: 'red'} :  null}>Exchange balance: {(bal.amount-this.state.value).toFixed(4)} {this.props.symbView}</ul>
-                    <ul id="bal">Chain balance: {Number(bal.chainBal)+Number(this.state.value)} {this.props.symbView}</ul><br/>
+                    <ul id="bal">Chain balance: {(Number(bal.chainBal)+Number(this.state.value)).toFixed(4)} {this.props.symbView}</ul><br/>
                     <ul>Resources can be redeemed at any time, EOS will be returned to your account in 3 days. Transfer or vote will cost some CPU and NET resources.</ul>
                 </div>
             </div>
