@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import scatter from './imgs/scatter.PNG';
 import logoBlue from './imgs/logoBlue.png';
+import logoBlueh from './imgs/logoBlueh.png';
 import $ from "jquery";
 
 import ScatterJS from 'scatterjs-core';
@@ -107,7 +108,8 @@ class Footer extends Component{
             <div>
                 <div className="footer">
                     <div className="container clearfix">
-                        <img src={logoBlue} />
+                        <img src={logoBlueh} className="darkF" />
+                        <img src={logoBlue} className="lightF"/>
                         <p>Cryptocurrency investment is subject to high market risk, please make your investments cautiously.</p>
                         <span>© UberDex Inc 2018. All Right Reserved.</span>
                         <ul>

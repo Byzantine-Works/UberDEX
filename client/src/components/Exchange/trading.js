@@ -11,6 +11,12 @@ function handleClick(e) {
     $('.ind').show();
   }
   
+  function openIntro()
+  {
+      $('.introAlart').fadeIn();
+  }
+
+
 function handleClicks(e) {
     e.preventDefault();
     $('.ind').hide();
@@ -23,6 +29,8 @@ class tradingHead extends Component{
     
         this.state = {
           hits: [],
+          colors: [],
+          logo: [],
         };
       }
 
@@ -36,6 +44,10 @@ class tradingHead extends Component{
         fetch(API)
         .then(response => response.json())
         .then(data => {this.setState({ hits: data }); });
+
+        fetch('https://uberdex-admin.herokuapp.com/getColors')
+        .then(response => response.json())
+        .then(data => {this.setState({colors:data.theme_color}); this.setState({logo:'https://uberdex-admin.herokuapp.com/images/byzantine/'+data.logo}); });
     }
 
 
@@ -44,57 +56,42 @@ class tradingHead extends Component{
         const { hits } = this.state;
         return(
             <div className="tradingHead">
-                <div className="container">
-                
+            
+
                 {hits.map(hit =>
-                    <div className="trading clearfix">
-                        <div className="lefts">
-                            <span className=" background" style={color} >{hit.symbol}</span>
-                            <h4>{hit.symbol} / <small> EOS</small></h4>
-                            <p className="ist colors" style={colors} onClick={handleClick}>Introduction</p>
-                            <p className="ind colors" style={colors} onClick={handleClicks}>Introduction</p>
-                        </div>
-                        <div className="rights">
-                            <ul>
-                                <li>
-                                    <p>Last Price</p>
-                                    <span className={hit.change < 0?'minus':'plus'}>{hit.last}</span> EOS
-                                </li>
-                                <li>
-                                    <p>24H Change</p>
-                                    <span className={hit.change < 0?'minus':'plus'}>{hit.change}</span>
-                                </li>
-                                <li>
-                                    <p>24H High</p>
-                                    <span>{hit.high} </span> EOS
-                                </li>
-                                <li>
-                                    <p>24H Low</p>
-                                    <span>{hit.low} </span> EOS
-                                </li>
-                                
-                                <li>
-                                    <p>24H Volume </p>
-                                    <span>{hit.volume} </span> {hit.symbol}
-                                </li>
-                            </ul>
-                        </div>
-                        <div className="openDetail clearfix">
-                            <div className="contrct">
-                                <p><strong>Total Supply</strong>
-                                10,000,000,000</p>
-                                <p><strong>Circulating</strong>
-                                5,200,000,000</p>
-                                <p><strong>Contract</strong>
-                                {hit.contract}</p>
-                                <p><strong>Website</strong>
-                                https://{hit.symbol}.com</p>
-                            </div>
-                        </div>
+                    <div className="tradingBlnces">
+                        <h3 className=" background" style={{'background': this.state.colors}}>{hit.symbol}  / <small> EOS</small></h3>
+                        <ul>
+                            <li>
+                                <p>Last Price</p>
+                                <span className={hit.change < 0?'minus':'plus'}>{hit.last}</span> EOS
+                            </li>
+                            <li>
+                                <p>24H Change</p>
+                                <span className={hit.change < 0?'minus':'plus'}>{hit.change}</span>
+                            </li>
+                            <li>
+                                <p>24H High</p>
+                                <span>{hit.high} EOS </span> 
+                            </li>
+                            <li>
+                                <p>24H Low</p>
+                                <span>{hit.low} EOS</span> 
+                            </li>
+                            
+                            <li>
+                                <p>24H Volume </p>
+                                <span>{hit.volume} {hit.symbol} </span> 
+                            </li>
+                            
+                            <li>
+                                <p>Contract </p>
+                                <span>{hit.contract} </span>
+                            </li>
+                        </ul>
                     </div>
                 
                 )}
-                </div>
             </div>
         )
     }
