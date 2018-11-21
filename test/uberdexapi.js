@@ -1223,7 +1223,7 @@ async function extrade(admin, amountbuy, amountsell, nonce, amount, tradenonce, 
             makersig: p.makersig,
             takersig: p.takersig
         }, {
-            authorization: [EXCHANGE_ADMIN_ACCOUNT, feeaccount]
+            authorization: [EXCHANGE_ADMIN_ACCOUNT, fee_account]
         });
     });
     //log(trxTrade);
@@ -1295,6 +1295,7 @@ async function exOfflineWithdrawal(
 }
 
 async function sendOfflineWithdrawal(user, token, amount, nonce, headers, userSignature) {
+    console.log("Cur Nonce is " + nonce);
     var extendedAsset;
     //simply deal with IQ specifics for now
     //TODO deal with different contracts and precisions here
@@ -1306,7 +1307,7 @@ async function sendOfflineWithdrawal(user, token, amount, nonce, headers, userSi
 
     const withdrawParams = {
         from: user,
-        nonce,
+        nonce: nonce,
         quantity: extendedAsset,
         admin: ADMIN_ACCOUNT
     };
@@ -1366,6 +1367,7 @@ async function sendOfflineWithdrawal(user, token, amount, nonce, headers, userSi
 
     const result = await dispatchEos.pushTransaction(offlineTransaction);
     console.log('result:', result);
+    return result;
 }
 
 //start EOS-API service
