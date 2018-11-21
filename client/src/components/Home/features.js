@@ -81,7 +81,17 @@ componentDidMount() {
    
     fetch('https://uberdex-admin.herokuapp.com/getColors')
     .then(response => response.json())
-    .then(data => {this.setState({colors:data.theme_color}); this.setState({logo:'https://uberdex-admin.herokuapp.com/images/byzantine/'+data.logo}); });
+    .then(data => {if(data.theme_color=='')
+    {
+        this.setState({colors:'#0e9caf'});
+    }
+    else
+    {
+        this.setState({colors:data.theme_color}); this.setState({logo:'https://uberdex-admin.herokuapp.com/images/byzantine/'+data.logo});
+    }
+    }).catch(data => {
+        this.setState({colors:'#0e9caf'});
+    });
 }
 render(){
     const { colors } = this.state;

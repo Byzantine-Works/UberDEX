@@ -39,15 +39,24 @@ class Home extends Component{
    'Content-Type': 'application/json',
  },  body: JSON.stringify(datas)})
        .then(response => response.json())
-       .then(datas => {console.log(datas.trx.trx.actions[0]);this.setState({transaction:datas});this.setState({transactionTrx:datas.trx.trx});this.setState({transactionReceipt:datas.trx.receipt});
-       $('#actionAmount').html(datas.trx.trx.actions[0].data.amount);$('#actionBuy').html(datas.trx.trx.actions[0].data.amountbuy);$('#actionSell').html(datas.trx.trx.actions[0].data.amountsell);$('#actionMaker').html(datas.trx.trx.actions[0].data.maker);$('#actionMakerfee').html(datas.trx.trx.actions[0].data.makerfee);
-       $('#actionTaker').html(datas.trx.trx.actions[0].data.taker);$('#actionTakerfee').html(datas.trx.trx.actions[0].data.takerfee);$('#actionHex').html(datas.trx.trx.actions[0].hex_data);}
-   );
+         .then(datas => {var ab=234;console.log(ab.toFixed(2));this.setState({transaction:datas});this.setState({transactionTrx:datas.trx.trx});this.setState({transactionReceipt:datas.trx.receipt});
+       $('#actionAmount').html(datas.trx.trx.actions[0].data.amount);$('#actionBuy').html(datas.trx.trx.actions[0].data.amountbuy);$('#actionSell').html(datas.trx.trx.actions[0].data.amountsell);$('#actionMaker').html(datas.trx.trx.actions[0].data.make);$('#actionMakerfee').html(datas.trx.trx.actions[0].data.makerfee/10000);
+       $('#actionTaker').html(datas.trx.trx.actions[0].data.taker);$('#actionTakerfee').html(datas.trx.trx.actions[0].data.takerfee/10000);$('#actionHex').html(datas.trx.trx.actions[0].hex_data);}
+  );
 
    fetch('https://uberdex-admin.herokuapp.com/getColors')
-   .then(response => response.json())
-   .then(data => {this.setState({colors:data.theme_color}); this.setState({logo:'https://uberdex-admin.herokuapp.com/images/byzantine/'+data.logo}); });
-
+    .then(response => response.json())
+    .then(data => {if(data.theme_color=='')
+    {
+        this.setState({colors:'#0e9caf'});
+    }
+    else
+    {
+        this.setState({colors:data.theme_color}); this.setState({logo:'https://uberdex-admin.herokuapp.com/images/byzantine/'+data.logo});
+    }
+    }).catch(data => {
+        this.setState({colors:'#0e9caf'});
+    });
 
 }
     render(){

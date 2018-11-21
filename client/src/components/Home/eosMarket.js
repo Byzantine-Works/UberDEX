@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { Link } from 'react-router-dom';
 import $ from "jquery";
 
 import data from '../../app.json';
@@ -22,10 +23,20 @@ class EOS extends Component{
           .then(response => response.json())
           .then(data => this.setState({ tricker: data }));
 
-          fetch('https://uberdex-admin.herokuapp.com/getColors')
-          .then(response => response.json())
-          .then(data => {this.setState({colors:data.theme_color}); this.setState({logo:'https://uberdex-admin.herokuapp.com/images/byzantine/'+data.logo}); });
-      }
+        fetch('https://uberdex-admin.herokuapp.com/getColors')
+            .then(response => response.json())
+            .then(data => {if(data.theme_color=='')
+            {
+                this.setState({colors:'#0e9caf'});
+            }
+            else
+            {
+                this.setState({colors:data.theme_color}); this.setState({logo:'https://uberdex-admin.herokuapp.com/images/byzantine/'+data.logo});
+            }
+            }).catch(data => {
+                this.setState({colors:'#0e9caf'});
+            });
+        }
     render(){
         const { tricker } = this.state;
         return(
@@ -70,13 +81,13 @@ class EOS extends Component{
                         
                               return  <tr id={hit.symbol}>
                                     <td><i className="fa fa-star"></i></td>
-                                    <td><a href={'/exchange/?opt='+hit.symbol}>{hit.symbol} / EOS</a></td>
+                                    <td><Link to={'/exchange/?opt='+hit.symbol} className="link">{hit.symbol} / EOS</Link></td>
                                     <td className={hit.change < 0?'minus':'plus'}>{hit.last}</td>
                                     <td className={hit.change < 0?'minus':'plus'}>{hit.change}</td>
                                     <td>{hit.high}</td>
                                     <td>{hit.low}</td>
                                     <td>{hit.volume}</td>
-                                    <td><a href={'/exchange/?opt='+hit.symbol} className="trade colors"  style={{'color': this.state.colors}}>Trade</a></td>
+                                    <td><Link to={'/exchange/?opt='+hit.symbol} className="link trade colors" style={{'color': this.state.colors}}>Trade</Link> </td>
                                 </tr>
                                 })}
                                 

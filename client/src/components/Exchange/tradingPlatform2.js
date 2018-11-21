@@ -16,7 +16,6 @@ var logoUrl = '/img/'+data['logo'];
 var backgroundss = data['theme_color'];
 var colorsss = data['theme_color'];
 
-
 function tabsOnes(e)
 {
     e.preventDefault();
@@ -33,7 +32,6 @@ function tabsTwos(e)
     $('#tabss-2').css('display', 'block');
     $('#tabss-1').css('display', 'none');
 }
-
 function tabsOne(e)
 {
     e.preventDefault();
@@ -223,7 +221,45 @@ function closeView(e){
 }
 
 
-
+function handleClick(e) {
+    e.preventDefault();
+    var amount_two = e.target.nextSibling.id;
+    var amount_twos = e.target.nextSibling.nextSibling.id;
+    var amount = e.target.id;
+    $(this).attr("data-id")
+     var ID = $(e.target).data('id');
+     var IDs = $(this).attr("data-id");
+     console.log(IDs);
+    var assetbuy = $(e.target).data('assetbuy');
+    var assetsell = $(e.target).data('assetsell');
+    var amountsell = $(e.target).data('amountsell');
+    var amountbuy = $(e.target).data('amountbuy');
+    var prices = $(e.target).data('price');
+    var maker = $(e.target).data('maker');
+    var makerexchange = $(e.target).data('makerexchange');
+    var side = $(e.target).data('side');
+    
+    document.getElementById('ID').value = ID;
+    document.getElementById('assetbuy').value = assetbuy;
+    document.getElementById('assetsell').value = assetsell;
+    document.getElementById('amountsell').value = amountsell;
+    document.getElementById('amountbuy').value = amountbuy;
+    document.getElementById('maker').value = maker;
+    document.getElementById('prices').value = prices;
+    document.getElementById('makerexchange').value = makerexchange;
+    document.getElementById('side').value = side;
+    document.getElementById('priceTwo').value = '';
+    document.getElementById('BuyPricetwos').value = '';
+    document.getElementById('BuyPricetwo').value = '';
+    document.getElementById('sellPricetwo').value = '';
+  //  console.log(amount_twos);
+   $('#apiType').val('take');
+    document.getElementById('price').value = amount;
+    document.getElementById('buyPrices').value = amount_two;
+    document.getElementById('buyPrice').value = amount_two;
+    document.getElementById('sellPrice').value = amount_twos;
+    
+  }
   function handleBuy(e)
 {
     e.preventDefault();
@@ -427,7 +463,41 @@ function changeBuyPrice(e)
     $('#BuyPricetwo').val(price/sellPrice);
     $('#apiType').val('make');
 }
+function handleClicks(e) {
+    e.preventDefault();
+    var amount_four = e.target.nextSibling.id;
+    var amount_fours = e.target.nextSibling.nextSibling.id;
+    var amounts = e.target.id;
 
+    var ID = $(e.target).data('id');
+    var assetbuy = $(e.target).data('assetbuy');
+    var assetsell = $(e.target).data('assetsell');
+    var amountsell = $(e.target).data('amountsell');
+    var amountbuy = $(e.target).data('amountbuy');
+    var prices = $(e.target).data('price');
+    var maker = $(e.target).data('maker');
+    var makerexchange = $(e.target).data('makerexchange');
+    var side = $(e.target).data('side');
+    
+    document.getElementById('ID').value = ID;
+    document.getElementById('assetbuy').value = assetbuy;
+    document.getElementById('assetsell').value = assetsell;
+    document.getElementById('amountsell').value = amountsell;
+    document.getElementById('amountbuy').value = amountbuy;
+    document.getElementById('maker').value = maker;
+    document.getElementById('prices').value = prices;
+    document.getElementById('makerexchange').value = makerexchange;
+    document.getElementById('side').value = side;
+    document.getElementById('priceTwo').value = amounts;
+    document.getElementById('BuyPricetwos').value = amount_four;
+    document.getElementById('BuyPricetwo').value = amount_four;
+    document.getElementById('sellPricetwo').value = amount_fours;
+    $('#apiType').val('take');
+     document.getElementById('price').value = '';
+    document.getElementById('buyPrices').value = '';
+    document.getElementById('buyPrice').value = '';
+    document.getElementById('sellPrice').value = '';
+  }
  var url = new URL(window.location.href);
      var     c = url.searchParams.get("opt");
 
@@ -506,7 +576,7 @@ class tradingHead extends Component{
           apil:'SEED',
           amounttype:'plus',
           myamount:"",
-          mysign:"",
+          
             Orders: [],
             OrderSells: [],
             tradebook: [],
@@ -515,95 +585,13 @@ class tradingHead extends Component{
             logo: [],
         };
          this.refresh_data = this.refresh_data.bind(this);
-          this.handleClicks = this.handleClicks.bind(this);         
-                this.handleClick = this.handleClick.bind(this);         
-    
+             this.refresh_r = this.refresh_r.bind(this);
+     
       }
-      handleClick=(orderId)=> {
-    let API="https://api.byzanti.ne/orderById?orderId="+orderId+"&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N";
-   fetch(API)
-        .then(response => response.json())
-        .then(data => {
-             var amount_two = data.amountSell;
-    var amount_twos = data.amountBuy;
-    var amount = data.price;
-    
-     var ID = orderId;
-    var assetbuy = data.assetSell;
-    var assetsell = data.assetBuy;
-    var amountsell = data.amountBuy;
-    var amountbuy = data.amountSell;
-    var prices = data.price;
-    var maker = data.useraccount;
-    var makerexchange = data.source;
-    var side = data.side;
-    
-    document.getElementById('ID').value = ID;
-    document.getElementById('assetbuy').value = assetbuy;
-    document.getElementById('assetsell').value = assetsell;
-    document.getElementById('amountsell').value = amountsell;
-    document.getElementById('amountbuy').value = amountbuy;
-    document.getElementById('maker').value = maker;
-    document.getElementById('prices').value = prices;
-    document.getElementById('makerexchange').value = makerexchange;
-    document.getElementById('side').value = side;
-    document.getElementById('priceTwo').value = '';
-    document.getElementById('BuyPricetwos').value = '';
-    document.getElementById('BuyPricetwo').value = '';
-    document.getElementById('sellPricetwo').value = '';
-  //  console.log(amount_twos);
-   $('#apiType').val('take');
-    document.getElementById('price').value = amount;
-    document.getElementById('buyPrices').value = amount_two;
-    document.getElementById('buyPrice').value = amount_two;
-    document.getElementById('sellPrice').value = amount_twos;
-            });
-   
-    
-  }
-handleClicks=(orderId,e)=> {
-  let API1="https://api.byzanti.ne/orderById?orderId="+orderId+"&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N";
-   fetch(API1)
-        .then(response => response.json())
-        .then(data => {
-            console.log(data)
-             var amount_four = data.amountBuy;
-    var amount_fours = data.amountSell;
-    var amounts = data.price;
-
-    var ID = orderId;
-    
-    var assetbuy = data.assetSell;
-    var assetsell = data.assetBuy;
-    var amountsell = data.amountBuy;
-    var amountbuy = data.amountSell;
-    var prices = data.price;
-    var maker = data.useraccount;
-    var makerexchange = data.source;
-    var side = data.side;
-    
-    document.getElementById('ID').value = ID;
-    document.getElementById('assetbuy').value = assetbuy;
-    document.getElementById('assetsell').value = assetsell;
-    document.getElementById('amountsell').value = amountsell;
-    document.getElementById('amountbuy').value = amountbuy;
-    document.getElementById('maker').value = maker;
-    document.getElementById('prices').value = prices;
-    document.getElementById('makerexchange').value = makerexchange;
-    document.getElementById('side').value = side;
-    document.getElementById('priceTwo').value = amounts;
-    document.getElementById('BuyPricetwos').value = amount_four;
-    document.getElementById('BuyPricetwo').value = amount_four;
-    document.getElementById('sellPricetwo').value = amount_fours;
-    $('#apiType').val('take');
-     document.getElementById('price').value = '';
-    document.getElementById('buyPrices').value = '';
-    document.getElementById('buyPrice').value = '';
-    document.getElementById('sellPrice').value = '';
-        });
-        
-  
-  }
+refresh_r()
+{
+    console.log('hi');
+}
 refresh_data()
 {
      
@@ -612,7 +600,7 @@ refresh_data()
       
         var API = 'https://api.byzanti.ne/ticker?symbol='+c+'&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
         var APISs = 'https://api.byzanti.ne/orderBook?symbol='+c+'&side=BUY&size=150&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
-        var APIS = 'https://api.byzanti.ne/orderBook?symbol='+c+'&side=BUY&size=10&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+        var APIS = 'https://api.byzanti.ne/orderBook?symbol='+c+'&side=BUY&size=11&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
         var APISS = 'https://api.byzanti.ne/orders?symbol='+c+'&side=BUY&size=22&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
         var orderTaker = 'https://api.byzanti.ne/tradebook?symbol='+c+'&size=100&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
         fetch(API)
@@ -634,8 +622,8 @@ refresh_data()
          fetch(orderTaker)
         .then(response => response.json())
         .then(data => {this.setState({ tacker: data }); var i=0; data.map(bids => {
-                                                      if(i==0){if(bids.assetBuy==c){this.setState({mysign:"plus"})}else{this.setState({mysign:"minus"})}this.setState({myamount:bids.price});i++;}    });});
-        
+                                   if(i==0){this.setState({myamount:bids.price});i++;}    });});
+       
     
         fetch('https://api.byzanti.ne/balance?account=taker1&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N')
         .then(response => response.json())
@@ -661,6 +649,13 @@ $('#sellPrice').val('');
 $('#priceTwo').val('');
 $('#BuyPricetwo').val('');
 $('#sellPricetwo').val('');
+setTimeout(
+    function() {
+        {this.refresh_r()}
+    }
+    .bind(this),
+    3000
+);
 }
     
     componentDidMount() {
@@ -694,7 +689,7 @@ $('#sellPricetwo').val('');
         fetch(orderTaker)
         .then(response => response.json())
         .then(data => {this.setState({ tacker: data }); var i=0; data.map(bids => {
-                                   if(i==0){if(bids.assetBuy==c){this.setState({mysign:"plus"})}else{this.setState({mysign:"minus"})}this.setState({myamount:bids.price});i++;}    });});
+                                   if(i==0){this.setState({myamount:bids.price});i++;}    });});
         
     
         fetch('https://api.byzanti.ne/balance?account=taker1&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N')
@@ -830,37 +825,42 @@ $('#sellPricetwo').val('');
                                 <li className="tabsThree"><a href="#tabs-3" onClick={tabsThree}>Sell</a></li>
                             </ul>
                             <div id="tabs-1">
-                               <table className="mainTable">
+                               <table>
                                     <thead>
                                         <tr>
                                             <th>Price(EOS)</th>
                                             {tricker.map(hit => <th>{hit.symbol} </th>  )}
                                             <th>Total(EOS)</th>
-                                            <th>Exchange</th>
                                     </tr>
                                     </thead>
                                     
                                     <tbody>
                                         {orderBooks.map(bids => {
-                                          
-                                            return  <tr onClick={this.handleClicks.bind(this,bids.orderId)}>
-                                                <td className='minus' id={bids.orderId} data-id={bids.orderId} data-assetbuy={bids.assetSell} data-assetsell={bids.assetBuy} data-amountsell={bids.amountBuy} data-amountbuy={bids.amountSell} data-price={bids.price} data-maker={bids.useraccount} data-makerexchange={bids.source} data-side={bids.side}   >{bids.price}</td>
+                                           myamount=bids.price;
+                                           if(bids.change>0)
+                                           {
+                                            mysign="plus";
+                                           }
+                                           else
+                                           {
+                                            mysign="minus";
+                                           }
+                                            return  <tr>
+                                                <td className='minus' id={bids.price} data-id={bids.orderId} data-assetbuy={bids.assetSell} data-assetsell={bids.assetBuy} data-amountsell={bids.amountBuy} data-amountbuy={bids.amountSell} data-price={bids.price} data-maker={bids.useraccount} data-makerexchange={bids.source} data-side={bids.side}   onClick={handleClicks}>{bids.price}</td>
                                                 <td id={bids.amountBuy}>{bids.amountBuy}</td>
                                                 <td id={bids.amountSell}>{bids.amountSell}</td>
-                                                <td id={bids.source}>{bids.source}</td>
                                             </tr>
                                         }
                                         )}
                                
                                         <tr>
-                                            <td colspan="4" className={"lastTrans "+this.state.mysign}><span id="lastValue">{this.state.myamount}</span><i className="fa fa-arrow-up"></i><i className="fa fa-arrow-down"></i></td>
+                                            <td colspan="3" className={"lastTrans "+mysign}><span id="lastValue">{this.state.myamount}</span><i className="fa fa-arrow-up"></i><i className="fa fa-arrow-down"></i></td>
                                         </tr>
                                         {orderBook.map(ask => 
                                             <tr>
-                                                <td className='plus' id={ask.price} data-id={ask.orderId} data-assetbuy={ask.assetSell} data-assetsell={ask.assetBuy} data-amountsell={ask.amountBuy} data-amountbuy={ask.amountSell} data-price={ask.price} data-maker={ask.useraccount} data-makerexchange={ask.source} data-side={ask.side} onClick={this.handleClick.bind(this,ask.orderId)}>{ask.price}</td>
+                                                <td className='plus' id={ask.price} data-id={ask.orderId} data-assetbuy={ask.assetSell} data-assetsell={ask.assetBuy} data-amountsell={ask.amountBuy} data-amountbuy={ask.amountSell} data-price={ask.price} data-maker={ask.useraccount} data-makerexchange={ask.source} data-side={ask.side} onClick={handleClick}>{ask.price}</td>
                                                 <td id={ask.amountSell}>{ask.amountSell}</td>
                                                 <td id={ask.amountBuy}>{ask.amountBuy}</td>
-                                                <td id={ask.source}>{ask.source}</td>
                                             </tr>
                                         )}
                                         
@@ -874,7 +874,6 @@ $('#sellPricetwo').val('');
                                             <th>Price(EOS)</th>
                                             {tricker.map(hit => <th>{hit.symbol} </th>  )}
                                             <th>Total(EOS)</th>
-                                            <th>Exchange</th>
                                     </tr>
                                     </thead>
                                     
@@ -882,10 +881,9 @@ $('#sellPricetwo').val('');
                                         
                                         {orderBookss.map(ask => 
                                             <tr>
-                                                <td className='plus' id={ask.price} data-id={ask.orderId} data-assetbuy={ask.assetSell} data-assetsell={ask.assetBuy} data-amountsell={ask.amountBuy} data-amountbuy={ask.amountSell} data-price={ask.price} data-maker={ask.useraccount} data-makerexchange={ask.source} data-side={ask.side} onClick={this.handleClick.bind(this,ask.orderId)}>{ask.price}</td>
+                                                <td className='plus' id={ask.price} data-id={ask.orderId} data-assetbuy={ask.assetSell} data-assetsell={ask.assetBuy} data-amountsell={ask.amountBuy} data-amountbuy={ask.amountSell} data-price={ask.price} data-maker={ask.useraccount} data-makerexchange={ask.source} data-side={ask.side} onClick={handleClick}>{ask.price}</td>
                                                 <td id={ask.amountSell}>{ask.amountSell}</td>
                                                 <td id={ask.amountBuy}>{ask.amountBuy}</td>
-                                                <td id={ask.source}>{ask.source}</td>
                                             </tr>
                                         )}
 
@@ -899,7 +897,6 @@ $('#sellPricetwo').val('');
                                             <th>Price(EOS)</th>
                                             {tricker.map(hit => <th>{hit.symbol} </th>  )}
                                             <th>Total(EOS)</th>
-                                            <th>Exchange</th>
                                     </tr>
                                     </thead>
                                     
@@ -907,10 +904,9 @@ $('#sellPricetwo').val('');
                                     <tbody>
                                         {orderBookss.map(bids => 
                                             <tr>
-                                                <td className='minus' id={bids.price} data-id={bids.orderId} data-assetbuy={bids.assetSell} data-assetsell={bids.assetBuy} data-amountsell={bids.amountBuy} data-amountbuy={bids.amountSell} data-price={bids.price} data-maker={bids.useraccount} data-makerexchange={bids.source} data-side={bids.side}   onClick={this.handleClicks.bind(this,bids.orderId)}>{bids.price}</td>
+                                                <td className='minus' id={bids.price} data-id={bids.orderId} data-assetbuy={bids.assetSell} data-assetsell={bids.assetBuy} data-amountsell={bids.amountBuy} data-amountbuy={bids.amountSell} data-price={bids.price} data-maker={bids.useraccount} data-makerexchange={bids.source} data-side={bids.side}   onClick={handleClicks}>{bids.price}</td>
                                                 <td id={bids.amountBuy}>{bids.amountBuy}</td>
                                                 <td id={bids.amountSell}>{bids.amountSell}</td>
-                                                <td id={bids.source}>{bids.source}</td>
                                             </tr>
                                         )}
 
@@ -942,7 +938,7 @@ $('#sellPricetwo').val('');
                                     </label>
                                     <input type="number"  id="sellPrice" onChange={changeSellPrice} />
                                     {tricker.map(hit =>
-                                        <input type="submit" value={'Buy '+hit.symbol} onClick={handleBuy} className="background" />
+                                        <input type="submit" value={'Buy '+hit.symbol} onClick={handleBuy} className="background" style={color} />
                                     )}
                                 </div>
                                 <div className="red">
@@ -1071,9 +1067,7 @@ $('#sellPricetwo').val('');
                         </div>
                     </div> 
                 )}
-                
-            
-                <div className="orderTab">
+            <div className="orderTab">
                 <div className="orderD">
                     <div className="container clearfix">
                         <ul>

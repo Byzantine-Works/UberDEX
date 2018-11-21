@@ -17,23 +17,6 @@ var backgroundss = data['theme_color'];
 var colorsss = data['theme_color'];
 
 
-function tabsOnes(e)
-{
-    e.preventDefault();
-    $('.tabsOnes').addClass('ui-tabs-active');
-    $('.tabsTwos').removeClass('ui-tabs-active');
-    $('#tabss-1').css('display', 'block');
-    $('#tabss-2').css('display', 'none');
-}
-function tabsTwos(e)
-{
-    e.preventDefault();
-    $('.tabsOnes').removeClass('ui-tabs-active');
-    $('.tabsTwos').addClass('ui-tabs-active');
-    $('#tabss-2').css('display', 'block');
-    $('#tabss-1').css('display', 'none');
-}
-
 function tabsOne(e)
 {
     e.preventDefault();
@@ -223,7 +206,43 @@ function closeView(e){
 }
 
 
-
+function handleClick(e) {
+    e.preventDefault();
+    var amount_two = e.target.nextSibling.id;
+    var amount_twos = e.target.nextSibling.nextSibling.id;
+    var amount = e.target.id;
+    
+     var ID = $(e.target).data('id');
+    var assetbuy = $(e.target).data('assetbuy');
+    var assetsell = $(e.target).data('assetsell');
+    var amountsell = $(e.target).data('amountsell');
+    var amountbuy = $(e.target).data('amountbuy');
+    var prices = $(e.target).data('price');
+    var maker = $(e.target).data('maker');
+    var makerexchange = $(e.target).data('makerexchange');
+    var side = $(e.target).data('side');
+    
+    document.getElementById('ID').value = ID;
+    document.getElementById('assetbuy').value = assetbuy;
+    document.getElementById('assetsell').value = assetsell;
+    document.getElementById('amountsell').value = amountsell;
+    document.getElementById('amountbuy').value = amountbuy;
+    document.getElementById('maker').value = maker;
+    document.getElementById('prices').value = prices;
+    document.getElementById('makerexchange').value = makerexchange;
+    document.getElementById('side').value = side;
+    document.getElementById('priceTwo').value = '';
+    document.getElementById('BuyPricetwos').value = '';
+    document.getElementById('BuyPricetwo').value = '';
+    document.getElementById('sellPricetwo').value = '';
+  //  console.log(amount_twos);
+   $('#apiType').val('take');
+    document.getElementById('price').value = amount;
+    document.getElementById('buyPrices').value = amount_two;
+    document.getElementById('buyPrice').value = amount_two;
+    document.getElementById('sellPrice').value = amount_twos;
+    
+  }
   function handleBuy(e)
 {
     e.preventDefault();
@@ -427,7 +446,41 @@ function changeBuyPrice(e)
     $('#BuyPricetwo').val(price/sellPrice);
     $('#apiType').val('make');
 }
+function handleClicks(e) {
+    e.preventDefault();
+    var amount_four = e.target.nextSibling.id;
+    var amount_fours = e.target.nextSibling.nextSibling.id;
+    var amounts = e.target.id;
 
+    var ID = $(e.target).data('id');
+    var assetbuy = $(e.target).data('assetbuy');
+    var assetsell = $(e.target).data('assetsell');
+    var amountsell = $(e.target).data('amountsell');
+    var amountbuy = $(e.target).data('amountbuy');
+    var prices = $(e.target).data('price');
+    var maker = $(e.target).data('maker');
+    var makerexchange = $(e.target).data('makerexchange');
+    var side = $(e.target).data('side');
+    
+    document.getElementById('ID').value = ID;
+    document.getElementById('assetbuy').value = assetbuy;
+    document.getElementById('assetsell').value = assetsell;
+    document.getElementById('amountsell').value = amountsell;
+    document.getElementById('amountbuy').value = amountbuy;
+    document.getElementById('maker').value = maker;
+    document.getElementById('prices').value = prices;
+    document.getElementById('makerexchange').value = makerexchange;
+    document.getElementById('side').value = side;
+    document.getElementById('priceTwo').value = amounts;
+    document.getElementById('BuyPricetwos').value = amount_four;
+    document.getElementById('BuyPricetwo').value = amount_four;
+    document.getElementById('sellPricetwo').value = amount_fours;
+    $('#apiType').val('take');
+     document.getElementById('price').value = '';
+    document.getElementById('buyPrices').value = '';
+    document.getElementById('buyPrice').value = '';
+    document.getElementById('sellPrice').value = '';
+  }
  var url = new URL(window.location.href);
      var     c = url.searchParams.get("opt");
 
@@ -504,9 +557,7 @@ class tradingHead extends Component{
           tacker: [],
           blc: [],
           apil:'SEED',
-          amounttype:'plus',
-          myamount:"",
-          mysign:"",
+          
             Orders: [],
             OrderSells: [],
             tradebook: [],
@@ -515,95 +566,8 @@ class tradingHead extends Component{
             logo: [],
         };
          this.refresh_data = this.refresh_data.bind(this);
-          this.handleClicks = this.handleClicks.bind(this);         
-                this.handleClick = this.handleClick.bind(this);         
-    
       }
-      handleClick=(orderId)=> {
-    let API="https://api.byzanti.ne/orderById?orderId="+orderId+"&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N";
-   fetch(API)
-        .then(response => response.json())
-        .then(data => {
-             var amount_two = data.amountSell;
-    var amount_twos = data.amountBuy;
-    var amount = data.price;
-    
-     var ID = orderId;
-    var assetbuy = data.assetSell;
-    var assetsell = data.assetBuy;
-    var amountsell = data.amountBuy;
-    var amountbuy = data.amountSell;
-    var prices = data.price;
-    var maker = data.useraccount;
-    var makerexchange = data.source;
-    var side = data.side;
-    
-    document.getElementById('ID').value = ID;
-    document.getElementById('assetbuy').value = assetbuy;
-    document.getElementById('assetsell').value = assetsell;
-    document.getElementById('amountsell').value = amountsell;
-    document.getElementById('amountbuy').value = amountbuy;
-    document.getElementById('maker').value = maker;
-    document.getElementById('prices').value = prices;
-    document.getElementById('makerexchange').value = makerexchange;
-    document.getElementById('side').value = side;
-    document.getElementById('priceTwo').value = '';
-    document.getElementById('BuyPricetwos').value = '';
-    document.getElementById('BuyPricetwo').value = '';
-    document.getElementById('sellPricetwo').value = '';
-  //  console.log(amount_twos);
-   $('#apiType').val('take');
-    document.getElementById('price').value = amount;
-    document.getElementById('buyPrices').value = amount_two;
-    document.getElementById('buyPrice').value = amount_two;
-    document.getElementById('sellPrice').value = amount_twos;
-            });
-   
-    
-  }
-handleClicks=(orderId,e)=> {
-  let API1="https://api.byzanti.ne/orderById?orderId="+orderId+"&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N";
-   fetch(API1)
-        .then(response => response.json())
-        .then(data => {
-            console.log(data)
-             var amount_four = data.amountBuy;
-    var amount_fours = data.amountSell;
-    var amounts = data.price;
 
-    var ID = orderId;
-    
-    var assetbuy = data.assetSell;
-    var assetsell = data.assetBuy;
-    var amountsell = data.amountBuy;
-    var amountbuy = data.amountSell;
-    var prices = data.price;
-    var maker = data.useraccount;
-    var makerexchange = data.source;
-    var side = data.side;
-    
-    document.getElementById('ID').value = ID;
-    document.getElementById('assetbuy').value = assetbuy;
-    document.getElementById('assetsell').value = assetsell;
-    document.getElementById('amountsell').value = amountsell;
-    document.getElementById('amountbuy').value = amountbuy;
-    document.getElementById('maker').value = maker;
-    document.getElementById('prices').value = prices;
-    document.getElementById('makerexchange').value = makerexchange;
-    document.getElementById('side').value = side;
-    document.getElementById('priceTwo').value = amounts;
-    document.getElementById('BuyPricetwos').value = amount_four;
-    document.getElementById('BuyPricetwo').value = amount_four;
-    document.getElementById('sellPricetwo').value = amount_fours;
-    $('#apiType').val('take');
-     document.getElementById('price').value = '';
-    document.getElementById('buyPrices').value = '';
-    document.getElementById('buyPrice').value = '';
-    document.getElementById('sellPrice').value = '';
-        });
-        
-  
-  }
 refresh_data()
 {
      
@@ -612,7 +576,7 @@ refresh_data()
       
         var API = 'https://api.byzanti.ne/ticker?symbol='+c+'&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
         var APISs = 'https://api.byzanti.ne/orderBook?symbol='+c+'&side=BUY&size=150&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
-        var APIS = 'https://api.byzanti.ne/orderBook?symbol='+c+'&side=BUY&size=10&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+        var APIS = 'https://api.byzanti.ne/orderBook?symbol='+c+'&side=BUY&size=11&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
         var APISS = 'https://api.byzanti.ne/orders?symbol='+c+'&side=BUY&size=22&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
         var orderTaker = 'https://api.byzanti.ne/tradebook?symbol='+c+'&size=100&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
         fetch(API)
@@ -631,15 +595,13 @@ refresh_data()
         .then(response => response.json())
         .then(data => {this.setState({ orderBookss: data['asks'], orderBookss: data['bids'] }); });
         
-         fetch(orderTaker)
+        fetch(orderTaker)
         .then(response => response.json())
-        .then(data => {this.setState({ tacker: data }); var i=0; data.map(bids => {
-                                                      if(i==0){if(bids.assetBuy==c){this.setState({mysign:"plus"})}else{this.setState({mysign:"minus"})}this.setState({myamount:bids.price});i++;}    });});
-        
-    
-        fetch('https://api.byzanti.ne/balance?account=taker1&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N')
+        .then(data => {this.setState({ tacker: data }); });
+
+        fetch('https://api.byzanti.ne/exbalance?account=taker1&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N')
         .then(response => response.json())
-        .then(data => {this.setState({blc:data}); });
+        .then(data => {this.setState({blc:(data[0].amount/10000)}); });
         
         var tradebook = 'https://api.byzanti.ne/tradebook?symbol='+c+'&size=10&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
         var NAPI = 'https://api.byzanti.ne/ordersByUser?user=taker1&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
@@ -666,70 +628,7 @@ $('#sellPricetwo').val('');
     componentDidMount() {
       /*   var url = new URL(window.location.href);
         console.log(url.href.substr(url.href.lastIndexOf('/') + 1));*/
-     
-        var url = new URL(window.location.href);
-         var c = url.searchParams.get("opt");
-      
-        var API = 'https://api.byzanti.ne/ticker?symbol='+c+'&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
-        var APISs = 'https://api.byzanti.ne/orderBook?symbol='+c+'&side=BUY&size=150&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
-        var APIS = 'https://api.byzanti.ne/orderBook?symbol='+c+'&side=BUY&size=10&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
-        var APISS = 'https://api.byzanti.ne/orders?symbol='+c+'&side=BUY&size=22&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
-        var orderTaker = 'https://api.byzanti.ne/tradebook?symbol='+c+'&size=100&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
-        fetch(API)
-        .then(response => response.json())
-        .then(data => {this.setState({ tricker: data }); });
-        
-        fetch(APISS)
-        .then(response => response.json())
-        .then(data => {this.setState({ orders: data }); });
-        
-        fetch(APIS)
-        .then(response => response.json())
-        .then(data => {this.setState({ orderBook: data['asks'], orderBooks: data['bids'] }); });
-        
-        fetch(APISs)
-        .then(response => response.json())
-        .then(data => {this.setState({ orderBookss: data['asks'], orderBookss: data['bids'] }); });
-        
-        fetch(orderTaker)
-        .then(response => response.json())
-        .then(data => {this.setState({ tacker: data }); var i=0; data.map(bids => {
-                                   if(i==0){if(bids.assetBuy==c){this.setState({mysign:"plus"})}else{this.setState({mysign:"minus"})}this.setState({myamount:bids.price});i++;}    });});
-        
-    
-        fetch('https://api.byzanti.ne/balance?account=taker1&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N')
-        .then(response => response.json())
-        .then(data => {this.setState({blc:data}); });
-        
-        var tradebook = 'https://api.byzanti.ne/tradebook?symbol='+c+'&size=10&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
-        var NAPI = 'https://api.byzanti.ne/ordersByUser?user=taker1&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
-        var OrderSell = 'https://api.byzanti.ne/orders?symbol=IQ&side=SELL&size=100&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
-        fetch(NAPI)
-        .then(response => response.json())
-        .then(data => {this.setState({ Orders: data }); });
-        fetch(OrderSell)
-        .then(response => response.json())
-        .then(data => {this.setState({ OrderSells: data }); });
-        
-        fetch(tradebook)
-        .then(response => response.json())
-        .then(data => {this.setState({ tradebook: data }); });
-
-        fetch('https://uberdex-admin.herokuapp.com/getColors')
-        .then(response => response.json())
-        .then(data => {if(data.logo=='')
-        {
-            this.setState({colors:'#0e9caf'});this.setState({logo:logoss});
-        }
-        else
-        {
-            this.setState({colors:data.theme_color}); 
-            $('#logoImg').attr('src','https://uberdex-admin.herokuapp.com/images/byzantine/'+data.logo);
-        }
-        }).catch(data => {
-            this.setState({colors:'#0e9caf'});this.setState({logo:logoss});
-        });
-           const widgetOptions = {
+        const widgetOptions = {
 			debug: false,
 			symbol: this.props.symbol,
 			datafeed: Datafeed,
@@ -766,15 +665,73 @@ $('#sellPricetwo').val('');
 			});
         });
         
+        var url = new URL(window.location.href);
+         var c = url.searchParams.get("opt");
+      
+        var API = 'https://api.byzanti.ne/ticker?symbol='+c+'&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+        var APISs = 'https://api.byzanti.ne/orderBook?symbol='+c+'&side=BUY&size=150&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+        var APIS = 'https://api.byzanti.ne/orderBook?symbol='+c+'&side=BUY&size=10&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+        var APISS = 'https://api.byzanti.ne/orders?symbol='+c+'&side=BUY&size=22&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+        var orderTaker = 'https://api.byzanti.ne/tradebook?symbol='+c+'&size=100&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+        fetch(API)
+        .then(response => response.json())
+        .then(data => {this.setState({ tricker: data }); });
+        
+        fetch(APISS)
+        .then(response => response.json())
+        .then(data => {this.setState({ orders: data }); });
+        
+        fetch(APIS)
+        .then(response => response.json())
+        .then(data => {this.setState({ orderBook: data['asks'], orderBooks: data['bids'] }); });
+        
+        fetch(APISs)
+        .then(response => response.json())
+        .then(data => {this.setState({ orderBookss: data['asks'], orderBookss: data['bids'] }); });
+        
+        fetch(orderTaker)
+        .then(response => response.json())
+        .then(data => {this.setState({ tacker: data }); });
+
+        fetch('https://api.byzanti.ne/exbalance?account=taker1&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N')
+        .then(response => response.json())
+        .then(data => {this.setState({blc:(data[0].amount/10000)}); });
+        
+        var tradebook = 'https://api.byzanti.ne/tradebook?symbol='+c+'&size=10&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+        var NAPI = 'https://api.byzanti.ne/ordersByUser?user=taker1&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+        var OrderSell = 'https://api.byzanti.ne/orders?symbol=IQ&side=SELL&size=100&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+        fetch(NAPI)
+        .then(response => response.json())
+        .then(data => {this.setState({ Orders: data }); });
+        fetch(OrderSell)
+        .then(response => response.json())
+        .then(data => {this.setState({ OrderSells: data }); });
+        
+        fetch(tradebook)
+        .then(response => response.json())
+        .then(data => {this.setState({ tradebook: data }); });
+
+        fetch('https://uberdex-admin.herokuapp.com/getColors')
+        .then(response => response.json())
+        .then(data => {if(data.logo=='')
+        {
+            this.setState({colors:'#0e9caf'});this.setState({logo:logoss});
+        }
+        else
+        {
+            this.setState({colors:data.theme_color}); 
+            $('#logoImg').attr('src','https://uberdex-admin.herokuapp.com/images/byzantine/'+data.logo);
+        }
+        }).catch(data => {
+            this.setState({colors:'#0e9caf'});this.setState({logo:logoss});
+        });
         setTimeout(function(){
             handledefualt();
                
         },3000);
     }
-    
     render(){
-       var {myamount}=0;
-       var {mysign}="plus";
+       
         const { tricker } = this.state;
         const { orders } = this.state;
         const { orderBook } = this.state;
@@ -786,7 +743,7 @@ $('#sellPricetwo').val('');
         const { Orders } = this.state;
         const { OrderSells } = this.state;
         const { tradebook } = this.state;
-      // console.log(strlen(orderBooks));
+       
         return(
             <div>
                 <div className="wellcomBanner background" style={color}>
@@ -830,37 +787,31 @@ $('#sellPricetwo').val('');
                                 <li className="tabsThree"><a href="#tabs-3" onClick={tabsThree}>Sell</a></li>
                             </ul>
                             <div id="tabs-1">
-                               <table className="mainTable">
+                               <table>
                                     <thead>
                                         <tr>
                                             <th>Price(EOS)</th>
                                             {tricker.map(hit => <th>{hit.symbol} </th>  )}
                                             <th>Total(EOS)</th>
-                                            <th>Exchange</th>
                                     </tr>
                                     </thead>
                                     
                                     <tbody>
-                                        {orderBooks.map(bids => {
-                                          
-                                            return  <tr onClick={this.handleClicks.bind(this,bids.orderId)}>
-                                                <td className='minus' id={bids.orderId} data-id={bids.orderId} data-assetbuy={bids.assetSell} data-assetsell={bids.assetBuy} data-amountsell={bids.amountBuy} data-amountbuy={bids.amountSell} data-price={bids.price} data-maker={bids.useraccount} data-makerexchange={bids.source} data-side={bids.side}   >{bids.price}</td>
+                                        {orderBooks.map(bids => 
+                                            <tr>
+                                                <td className='minus' id={bids.price} data-id={bids.orderId} data-assetbuy={bids.assetSell} data-assetsell={bids.assetBuy} data-amountsell={bids.amountBuy} data-amountbuy={bids.amountSell} data-price={bids.price} data-maker={bids.useraccount} data-makerexchange={bids.source} data-side={bids.side}   onClick={handleClicks}>{bids.price}</td>
                                                 <td id={bids.amountBuy}>{bids.amountBuy}</td>
                                                 <td id={bids.amountSell}>{bids.amountSell}</td>
-                                                <td id={bids.source}>{bids.source}</td>
                                             </tr>
-                                        }
                                         )}
-                               
                                         <tr>
-                                            <td colspan="4" className={"lastTrans "+this.state.mysign}><span id="lastValue">{this.state.myamount}</span><i className="fa fa-arrow-up"></i><i className="fa fa-arrow-down"></i></td>
+                                            <td colspan="3" className="lastTrans plus"><span id="lastValue">0.00115</span><i className="fa fa-arrow-up"></i><i className="fa fa-arrow-down"></i></td>
                                         </tr>
                                         {orderBook.map(ask => 
                                             <tr>
-                                                <td className='plus' id={ask.price} data-id={ask.orderId} data-assetbuy={ask.assetSell} data-assetsell={ask.assetBuy} data-amountsell={ask.amountBuy} data-amountbuy={ask.amountSell} data-price={ask.price} data-maker={ask.useraccount} data-makerexchange={ask.source} data-side={ask.side} onClick={this.handleClick.bind(this,ask.orderId)}>{ask.price}</td>
+                                                <td className='plus' id={ask.price} data-id={ask.orderId} data-assetbuy={ask.assetSell} data-assetsell={ask.assetBuy} data-amountsell={ask.amountBuy} data-amountbuy={ask.amountSell} data-price={ask.price} data-maker={ask.useraccount} data-makerexchange={ask.source} data-side={ask.side} onClick={handleClick}>{ask.price}</td>
                                                 <td id={ask.amountSell}>{ask.amountSell}</td>
                                                 <td id={ask.amountBuy}>{ask.amountBuy}</td>
-                                                <td id={ask.source}>{ask.source}</td>
                                             </tr>
                                         )}
                                         
@@ -874,7 +825,6 @@ $('#sellPricetwo').val('');
                                             <th>Price(EOS)</th>
                                             {tricker.map(hit => <th>{hit.symbol} </th>  )}
                                             <th>Total(EOS)</th>
-                                            <th>Exchange</th>
                                     </tr>
                                     </thead>
                                     
@@ -882,10 +832,9 @@ $('#sellPricetwo').val('');
                                         
                                         {orderBookss.map(ask => 
                                             <tr>
-                                                <td className='plus' id={ask.price} data-id={ask.orderId} data-assetbuy={ask.assetSell} data-assetsell={ask.assetBuy} data-amountsell={ask.amountBuy} data-amountbuy={ask.amountSell} data-price={ask.price} data-maker={ask.useraccount} data-makerexchange={ask.source} data-side={ask.side} onClick={this.handleClick.bind(this,ask.orderId)}>{ask.price}</td>
+                                                <td className='plus' id={ask.price} data-id={ask.orderId} data-assetbuy={ask.assetSell} data-assetsell={ask.assetBuy} data-amountsell={ask.amountBuy} data-amountbuy={ask.amountSell} data-price={ask.price} data-maker={ask.useraccount} data-makerexchange={ask.source} data-side={ask.side} onClick={handleClick}>{ask.price}</td>
                                                 <td id={ask.amountSell}>{ask.amountSell}</td>
                                                 <td id={ask.amountBuy}>{ask.amountBuy}</td>
-                                                <td id={ask.source}>{ask.source}</td>
                                             </tr>
                                         )}
 
@@ -899,7 +848,6 @@ $('#sellPricetwo').val('');
                                             <th>Price(EOS)</th>
                                             {tricker.map(hit => <th>{hit.symbol} </th>  )}
                                             <th>Total(EOS)</th>
-                                            <th>Exchange</th>
                                     </tr>
                                     </thead>
                                     
@@ -907,10 +855,9 @@ $('#sellPricetwo').val('');
                                     <tbody>
                                         {orderBookss.map(bids => 
                                             <tr>
-                                                <td className='minus' id={bids.price} data-id={bids.orderId} data-assetbuy={bids.assetSell} data-assetsell={bids.assetBuy} data-amountsell={bids.amountBuy} data-amountbuy={bids.amountSell} data-price={bids.price} data-maker={bids.useraccount} data-makerexchange={bids.source} data-side={bids.side}   onClick={this.handleClicks.bind(this,bids.orderId)}>{bids.price}</td>
+                                                <td className='minus' id={bids.price} data-id={bids.orderId} data-assetbuy={bids.assetSell} data-assetsell={bids.assetBuy} data-amountsell={bids.amountBuy} data-amountbuy={bids.amountSell} data-price={bids.price} data-maker={bids.useraccount} data-makerexchange={bids.source} data-side={bids.side}   onClick={handleClicks}>{bids.price}</td>
                                                 <td id={bids.amountBuy}>{bids.amountBuy}</td>
                                                 <td id={bids.amountSell}>{bids.amountSell}</td>
-                                                <td id={bids.source}>{bids.source}</td>
                                             </tr>
                                         )}
 
@@ -928,7 +875,7 @@ $('#sellPricetwo').val('');
                             <div className="clearfix">
                                 <div>
                                     {tricker.map(hit =>
-                                        <h6>Buy {hit.symbol} <span>Balance:{this.state.blc[0]}</span></h6>
+                                        <h6>Buy {hit.symbol} <span>Balance:{this.state.blc}</span></h6>
                                     )}
                                     <label>Price <span></span> </label>
                                     <input type="number" id="price" />
@@ -941,13 +888,11 @@ $('#sellPricetwo').val('');
                                     <label>Total  <span>EOS</span>
                                     </label>
                                     <input type="number"  id="sellPrice" onChange={changeSellPrice} />
-                                    {tricker.map(hit =>
-                                        <input type="submit" value={'Buy '+hit.symbol} onClick={handleBuy} className="background" />
-                                    )}
+                                    <input type="submit" value="Signin to trade" onClick={handleBuy} className="background" style={color} />
                                 </div>
                                 <div className="red">
                                     {tricker.map(hit =>
-                                        <h6>Sell {hit.symbol} <span>Balance:{this.state.blc[1]}</span></h6>
+                                        <h6>Sell {hit.symbol} <span>Balance:0.0000 EOS</span></h6>
                                     )}
                                     <label>Price <span></span> </label>
                                     <input type="number"  id="priceTwo" />
@@ -969,9 +914,7 @@ $('#sellPricetwo').val('');
                                     <input type="number" id="BuyPricetwo"  onChange={changeBuyPrice1} />
                                     <label>Total <span>EOS</span></label>
                                     <input type="number" id="sellPricetwo" onChange={changeBuyPrice} />
-                                    {tricker.map(hit =>
-                                        <input type="submit"  onClick={handleSell} value={'Sell '+hit.symbol} />
-                                    )}
+                                    <input type="submit"  onClick={handleSell} value="Signin to trade" />
                                 </div>
                             </div>
                         </div>
@@ -1019,7 +962,6 @@ $('#sellPricetwo').val('');
                                         <li><span>Maker Exchange</span> {tackers.makerExchange} <cite></cite> </li>
                                         <li><span>Time stamp</span> <cite>{tackers.timestamp}</cite> </li>
                                         <li><span>Trade Id</span> <cite className="tradeId">{tackers.tradeId}</cite> </li>
-                                        <li><span>Transaction Id</span> <a href={'/transaction/?trxID='+tackers.transactionId+'&blocknumber='+tackers.blockNumber}>{tackers.transactionId}</a></li>
                                     </ul>
                                     
                                     <ul>
@@ -1030,7 +972,6 @@ $('#sellPricetwo').val('');
                                         <li><span>Taker Exchange</span> <cite>{tackers.takerExchange}</cite> </li>
                                         <li><span>Time stamp</span> <cite>{tackers.timestamp}</cite> </li>
                                         <li><span>Trade Id</span> <cite className="tradeId">{tackers.tradeId}</cite> </li>
-                                        <li><span>Transaction Id</span> <a href={'/transaction/?trxID='+tackers.transactionId+'&blocknumber='+tackers.blockNumber}>{tackers.transactionId}</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -1072,116 +1013,118 @@ $('#sellPricetwo').val('');
                     </div> 
                 )}
                 
-            
-                <div className="orderTab">
-                <div className="orderD">
-                    <div className="container clearfix">
-                        <ul>
-                            <li className="tabsOnes ui-tabs-active"><a href="#tabss-1" onClick={tabsOnes}>Open Order</a></li>
-                            <li className="tabsTwos"><a href="#tabss-2" onClick={tabsTwos}>Order History</a></li>
-                        </ul>
-                        <div id="tabss-1">  
-                        <table className="openOrder">
-                            <thead>
+            <div className="orderD">
+                <div className="container clearfix">
                         
-                                <tr>
-                                    <th>Coin</th>
-                                    <th>Type </th>
-                                    <th>Order Id </th>
-                                    <th>Price</th>
-                                    <th>Amount</th>
-                                    <th>Timestamp</th>
-                                    <th>Status </th>
-                                    <th>Account Name</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {Orders.map(order =>{
-                                    if(order.cancelled=='1')
-                                    {
-                                        var isCancel='Cancelled';
-                                    }
-                                    else
-                                    {
-                                        var isCancel='Active';
-                                    }
-                                    if(order.amountBuy>0)
-                                    {
-                                        var amountToShow=order.amountBuy;
-                                    }
-                                    else
-                                    {
-                                        var amountToShow=order.amountSell;
-                                    }
-                                    
-                                    var url = new URL(window.location.href);
-                                    var c = url.searchParams.get("opt");
-                                    
-                                    if(order.assetBuy==c || order.assetSell==c)
-                                    {
-                                        return   <tr>
-                                            <td className={'plus '+order.assetBuy}  id={order.orderId}  onClick={orderView} >{order.assetBuy}</td>
-                                            <td id={order.orderId}  onClick={orderView}>{order.side}</td>
-                                            <td id={order.orderId}  onClick={orderView}>{order.orderId}</td>
-                                            <td id={order.orderId}  onClick={orderView}>{parseFloat(order.price).toFixed(4)}</td>
-                                            <td id={order.orderId}  onClick={orderView}>{parseFloat(amountToShow).toFixed(4)}</td>
-                                            <td id={order.orderId}  onClick={orderView}>{order.created}</td>
-                                            <td id={order.orderId}    ><a href="javascript:void(0)" id={order.orderId} onClick={cancelOrder}>{isCancel}</a></td>
-                                            <td id={order.orderId}  onClick={orderView}>{order.useraccount}</td>
-                                        </tr>
-                                    }
-                                    
-                            
-                                
-                                } )}
-                            </tbody>
-                        </table>
-                        </div> 
-                        <div id="tabss-2">
-                        <table>
-                            <thead>
-                        
-                                <tr>
-                                    <th>Coin</th>
-                                    <th>Type </th>
-                                    <th>Trade ID </th>
-                                    <th>Price</th>
-                                    <th>Amount</th>
-                                    <th>Timestamp</th>
-                                    <th>Taker </th>
-                                    <th>Maker </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            {tradebook.map(tradebooks =>{
-                                if(tradebooks.taker=='taker1')
+                    <h3>Open Orders</h3>
+                    <table className="openOrder">
+                        <thead>
+                    
+                            <tr>
+                                <th>Coin</th>
+                                <th>Type </th>
+                                <th>Order Id </th>
+                                <th>Entrusted Time</th>
+                                <th>Price</th>
+                                <th>Amount</th>
+                                <th>Timestamp</th>
+                                <th>Entrusted </th>
+                                <th>Status </th>
+                                <th>Account Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {Orders.map(order =>{
+                                if(order.cancelled=='1')
                                 {
-                                    if(tradebooks.assetBuy=='EOS')
-                                    {
-                                        var sides= 'Sell';
-                                    }
-                                    else
-                                    {
-                                        var sides='Buy';
-                                    }
-                                    return <tr>
-                                    <td className={'plus '+tradebooks.assetBuy}  id={tradebooks.tradeId}  onClick={tackerViews}  >{tradebooks.assetBuy}</td>
-                                    <td id={tradebooks.tradeId}>{sides}</td>
-                                    <td id={tradebooks.tradeId}>{tradebooks.tradeId}</td>
-                                    <td id={tradebooks.tradeId}>{tradebooks.price}</td>
-                                    <td id={tradebooks.tradeId}>{tradebooks.amountBuy}</td>
-                                    <td id={tradebooks.tradeId}>{tradebooks.created}</td>
-                                    <td id={tradebooks.tradeId}>{tradebooks.taker}</td>
-                                    <td id={tradebooks.tradeId}>{tradebooks.maker}</td>
-                                </tr>
+                                    var isCancel='Cancelled';
+                                }
+                                else
+                                {
+                                    var isCancel='Active';
+                                }
+                                if(order.amountBuy>0)
+                                {
+                                    var amountToShow=order.amountBuy;
+                                }
+                                else
+                                {
+                                    var amountToShow=order.amountSell;
                                 }
                                 
+                                var url = new URL(window.location.href);
+                                var c = url.searchParams.get("opt");
+                                
+                                if(order.assetBuy==c || order.assetSell==c)
+                                {
+                                    return   <tr>
+                                        <td className={'plus '+order.assetBuy}  id={order.orderId}  onClick={orderView} >{order.assetBuy}</td>
+                                        <td id={order.orderId}  onClick={orderView}>{order.side}</td>
+                                        <td id={order.orderId}  onClick={orderView}>{order.orderId}</td>
+                                        <td id={order.orderId}  onClick={orderView}>{order.created}</td>
+                                        <td id={order.orderId}  onClick={orderView}>{parseFloat(order.price).toFixed(4)}</td>
+                                        <td id={order.orderId}  onClick={orderView}>{parseFloat(amountToShow).toFixed(4)}</td>
+                                        <td id={order.orderId}  onClick={orderView}>{order.created}</td>
+                                        <td id={order.orderId}  onClick={orderView}>Yes</td>
+                                        <td id={order.orderId}    ><a href="javascript:void(0)" id={order.orderId} onClick={cancelOrder}>{isCancel}</a></td>
+                                        <td id={order.orderId}  onClick={orderView}>{order.useraccount}</td>
+                                    </tr>
+                                }
+                                
+                          
+                            
+                            } )}
+                        </tbody>
+                    </table>
+                    
+
+                    <h3>Orders History</h3>
+                    <table>
+                        <thead>
+                    
+                            <tr>
+                                <th>Coin</th>
+                                <th>Type </th>
+                                <th>Trade ID </th>
+                                <th>Entrusted Time</th>
+                                <th>Price</th>
+                                <th>Amount</th>
+                                <th>Timestamp</th>
+                                <th>Entrusted </th>
+                                <th>Taker </th>
+                                <th>Maker </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {tradebook.map(tradebooks =>{
+                            if(tradebooks.taker=='taker1')
+                            {
+                                if(tradebooks.assetBuy=='EOS')
+                                {
+                                    var sides= 'Sell';
+                                }
+                                else
+                                {
+                                    var sides='Buy';
+                                }
+                                return <tr>
+                                <td className={'plus '+tradebooks.assetBuy}  id={tradebooks.tradeId}  onClick={tackerViews}  >{tradebooks.assetBuy}</td>
+                                <td id={tradebooks.tradeId}>{sides}</td>
+                                <td id={tradebooks.tradeId}>{tradebooks.tradeId}</td>
+                                <td id={tradebooks.tradeId}>{tradebooks.created}</td>
+                                <td id={tradebooks.tradeId}>{tradebooks.price}</td>
+                                <td id={tradebooks.tradeId}>{tradebooks.amountBuy}</td>
+                                <td id={tradebooks.tradeId}>{tradebooks.created}</td>
+                                <td id={tradebooks.tradeId}>Yes</td>
+                                <td id={tradebooks.tradeId}>{tradebooks.taker}</td>
+                                <td id={tradebooks.tradeId}>{tradebooks.maker}</td>
+                            </tr>
                             }
-                                )}
-                            </tbody>
-                        </table>
-                        </div>
-                    </div>
+                            
+                        }
+                            )}
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
