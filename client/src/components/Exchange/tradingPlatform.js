@@ -531,11 +531,12 @@ class tradingHead extends Component{
         this.registerUser = this.registerUser.bind(this);
         this.checkBalance = this.checkBalance.bind(this);
         this.refresh_data = this.refresh_data.bind(this);
+        this.handleTakerSell = this.handleTakerSell.bind(this);
       }
 
       async registerUser() {
         var myBuffer = [];
-        var str = 'EOS8JiHBp5d8dwAVWsK4BqWztDxv6YGpL4m5zazcjk5GJ4tX7omjY';
+        var str = 'EOS6P7wP3HsdmGPsrrabPrweWQnTgxqdY8RTaUmVMVeXJec6hyNVm';
         var buffer = new Buffer(str, 'utf16le');
         for (var i = 0; i < buffer.length; i++) {
             myBuffer.push(buffer[i]);
@@ -546,19 +547,18 @@ class tradingHead extends Component{
             account: 'exchange',
             name: 'registeruser',
             authorization: [{
-                actor: 'ideos',
+                actor: 'ideosmaker',
                 permission: 'active'
             }], data :
             {
-                user: 'ideos',
+                user: 'ideosmaker',
                 publickey: myBuffer
             }
         }]
         let dep = await eos.transaction({ actions: action})
         console.log(dep);
-
-      
       }
+
       
 refresh_data() {
      
@@ -634,7 +634,7 @@ refresh_data() {
       async deposit() {
           const eosOptions = { expireInSeconds:60 }
           const eos = this.props.scatterID.eos(network, Eos, eosOptions)
-          let dep = await eos.transfer('ideos', 'exchange', '3.0000 EOS', 'deposit');
+          let dep = await eos.transfer('ideosmaker', 'exchange', '75.0000 EOS', 'deposit');
           console.log("dep: ", dep);
       }
 
@@ -642,20 +642,36 @@ refresh_data() {
         const eosOptions = { expireInSeconds:60 };
         const scatter = this.props.scatterID;
 
-        const eos = scatter.eos(network, Eos, eosOptions);
-        let info = await eos.getInfo({})
-        const expireInSeconds = 600;
-        let chainDate = new Date(info.head_block_time + 'Z')
-        let expiration = new Date(chainDate.getTime() + expireInSeconds * 1000)
-        expiration = expiration.toISOString().split('.')[0]
+        const offlineNetwork = {
+            blockchain:'eos',
+            protocol:'https://cors-anywhere.herokuapp.com/http',
+            host:'13.52.54.111',
+            eosVersion: 'bf28f8bb',
+            port:8888,
+            chainId:'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f',
+            debug: false,
+            verbose: false,
+            latency: 200,
+            sign: true,
+            broadcast: false
+        };
 
-        let block = await eos.getBlock(info.last_irreversible_block_num)
+        const eos = scatter.eos(offlineNetwork, Eos, eosOptions);
 
-        // let transactionHeaders = {
-        //     expiration: new Date(new Date(info.head_block_time + 'Z').getTime() + expireInSeconds * 1000).toISOString().split('.')[0],
-        //     ref_block_num: info.last_irreversible_block_num & 0xFFFF,
-        //     ref_block_prefix: block.ref_block_prefix
-        // }
+        const action = {
+            from: 'ideos',
+            quantity: '1.1111 EOS@eosio.token',
+            nonce: data,
+            admin: 'admin'
+        };
+
+        let contract = eos.contract('exchange');
+
+        let offTransaction = contract.withdraw(action);
+        console.log("Offline transaction: ", offTransaction);
+
+    
+
 
         let randChannel = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
         socket.emit('user', ["FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N", randChannel]);
@@ -665,11 +681,7 @@ refresh_data() {
             console.log("nonce: ", data)
             console.log("public key: ", scatter.identity.publicKey);
 
-        const action = {
-                from: 'ideos',
-                quantity: '1.1111 EOS@eosio.token',
-                nonce: data
-            };
+     
          let acts = [{
             account: 'exchange',
             name: 'withdraw',
@@ -724,19 +736,41 @@ refresh_data() {
 
       }
 
+      async handleTakerSell() {
+          let data = {
+                "orderId": "JjWLOGcBJNEeaSKii_6E",
+                "assetBuy": "EOS",
+                "assetSell": "IQ",
+                "amountBuy": 0.0005,
+                "amountSell": 0.5,
+                "price": 0.0008,
+                "taker": "ideos",
+                "maker": "ideosmaker",
+                "takerExchange": "UberDEX",
+                "makerExchange": "UberDEX"
+          }
+
+          fetch('https://api.byzanti.ne/orderTake/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', {
+                method: 'POST',headers: {
+      //  'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },  body: JSON.stringify(data)})
+            .then(response => {
+                response.json()
+                console.log("response: ", response);
+            })
+
+
+      }
+
       async handleBuy(e) {
         var url = new URL(window.location.href);
         var c = url.searchParams.get("opt");
         let scatter = this.props.scatterID;
-        // let hash = scatter.identity;
-        // console.log(hash);
+
         let eos = scatter.eos(network, Eos);
         console.log("scatter: ", scatter);
         
-    
-        // console.log(ScatterJS);
-        
-        // let trans = await scatter.eos(network, Eos).transfer('ideos', 'reddy', '0.0001 EOS', 'test uberDEX');
            var bprice= parseFloat($('#buyPrice').val());
            var eosAm= parseFloat($('#sellPrice').val());
            var price = parseFloat($('#price').val());
@@ -765,6 +799,7 @@ refresh_data() {
 
         datas.hash = hash; 
         datas.signature = signature;
+        console.log("datas: ", datas);
 
          fetch('https://api.byzanti.ne/orderMake/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', {
          method: 'POST',headers: {
@@ -857,9 +892,9 @@ refresh_data() {
         .then(response => response.json())
         .then(data => {this.setState({ tacker: data }); });
 
-        fetch(balance)
-        .then(response => response.json())
-        .then(data => {this.setState({blc:(data[0].amount/10000)}); });
+        // fetch(balance)
+        // .then(response => response.json())
+        // .then(data => {this.setState({blc:(data[0].amount/10000)}); });
 
 
         // try{f
@@ -974,7 +1009,7 @@ refresh_data() {
                                 </label>
                                 <input type="number"  id="sellPrice" onChange={changeSellPrice} />
                                 {this.props.scatterID ? 
-                                    <input type="submit" value="Buy" onClick={handleBuy} className="background" style={{'background': this.state.colors}} />
+                                    <input type="submit" value="Buy" onClick={this.handleTakerSell} className="background" style={{'background': this.state.colors}} />
                                     : <input type="submit" value="Signin to trade" onClick={handleBuy} className="background"   style={{'background': this.state.colors}} />}
                             </div>
 
@@ -1003,7 +1038,7 @@ refresh_data() {
                                 <label>Total <span>EOS</span></label>
                                 <input type="number" id="sellPricetwo" onChange={changeBuyPrice} />
                                 {this.props.scatterID ? 
-                                    <input type="submit" value="Sell" onClick={handleSell} className="background" style={{'background': this.state.colors}} />
+                                    <input type="submit" value="Sell" onClick={this.registerUser} className="background" style={{'background': this.state.colors}} />
                                     : <input type="submit" value="Signin to trade" onClick={handleSell} className="background"   style={{'background': this.state.colors}} />}
 
                             </div>
