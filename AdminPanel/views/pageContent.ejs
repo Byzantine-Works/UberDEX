@@ -1,0 +1,47 @@
+<% include header.ejs %>
+
+        <!--End Header-->
+
+        <div class="PageContent">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12">
+                            <div class="innerDetail contentPage clearfix">
+                                <form action="/postContent" method="post">
+                                    <h4>Enter Your Pages Content</h4>
+                                    <div class="col-sm-12 col-md-12">
+                                        <h5>Home Page Detail</h5>
+                                        <input type="text" placeholder="Main Title" name="mainTitle" value="<%= data.mainTitle %>" />
+                                        <textarea class="convertit" name="mainContent"><%= data.mainContent %></textarea>
+                                    </div>
+                                    <div class="col-sm-12 col-md-12">
+                                        <h5>About Us</h5>
+                                        <input type="text" placeholder="Title" name="aboutUsTitle" value="<%= data.aboutUsTitle %>" />
+                                        <textarea name="aboutUs" class="convertit"><%= data.aboutUs %></textarea>
+                                    </div>
+                                    <div class="col-sm-12 col-md-12">
+                                        <h5>How to Trade</h5>
+                                        <input type="text" placeholder="Title" name="tradeTitle" value="<%= data.tradeTitle %>" />
+                                        <textarea name="trade" class="convertit"><%= data.trade %></textarea>
+                                    </div>
+                                    <div class="col-sm-12 col-md-12">
+                                        <h5>User Agreement</h5>
+                                        <input type="text" placeholder="Title" name="agreementTitle" value="<%= data.agreementTitle %>" />
+                                        <textarea name="agreement" class="convertit"><%= data.agreement %></textarea>
+                                    </div>
+                                    <div class="col-sm-12 col-md-12">
+                                        <h5>Contact</h5>
+                                        <input type="text" placeholder="Title" name="contactUsTitle" value="<%= data.contactUsTitle %>" />
+                                        <textarea name="contactUs" class="convertit"><%= data.contactUs %></textarea>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <input type="submit" value="Save">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+      
+     <% include footer.ejs %>
