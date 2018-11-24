@@ -1230,6 +1230,22 @@ async function extrade(admin, amountbuy, amountsell, nonce, amount, tradenonce, 
     return trxTrade;
 }
 
+async function exregisteruseraccount(account) {
+    console.log("Get account for => " + account);
+    var accountInfo = await eos.getAccount(account);
+
+    console.log(accountInfo);
+    for (var i = 0, len = accountInfo.permissions.length; i < len; i++) {
+        console.log("permission type => " + accountInfo.permissions[i].perm_name);
+        console.log("key => " + accountInfo.permissions[i].required_auth.keys[0].key);
+        if (accountInfo.permissions[i].perm_name == 'active') {
+            var registerTrx = await exregisteruser(account, accountInfo.permissions[i].required_auth.keys[0].key);
+            console.log(registerTrx);
+            break;
+        }
+    }
+}
+
 async function exregisteruser(account, pubkey) {
     log('exregisteruser ' + account + ' :: ' + pubkey);
 
@@ -1371,13 +1387,13 @@ async function sendOfflineWithdrawal(user, token, amount, nonce, headers, userSi
 }
 
 //start EOS-API service
-var server = app.listen(process.env.EOS_API_PORT, function () {
-    //var host = process.env.host;//os.hostname();
-    var port = server.address().port;
-    log('EOS-Exchange Contract API listening at http://localhost:' + port);
-    log('Running mode => ' + mode);
-    log('eosConfig =>' + JSON.stringify(eosNetwork, null, 2));
-});
+// var server = app.listen(process.env.EOS_API_PORT, function () {
+//     //var host = process.env.host;//os.hostname();
+//     var port = server.address().port;
+//     log('EOS-Exchange Contract API listening at http://localhost:' + port);
+//     log('Running mode => ' + mode);
+//     log('eosConfig =>' + JSON.stringify(eosNetwork, null, 2));
+// });
 
 module.exports.exdeposit = exdeposit;
 module.exports.exwithdraw = exwithdraw;
@@ -1385,4 +1401,5 @@ module.exports.getAllBalances = getAllBalances;
 module.exports.getExBalances = getExBalances;
 module.exports.extrade = extrade;
 module.exports.exregisteruser = exregisteruser;
+module.exports.exregisteruseraccount = exregisteruseraccount;
 module.exports.exOfflineWithdrawal = exOfflineWithdrawal;
