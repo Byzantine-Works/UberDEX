@@ -5,7 +5,7 @@
 
 #include "everipediaiq.hpp"
 
-void everipediaiq::create( account_name issuer,
+void everipediaiq::create( uint64_t issuer,
                     asset        maximum_supply )
 {
     require_auth( _self );
@@ -27,7 +27,7 @@ void everipediaiq::create( account_name issuer,
 }
 
 
-void everipediaiq::issue( account_name to, asset quantity, string memo )
+void everipediaiq::issue( uint64_t to, asset quantity, string memo )
 {
     auto sym = quantity.symbol;
     eosio_assert( sym.is_valid(), "invalid symbol name" );
@@ -57,8 +57,8 @@ void everipediaiq::issue( account_name to, asset quantity, string memo )
     }
 }
 
-void everipediaiq::transfer( account_name from,
-                      account_name to,
+void everipediaiq::transfer( uint64_t from,
+                      uint64_t to,
                       asset        quantity,
                       string       memo )
 {
@@ -104,7 +104,7 @@ void everipediaiq::transfer( account_name from,
     }
 }
 
-void everipediaiq::paytxfee( account_name from, asset fee, string memo )
+void everipediaiq::paytxfee( uint64_t from, asset fee, string memo )
 {
     require_auth( from );
     eosio_assert( from != FEE_CONTRACT_ACCTNAME, "cannot pay fee to self" );
@@ -128,7 +128,7 @@ void everipediaiq::paytxfee( account_name from, asset fee, string memo )
     sub_balance( from, fee );
 }
 
-void everipediaiq::burn( account_name from, asset quantity, string memo )
+void everipediaiq::burn( uint64_t from, asset quantity, string memo )
 {
      require_auth( from );
      auto sym = quantity.symbol;
@@ -152,7 +152,7 @@ void everipediaiq::burn( account_name from, asset quantity, string memo )
      sub_balance( from, quantity );
 }
 
-void everipediaiq::sub_balance( account_name owner, asset value ) {
+void everipediaiq::sub_balance( uint64_t owner, asset value ) {
    accounts from_acnts( _self, owner );
 
    const auto& from = from_acnts.get( value.symbol.name(), "no balance object found" );
@@ -168,7 +168,7 @@ void everipediaiq::sub_balance( account_name owner, asset value ) {
    }
 }
 
-void everipediaiq::add_balance( account_name owner, asset value, account_name ram_payer )
+void everipediaiq::add_balance( uint64_t owner, asset value, uint64_t ram_payer )
 {
    accounts to_acnts( _self, owner );
    auto to = to_acnts.find( value.symbol.name() );
@@ -183,7 +183,7 @@ void everipediaiq::add_balance( account_name owner, asset value, account_name ra
    }
 }
 
-void everipediaiq::brainmeiq( account_name staker, int64_t amount) {
+void everipediaiq::brainmeiq( uint64_t staker, int64_t amount) {
     require_auth(staker);
 
     eosio_assert(amount > 0, "must transfer a positive amount");

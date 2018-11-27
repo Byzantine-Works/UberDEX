@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "axios": "^0.18.0",
+    "bignumber.js": "^7.2.1",
     "check-update": "0.0.8",
     "eosjs": "^16.0.9",
     "eosjs-ecc": "^4.0.4",

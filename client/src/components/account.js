@@ -223,15 +223,17 @@ class Account extends Component {
 
     async deposit(quantity, symbol) {
         const eosOptions = { expireInSeconds: 60 }
-        const eos = this.props.scatterID.eos(network, Eos);
+        const eos = this.props.scatterID.eos(network, Eos, eosOptions);
+        let contract = await eos.contract('everipediaiq')
         console.log("payload deposit: ", this.props.scatterID.identity.accounts[0].name, 'exchange', Number(quantity).toFixed(4) + ' ' + symbol, 'deposit')
-        let dep = await eos.transfer('ideos', 'exchange', Number(quantity).toFixed(4) + ' ' + symbol, 'deposit');
+        let dep = await contract.transfer(this.props.scatterID.identity.accounts[0].name, 'exchange', Number(quantity).toFixed(3) + ' ' + symbol, 'deposit');
         console.log("dep: ", dep);
     }
 
     async withdraw() {
         const eosOptions = { expireInSeconds: 60 };
         const scatter = this.props.scatterID;
+        let account = scatter.identity.accounts[0].name
 
         const offlineNetwork = {
             blockchain: 'eos',
@@ -251,33 +253,24 @@ class Account extends Component {
     
 
 
-        let randChannel = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-        socket.emit('user', ["FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N", randChannel]);
+        let exnonce = await axios(`https://api.byzanti.ne/exnonce?account=${account}&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`)
+        exnonce = exnonce.data.nonce
 
-        await socket.on(randChannel, async (data) => {
             
 
             const action = {
                 admin: 'admin',
-                from: 'ideos',
-                quantity: '1.1111 EOS@eosio.token',
-                nonce: data
+                from: account,
+                quantity: '0.0001 EOS@eosio.token',
+                nonce: exnonce
             };
-            let acts = [{
-                account: 'exchange',
-                name: 'withdraw',
-                authorization: [{
-                    actor: 'ideos',
-                    permission: 'active'
-                }],
-                action
-            }];
+
 
             const offlineOptions = {
                 broadcast: false,
                 sign: true,
                 authorization: [{
-                        actor: 'ideos',
+                        actor: account,
                         permission: 'active'
                     },
                     {
@@ -294,46 +287,15 @@ class Account extends Component {
             console.log(offTransaction);
 
 
-            // let signature = await contract.widthraw.getArbitrarySignature(scatter.identity.accounts[0].publicKey, JSON.stringify(action));
-
-            // let w = await eos.transaction({ actions: acts});
 
             let payload = {};
-            payload.user = 'ideos';
+            payload.user = account;
             payload.token = 'EOS';
-            payload.amount = 1.1111;
-            payload.nonce = data;
+            payload.amount = 0.0001;
+            payload.nonce = exnonce;
             payload.signature = offTransaction.transaction.signatures[0];
             payload.headers = offTransaction.transaction.transaction;
 
-
-            //   let info = await eos.getInfo({})
-            //   const expireInSeconds = 3600;
-            //   let chainDate = new Date(info.head_block_time + 'Z')
-            //   let expiration = new Date(chainDate.getTime() + expireInSeconds * 1000)
-            //   expiration = expiration.toISOString().split('.')[0]
-
-            //   let block = await eos.getBlock(info.last_irreversible_block_num)
-
-            //   let transactionHeaders = {
-            //       expiration: new Date(new Date(info.head_block_time + 'Z').getTime() + expireInSeconds * 1000).toISOString().split('.')[0],
-            //       ref_block_num: info.last_irreversible_block_num & 0xFFFF,
-            //       ref_block_prefix: block.ref_block_prefix
-            //   }
-
-            // console.log(scatter.identity.accounts[0])
-            // let transaction = await scatter.createTransaction('eos', [actionTrans], scatter.identity.accounts[0], network);
-            // console.log(transaction);
-
-            // let transactionHeaders = {
-            //     expiration: transaction.transaction.expiration,
-            //     ref_block_num: transaction.transaction.ref_block_num,
-            //     ref_block_prefix: transaction.transaction.ref_block_prefix,
-            //     delay_sec: 3600
-            // };
-
-            // payload.headers = transactionHeaders;
-            // console.log("payload: ", payload);
 
 
             let withdrawApi = await fetch('https://api.byzanti.ne/exwithdrawscatter/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', {
@@ -346,7 +308,7 @@ class Account extends Component {
             });
 
             console.log("withdraw ", withdrawApi);
-        });
+    
 
 
     }

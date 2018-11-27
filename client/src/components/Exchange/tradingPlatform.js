@@ -7,12 +7,13 @@ import ecc from 'eosjs-ecc'
 import Trading from './trading';
 import Order from './order';
 import History from './orderHistory';
-
+import BN from 'bignumber.js';
+import axios from 'axios';
 import data from '../../app.json';
 var color = {background: data['theme_color']};
 var colors = {color: data['theme_color']};
 var logoUrl = '/img/'+data['logo'];
-
+const serialize = require('../../serialize');
 
 
 function handlelight(e)
@@ -534,6 +535,9 @@ class tradingHead extends Component{
         this.handleTakerSell = this.handleTakerSell.bind(this);
       }
 
+
+    
+
       async registerUser() {
         var myBuffer = [];
         var str = 'EOS6P7wP3HsdmGPsrrabPrweWQnTgxqdY8RTaUmVMVeXJec6hyNVm';
@@ -621,9 +625,9 @@ refresh_data() {
         // const eos = Eos(network);
         var trxGetExBalance = await eos.transaction('exchange', (contractuser) => {
             contractuser.getbalances({
-                owner: 'ideos'
+                owner: this.props.scatterID.identity.accounts[0].name
             }, {
-                authorization: ['ideos']
+                authorization: [this.props.scatterID.identity.accounts[0].name]
             });
         });
         console.log("get balance: ", trxGetExBalance);
@@ -737,21 +741,60 @@ refresh_data() {
       }
 
       async handleTakerSell() {
-          let data = {
-                "orderId": "JjWLOGcBJNEeaSKii_6E",
-                "assetBuy": "EOS",
-                "assetSell": "IQ",
-                "amountBuy": 0.0005,
-                "amountSell": 0.5,
-                "price": 0.0008,
-                "taker": "ideos",
-                "maker": "ideosmaker",
-                "takerExchange": "UberDEX",
-                "makerExchange": "UberDEX"
+        console.log("serialize: ", serialize);
+        var url = new URL(window.location.href);
+        var c = url.searchParams.get("opt");
+
+        const account = this.props.scatterID.identity.accounts[0].name;
+  
+        var bprice= parseFloat($('#buyPrice').val());
+        var eosAm= parseFloat($('#sellPrice').val());
+        var price = parseFloat($('#price').val());
+
+        const scatter = this.props.scatterID;
+        
+   
+
+        var amountB = BN(410.9501).multipliedBy(10000);
+        var amountS = BN(0.4787).multipliedBy(10000);
+        console.log(amountB, amountS);
+
+        let amountBuy = new BN(amountB);
+        let amountSell = new BN(amountS);
+        let nonceBN = new BN(1);
+      
+
+        let orderBuffer = await serialize.serializeOrder("exchange", "IQ", "EOS", amountBuy, amountSell, nonceBN, "13v33dreosda");
+        let orderHash = await ecc.sha256(orderBuffer);
+        let orderHashBuffer = await Buffer.from(orderHash, 'hex')
+        console.log(orderHashBuffer);
+
+        let tradeBuffer = serialize.serializeTrade(orderHashBuffer, amountBuy, account, nonceBN)
+        let data = {
+                assetBuy: "IQ",
+                assetSell: "EOS",
+                amountBuy: 410.9501,
+                amountSell: 0.4787,
+                price: 0.0011649,
+                taker: "ideos",
+                takerExchange: "uberdex",
+                makerExchange: "uberdex"
           }
 
+          console.log(tradeBuffer);
+
+          data.hash = ecc.sha256(tradeBuffer)
+          data.signature = await scatter.getArbitrarySignature(scatter.identity.publicKey, tradeBuffer, "test ordertake", false);
+          data.orderId = "i3n8UGcBKKlqgDKXXgfw"
+          data.maker = "13v33dreosda"
+          console.log(data.hash);
+          //75fe52cc4e23c14bb76ca6509b1500137a6ba397d736a32227605f33e09f549c
+
+          //97dec7eb89344b3a048f2ab2ce7d283e78c57e4105a299a0f275eea17f73f801
+       
+
           fetch('https://api.byzanti.ne/orderTake/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', {
-                method: 'POST',headers: {
+                method: 'POST', headers: {
       //  'Accept': 'application/json',
         'Content-Type': 'application/json',
       },  body: JSON.stringify(data)})
@@ -778,19 +821,18 @@ refresh_data() {
            console.log(c, bprice, eosAm);
            var tps=1;
            let randChannel = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-           socket.emit('user', ["FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N", randChannel]);
-           await socket.on(randChannel, async (data) => {
+
 
            let datas = {
-              side: "BUY",
-              assetBuy: c,
-              assetSell: "EOS",
+              side: "SELL",
+              assetBuy: "EOS",
+              assetSell: "IQ",
               amountBuy: bprice,
               amountSell: eosAm,
               price: price,
               type: 2,
             //   expires: new Date(new Date(info.head_block_time + 'Z').getTime() + 60 * 1000).toISOString().split('.')[0],
-              nonce: data,
+              nonce: 5,
               useraccount: scatter.identity.accounts[0].name
             };
        
@@ -818,8 +860,7 @@ refresh_data() {
                     console.log("orders: ", data);
                 });
 
-            })
-        });
+            });
          
     }
 
@@ -1038,8 +1079,8 @@ refresh_data() {
                                 <label>Total <span>EOS</span></label>
                                 <input type="number" id="sellPricetwo" onChange={changeBuyPrice} />
                                 {this.props.scatterID ? 
-                                    <input type="submit" value="Sell" onClick={this.registerUser} className="background" style={{'background': this.state.colors}} />
-                                    : <input type="submit" value="Signin to trade" onClick={handleSell} className="background"   style={{'background': this.state.colors}} />}
+                                    <input type="submit" value="Sell" onClick={this.handleBuy} className="background" style={{'background': this.state.colors}} />
+                                    : <input type="submit" value="Signin to trade" onClick={handleBuy} className="background"   style={{'background': this.state.colors}} />}
 
                             </div>
                         </div>
