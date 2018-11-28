@@ -1,0 +1,44 @@
+<% include header.ejs %>
+
+        <!--End Header-->
+
+        <div class="logoUpload">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12">
+                        <form action="/saveLogo" method="post" enctype="multipart/form-data">
+                            <div class="companyProfile clearfix">
+                                <div class="col-sm-4 col-md-4 logoOptions">
+                                    <span><img src="images/byzantine/<%= data.logo %>" alt=""></span>
+                                    <label><input type="file" name="logo">Upload New Logo</label>
+                                </div>
+                                <div class="col-sm-8 col-md-8 companyInfo">
+                                    <p>Please Provide some information about your company</p>
+                                    <h4>Company Information </h4>
+                                    <label>Company Name:</label>
+                                    <input type="text" name="companyName" value="<%= data.companyName %>">
+                                    <label>Company Address:</label>
+                                    <input type="text" name="companyAddress" value="<%= data.companyAddress %>">
+                                    <label>Company Phone Number:</label>
+                                    <input type="text" name="companyPhone" value="<%= data.companyPhone %>">
+                                    <label>Company Email:</label>
+                                    <input type="text" name="companyEmail" value="<%= data.companyEmail %>">
+                                    <label>Company Description:</label>
+                                    <input type="text" name="description" value="<%= data.companyDesc %>">
+                                    <label>Taker Fee:</label>
+                                    <input type="text" name="takerFee" value="<%= data.takerfee %>">
+                                    <label>Maker Fee:</label>
+                                    <input type="text" name="makerFee" value="<%= data.makerfee %>">
+                                   
+                                    <br />
+                                    <input type="submit" value="Save">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+      
+     <% include footer.ejs %>

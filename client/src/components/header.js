@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import logo from './logoMain.png';
 import logos from './logos.png';
 import $ from "jquery";
+
 import ScatterJS from 'scatterjs-core';
 import ScatterEOS from 'scatterjs-plugin-eosjs';
 import Eos from 'eosjs';

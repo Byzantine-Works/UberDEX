@@ -5,8 +5,8 @@ import Eos from 'eosjs';
 import openSocket from 'socket.io-client';
 import ecc from 'eosjs-ecc'
 import Trading from './trading';
-import Order from './order';
-import History from './orderHistory';
+// import Order from './order';
+// import History from './orderHistory';
 import BN from 'bignumber.js';
 import axios from 'axios';
 import data from '../../app.json';

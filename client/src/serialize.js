@@ -31,7 +31,6 @@ function serializeUInt64BN(bn) {
     assert(bn.isInteger());
     assert(bn.gte(0));
     assert(bn.lt(BN(2).pow(64)));
-    console.log(bn);
 
     var buf = Buffer.alloc(8);
     var byte;

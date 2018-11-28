@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
-import TradingCenter from './Exchange/tradingPlatform';
+import Datafeed from './TVChartContainer/api/index';
+import TradingCenter from './Exchange/tradingPlatform2';
+import Callaction from './callAction';
 import Footer from './footer';
 import Header from './header';
 import Order from './Exchange/order.js';

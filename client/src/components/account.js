@@ -224,9 +224,9 @@ class Account extends Component {
     async deposit(quantity, symbol) {
         const eosOptions = { expireInSeconds: 60 }
         const eos = this.props.scatterID.eos(network, Eos, eosOptions);
-        let contract = await eos.contract('everipediaiq')
-        console.log("payload deposit: ", this.props.scatterID.identity.accounts[0].name, 'exchange', Number(quantity).toFixed(4) + ' ' + symbol, 'deposit')
-        let dep = await contract.transfer(this.props.scatterID.identity.accounts[0].name, 'exchange', Number(quantity).toFixed(3) + ' ' + symbol, 'deposit');
+        let contract = await eos.contract('eosio.token')
+        console.log("payload deposit: ", this.props.scatterID.identity.accounts[0].name, 'exchange', Number(quantity).toFixed(3) + ' ' + symbol, 'deposit')
+        let dep = await contract.transfer(this.props.scatterID.identity.accounts[0].name, 'exchange', Number(quantity).toFixed(4) + ' ' + symbol, 'deposit');
         console.log("dep: ", dep);
     }
 
@@ -234,6 +234,7 @@ class Account extends Component {
         const eosOptions = { expireInSeconds: 60 };
         const scatter = this.props.scatterID;
         let account = scatter.identity.accounts[0].name
+        console.log(account);
 
         const offlineNetwork = {
             blockchain: 'eos',
@@ -255,13 +256,14 @@ class Account extends Component {
 
         let exnonce = await axios(`https://api.byzanti.ne/exnonce?account=${account}&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`)
         exnonce = exnonce.data.nonce
+        console.log(exnonce);
 
             
 
             const action = {
                 admin: 'admin',
                 from: account,
-                quantity: '0.0001 EOS@eosio.token',
+                quantity: '1.0000 EOS@eosio.token',
                 nonce: exnonce
             };
 
@@ -291,10 +293,12 @@ class Account extends Component {
             let payload = {};
             payload.user = account;
             payload.token = 'EOS';
-            payload.amount = 0.0001;
+            payload.amount = 1.0000;
             payload.nonce = exnonce;
             payload.signature = offTransaction.transaction.signatures[0];
             payload.headers = offTransaction.transaction.transaction;
+
+            console.log(payload);
 
 
 

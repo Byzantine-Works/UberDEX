@@ -287,6 +287,89 @@ table {	border-collapse: collapse; border-spacing: 0; }
   font-size: 16px;
 }
 
+
+.lit {
+  display: none !important;
+}
+
+.litb {
+  display: none !important;
+}
+.litg {
+  display: none !important;
+}
+.litl {
+  display: none !important;
+}
+.litp {
+  display: none !important;
+}
+.litr {
+  display: none !important;
+}
+.lity {
+  display: none !important;
+}
+
+.lightVersion .drk {
+  display: none !important;
+}
+
+.lightVersion .lit {
+  display: inline-block !important;
+}
+
+.lightVersion .features[rel="#d5364f"] .lit {
+  display: none !important;
+}
+
+.lightVersion .features[rel="#d5364f"] .litr {
+  display: inline-block !important;
+}
+
+.lightVersion .features[rel="#5fb158"] .lit {
+  display: none !important;
+}
+
+.lightVersion .features[rel="#5fb158"] .litg {
+  display: inline-block !important;
+}
+
+.lightVersion .features[rel="#fce050"] .lit {
+  display: none !important;
+}
+
+.lightVersion .features[rel="#fce050"] .lity {
+  display: inline-block !important;
+}
+
+
+.lightVersion .features[rel="#e88745"] .lit {
+  display: none !important;
+}
+
+.lightVersion .features[rel="#e88745"] .litb {
+  display: inline-block !important;
+}
+
+
+.lightVersion .features[rel="#8630ad"] .lit {
+  display: none !important;
+}
+
+.lightVersion .features[rel="#8630ad"] .litp {
+  display: inline-block !important;
+}
+
+
+.lightVersion .features[rel="#79edee"] .lit {
+  display: none !important;
+}
+
+.lightVersion .features[rel="#79edee"] .litl {
+  display: inline-block !important;
+}
+
 .EOStable .container {
   border-bottom: 2px solid #d8d8d8;
   padding-bottom: 30px;
@@ -519,25 +602,6 @@ table {	border-collapse: collapse; border-spacing: 0; }
   display: none !important;
 }
 
-.litb {
-  display: none !important;
-}
-.litg {
-  display: none !important;
-}
-.litl {
-  display: none !important;
-}
-.litp {
-  display: none !important;
-}
-.litr {
-  display: none !important;
-}
-.lity {
-  display: none !important;
-}
-
 .lightVersion .drk {
   display: none !important;
 }
@@ -545,65 +609,6 @@ table {	border-collapse: collapse; border-spacing: 0; }
 .lightVersion .lit {
   display: inline-block !important;
 }
-
-.lightVersion .features[rel="#d5364f"] .lit {
-  display: none !important;
-}
-
-.lightVersion .features[rel="#d5364f"] .litr {
-  display: inline-block !important;
-}
-
-.lightVersion .features[rel="#5fb158"] .lit {
-  display: none !important;
-}
-
-.lightVersion .features[rel="#5fb158"] .litg {
-  display: inline-block !important;
-}
-
-.lightVersion .features[rel="#fce050"] .lit {
-  display: none !important;
-}
-
-.lightVersion .features[rel="#fce050"] .lity {
-  display: inline-block !important;
-}
-
-
-.lightVersion .features[rel="#e88745"] .lit {
-  display: none !important;
-}
-
-.lightVersion .features[rel="#e88745"] .litb {
-  display: inline-block !important;
-}
-
-
-.lightVersion .features[rel="#8630ad"] .lit {
-  display: none !important;
-}
-
-.lightVersion .features[rel="#8630ad"] .litp {
-  display: inline-block !important;
-}
-
-
-.lightVersion .features[rel="#79edee"] .lit {
-  display: none !important;
-}
-
-.lightVersion .features[rel="#79edee"] .litl {
-  display: inline-block !important;
-}
-
-
-
-
-
-
-
-
 
 .lightVersion .callAction .callInner form input[type="submit"] {
   color: #007fdc;
@@ -851,7 +856,7 @@ a, input[type="submit"] {
 }
 
 .tradingHead .trading .rights ul li span.minus {
-  color: #dc0404;
+  color: #c92b7b;
 }
 
 .tradingHead {
@@ -1031,11 +1036,11 @@ a, input[type="submit"] {
 }
 
 .tradingCenter .center .calculator .red h6 {
-  color: #f10d0d;
+  color: #c92b7b;
 }
 
 .tradingCenter .center .calculator .red input[type="submit"] {
-  background: #f10d0d;
+  background: #cd2a79;
 }
 .tradingCenter .right {
   background: #f7f7f7;
@@ -1553,7 +1558,7 @@ body {
   box-shadow: 0px 0px 16px -6px #000;
 }
 .tradingCenter .lefts {
-  width: 30%;
+  width: 34%;
   float: left;
   background: #fff;
   border: 2px solid #e2e2e2;
@@ -1619,7 +1624,7 @@ body {
   color: #39bf0f;
 }
 .tradingCenter .center {
-  width: 69%;
+  width: 65%;
   border: 2px solid #e2e2e2;
   border-left: 0px;
 }
@@ -1913,8 +1918,6 @@ body {
   height: 41px;
   outline: 0px;
 }
-
-.tradingCenter .center .calculator .red input[type="submit"] {background: #7383d2;}
 
 
 .tradeWrap {
@@ -2235,7 +2238,7 @@ div#tv_chart_container iframe {
 .lightVersion .EOStable table tr th { color:#464646; }
 .lightVersion .EOStable table tr td {color: #464646;}
 .lightVersion .EOStable table tr td a { color:#464646; }
-.lightVersion .EOStable table tr td.minus { color:#fd3f3f; }
+.lightVersion .EOStable table tr td.minus { color:#c92b7b; }
 .lightVersion .EOStable table tr td.plus  { color:#39bf0f; }
 .lightVersion .tradingHead .trading .rights ul li p {
   color: #464646;
@@ -2253,14 +2256,14 @@ div#tv_chart_container iframe {
   color: #464646;
 }
 
-.lightVersion .tradingCenter .lefts table tr td.minus { color:#fd3f3f; }
+.lightVersion .tradingCenter .lefts table tr td.minus { color:#c92b7b; }
 .lightVersion .tradingCenter .lefts table tr td.plus  { color:#39bf0f; }
 
 .lightVersion .orderTacker table thead tr th, .lightVersion .orderTacker table tbody tr td {
   color: #464646;
 }
 
-.lightVersion .orderTacker table tr td.plus.EOS { color:#fd3f3f; }
+.lightVersion .orderTacker table tr td.plus.EOS { color:#c92b7b; }
 .lightVersion .orderTacker table tbody tr td.plus  { color:#39bf0f; }
 
 
@@ -2282,608 +2285,77 @@ div#tv_chart_container iframe {
 }
 
 .lightVersion .orderD table tbody tr td.plus  { color:#39bf0f; }
-.lightVersion .orderD table tbody tr td.EOS { color:#fd3f3f; }
-
-
-.tradingInner {
-    margin: 0 auto;
-    padding: 10px 10px;
+.lightVersion .orderD table tbody tr td.EOS { color:#c92b7b; }
+.sellAlart {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    background: rgba(0, 0, 0, 0.34);
+    width: 100%;
+    height: 100%;
+    z-index: 99999999999;
+    display: none;
 }
 
-.tradingInner .leftSide {
-    width: 25%;
-    float: left;
+.sellAlart .innrs {
+  background: #fff;
+  width: 700px;
+  padding: 20px 30px;
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -370px;
+  margin-top: -100px;
 }
 
-.tradingInner .leftSide .tradingHead {
-    background: #ececec;
-    padding: 0px;
-    margin-bottom: 10px;
-}
-
-.tradingInner .leftSide 
- .tradingBlnces h3 {
-    margin: 0px;
-    font-family: 'Calibri', sans-serif;
-    font-size: 16px;
+.sellAlart .innrs h3 {
+    font-size: 20px;
     font-weight: bold;
+    margin: 0px;
     line-height: normal;
-    padding: 10px 20px;
-    color: #fff;
-}
-
-.tradingInner .leftSide .tradingBlnces h3 span {
-    float: right;
-}
-
-.tradingInner .leftSide .tradingBlnces ul li {
-    background: #f7f7f7;
-    margin-bottom: 5px;
-    padding: 10px 10px;
+    margin-bottom: 9px;
     font-family: 'Calibri', sans-serif;
-    color: #464646;
 }
 
-.tradingInner .leftSide .tradingBlnces ul {
-    padding: 10px;
+.sellAlart .innrs p {
+    font-size: 16px;
+    margin: 0px;
+    line-height: normal;
+    margin-bottom: 9px;
+    font-family: 'Calibri', sans-serif;
 }
 
-.tradingInner .leftSide .tradingBlnces ul li p {
+.sellAlart .innrs a {
+    background: #319db8;
+    font-size: 16px;
+    margin: 0px;
+    line-height: normal;
+    margin-bottom: 9px;
+    font-family: 'Calibri', sans-serif;
     display: inline-block;
-    margin: 0px;
     font-weight: bold;
-    font-size: 16px;
-}
-
-.tradingInner .leftSide .tradingBlnces ul li span {
-    float: right;
-}
-
-.tradingInner .leftSide .tradingBlnces ul li span.plus {
-    color: green;
-}
-
-.tradingInner .leftSide .tradingBlnces ul li span.minus {
-    color: red;
-}
-
-.tradingInner .leftSide .lattestTrans {
-    background: #ececec;
-    padding: 10px;
-}
-
-.tradingInner .leftSide .lattestTrans h4 {
-    margin: 0px;
-    font-family: 'Calibri', sans-serif;
-    font-size: 16px;
-    font-weight: bold;
-    line-height: normal;
-    padding: 10px 20px;
+    padding: 8px 46px;
+    text-decoration: none;
     color: #fff;
-    margin: -10px -10px 10px;
+    border-radius: 25px;
 }
-
-.tradingInner .leftSide .lattestTrans table {
-    width: 100%;
+.orderD .openOrder tr th:first-child, .orderD .openOrder tr th:nth-child(2) {
+    width: 0.5%;
+}
+.orderD table tbody tr td {
+  font-size: 14px;
+}
+.orderD table thead tr th {
+  font-size: 15px;
+  font-weight: bold;
+}
+.tradingCenter .lefts table {
+    height: 947px;
     display: block;
-    height: 300px;
     overflow: auto;
-    font-family: 'Calibri', sans-serif;
-    border: 1px solid #dedede;
 }
 
-.tradingInner .leftSide .lattestTrans table th {
-    width: 10%;
-    padding: 10px;
-    font-weight: bold;
-    font-size: 16px;
-    border-bottom: 2px solid #dedede;
-    background: #f7f7f7;
-}
-
-.tradingInner .leftSide .lattestTrans table td {
-    width: 10%;
-    padding: 7px 10px;
-    font-size: 12px;
-    background: rgba(245, 245, 245, 0.7);
-    border-bottom: 2px solid #dedede;
-}
-
-.tradingInner .leftSide .lattestTrans table td.plus {
-    color: green;
-}
-
-.tradingInner .leftSide .lattestTrans table td.plus.EOS {
-    color: red;
-}
-
-.tradingInner .centerSideup {
-    width: 75%;
-    float: left;
-    padding: 0px 0px 10px 10px;
-    box-sizing: border-box;
-}
-
-.tradingInner .centerSideup .centerSideInnerup {
-    background: #ececec;
-    padding: 10px;
-}
-
-.tradingInner .centerSideup .centerSideInnerup h3 {
-    margin: 0px;
-    font-family: 'Calibri', sans-serif;
-    font-size: 16px;
-    font-weight: bold;
-    line-height: normal;
-    padding: 10px 20px;
-    color: #fff;
-    margin: -10px -10px 10px;
-}
-
-.tradingInner .centerSideup table {
-    width: 100%;
-    display: block;
-    height: 288px;
-    overflow: auto;
-    font-family: 'Calibri', sans-serif;
-    border: 1px solid #dedede;
-}
-
-.tradingInner .centerSideup table th {
-    width: 3%;
-    padding: 14px 10px;
-    font-weight: bold;
-    font-size: 16px;
-    border-bottom: 2px solid #dedede;
-    background: #f7f7f7;
-    vertical-align: middle;
-}
-
-.tradingInner .centerSideup table td {
-    width: 3%;
-    padding: 9px 10px;
-    font-size: 13px;
-    background: rgba(245, 245, 245, 0.7);
-    border-bottom: 2px solid #dedede;
-    text-align: center;
-}
-
-.tradingInner .centerSideup table td.plus {
-    color: green;
-}
-
-.tradingInner .centerSideup table td.plus.EOS {
-    color: red;
-}
-
-.tradingInner .centerSideup table th:nth-child(3), .tradingInner .centerSideup table th:last-child {width: 12%;}
-
-.tradingInner .centerSideup table td:nth-child(3), .tradingInner .centerSideup table td:last-child {
-    width: 12%;
-}
-
-.tradingInner .centerSideup table td a {
-    color: #000;
-}
-
-
-.tradingInner .centerSide {
-  width: 100%;
-  float: left;
-  box-sizing: border-box;
-}
-
-.tradingInner .centerSide .centerSideInner {
-  padding: 10px;
-  background: #ececec;
-}
-
-.tradingInner .centerSide div#tv_chart_container {
-  width: 100%;
-}
-.tradingInner .rightSide {
-  width: 75%;
-  float: left;
-  padding: 0px 0px 10px 10px;
-  box-sizing: border-box;
-  overflow: hidden;
-  display: flex;
-}
-
-.tradingInner .rightSide .calculators {
-  width: 40%;
-  float: left;
-  margin-right: 5px;
-  background: #ececec;
-}
-
-.tradingInner .rightSide .rightOrders {
-  width: 60%;
-  background: #ececec;
-  margin-left: 5px;
-}
-
-.tradingInner .rightSide .rightOrders h3 {
-  margin: 0px;
-  font-family: 'Calibri', sans-serif;
-  font-size: 16px;
-  font-weight: bold;
-  line-height: normal;
-  padding: 10px 20px;
-  color: #fff;
-}
-
-.tradingCenter {
-  overflow: hidden;
-}
-
-.tradingInner .rightSide .rightOrders #tabs {
-  padding: 10px;
-}
-
-.tradingInner .rightSide .rightOrders ul li {
-  display: inline-block;
-  margin-right: 10px;
-}
-
-.tradingInner .rightSide .rightOrders ul li a {
-  font-family: 'Calibri', sans-serif;
-  text-decoration: none;
-  font-size: 16px;
-  outline: 0px !important;
-  font-weight: bold;
-  color: #464646;
-  border-bottom: 4px solid #464646;
-  padding: 5px 20px;
-  display: block;
-}
-
-.tradingInner .rightSide .rightOrders ul {
-  margin-bottom: 10px !important;
-}
-.tradingInner .rightSide .rightOrders ul li a {
-  line-height: normal;
-}
-
-.tradingInner .rightSide .rightOrders ul li:first-child.ui-tabs-active a {border-color: red;color: red;}
-
-.tradingInner .rightSide .rightOrders ul li:last-child.ui-tabs-active a {
-  color: green;
-  border-color: green;
-}
-
-.tradingInner .rightSide .rightOrders table {
-  width: 100%;
-  display: block;
-  height: 288px;
-  overflow: auto;
-  font-family: 'Calibri', sans-serif;
-  border: 1px solid #dedede;
-}
-
-.tradingInner .rightSide .rightOrders table th {
-  width: 6%;
-  padding: 14px 10px;
-  font-weight: bold;
-  font-size: 16px;
-  border-bottom: 2px solid #dedede;
-  background: #f7f7f7;
-  vertical-align: middle;
-  text-align: left;
-}
-
-.tradingInner .rightSide .rightOrders table td {
-  width: 3%;
-  padding: 9px 10px;
-  font-size: 13px;
-  background: rgba(245, 245, 245, 0.7);
-  border-bottom: 2px solid #dedede;
-  text-align: left;
-}
-
-.tradingInner .rightSide .rightOrders table td.plus {
-  color: green;
-}
-
-.tradingInner .rightSide .rightOrders table td.minus {
-  color: red;
-}
-
-.tradingInner .rightSide .rightOrders table th:last-child {
-  width: 16%;
-}
-
-.tradingInner .rightSide .rightOrders table td:last-child {
-  width: 16%;
-}
-
-.tradingInner .rightSide .rightOrders table td.plus, .tradingInner .rightSide .rightOrders table td.minus {
-  cursor: pointer;
-}
-
-.tradingInner .rightSide .calculators h4 {
-  margin: 0px;
-  font-family: 'Calibri', sans-serif;
-  font-size: 16px;
-  font-weight: bold;
-  line-height: normal;
-  padding: 10px 20px;
-  color: #fff;
-}
-
-.tradingInner .rightSide .calculators > div {
-  padding: 10px;
-}
-
-.tradingInner .rightSide .calculators ul li {
-display: inline-block;
-margin-right: 10px;
-}
-
-.tradingInner .rightSide .calculators ul li a {
-font-family: 'Calibri', sans-serif;
-text-decoration: none;
-font-size: 16px;
-outline: 0px !important;
-font-weight: bold;
-color: #464646;
-border-bottom: 4px solid #464646;
-padding: 5px 20px;
-display: block;
-}
-
-.tradingInner .rightSide .calculators ul {
-margin-bottom: 24px !important;
-}
-
-.tradingInner .rightSide .calculators ul li:last-child.ui-tabs-active a {border-color: red;color: red;}
-
-.tradingInner .rightSide .calculators ul li:first-child.ui-tabs-active a {
-color: green;
-border-color: green;
-}
-.tradingInner .centerSideup .centerSideInnerup .orderWrap h3 {
-  margin: 0px 0px 0px;
-  background: none !important;
-  box-shadow: none;
-  border: 0px;
-  color: #000 !important;
-  padding: 12px 34px;
-}
-.tradingInner .rightSide .calculators label {
-  font-size: 16px;
-  font-weight: bold;
-  font-family: 'Calibri', sans-serif;
-  display: block;
-  margin-bottom: 10px;
-  margin-left: 21px;
-}
-
-.tradingInner .rightSide .calculators input[type="number"] {
-  width: 100%;
-  padding: 10px 20px;
-  box-sizing: border-box;
-  border-radius: 50px;
-  border: 1px solid #d8d8d8;
-  font-family: 'Calibri', sans-serif;
-  font-size: 16px;
-  outline: 0px;
-  font-weight: 400;
-  margin-bottom: 18px;
-  background: #f7f7f7;
-}
-
-.tradingInner .rightSide .calculators label span {
-  float: right;
-  font-weight: 400;
-  margin-right: 16px;
-}
-
-.tradingInner .rightSide .calculators input[type="submit"] {
-  width: 100%;
-  background: #008000;
-  color: #fff;
-  border: 0px;
-  font-family: 'Calibri', sans-serif;
-  font-weight: bold;
-  font-size: 16px;
-  padding: 13px 0px;
-  outline: 0px;
-  border-radius: 28px;
-  display: block;
-}
-
-.tradingInner .rightSide .rightOrders table {
-  height: 303px;
-}
-
-.tradingInner .leftSide .lattestTrans table {
-  height: 390px;
-}
-
-.tradingInner .centerSideup .centerSideInnerup h3 {
-  background: #dedede !important;
-  color: #464646;
-}
-
-.tradingInner .leftSide .tradingBlnces h3 {
-  background: #dedede !important;
-  color: #464646;
-}
-
-
-.tradingInner .rightSide .rightOrders h3 {
-  background: #dedede !important;
-  color: #464646;
-}
-
-
-.tradingInner .rightSide .calculators h4{
-  background: #dedede !important;
-  color: #464646;
-}
-
-
-.tradingInner .leftSide .lattestTrans h4{
-  background: #dedede !important;
-  color: #464646;
-}
-.header.headerInners {
-  padding: 0px 30px 6px;
-}
-
-.darkVersion .wellcomBanner {
-  background: #52565a !important;
-}
-
-.darkVersion .tradingCenter {
-  background: #6c747b;
-}
-
-.darkVersion .tradingInner .centerSideup .centerSideInnerup h3 {
-  background: #52565a !important;
-  color: #fff;
-  box-shadow: 0px 3px 15px -4px #000;
-}
-
-.darkVersion .tradingInner .leftSide .tradingBlnces h3  {
-  background: #52565a !important;
-  color: #fff;
-  box-shadow: 0px 3px 15px -4px #000;
-}
-
-.darkVersion .tradingInner .rightSide .rightOrders h3  {
-  background: #52565a !important;
-  color: #fff;
-  box-shadow: 0px 3px 15px -4px #000;
-}
-
-.darkVersion .tradingInner .rightSide .calculators h4  {
-  background: #52565a !important;
-  color: #fff;
-  box-shadow: 0px 3px 15px -4px #000;
-}
-
-.darkVersion .tradingInner .leftSide .lattestTrans h4  {
-  background: #52565a !important;
-  color: #fff;
-  box-shadow: 0px 3px 15px -4px #000;
-}
-
-.darkVersion .tradingInner .leftSide .tradingHead {
-  background: #7d7d7d;
-}
-
-.darkVersion .tradingInner .leftSide .tradingBlnces ul li {
-  color: #fff;
-  background: #6c747b;
-}
-
-.darkVersion .tradingInner .centerSideup .centerSideInnerup {
-  background: #797979;
-}
-
-.darkVersion .tradingInner .centerSideup table th {
-  color: #fff;
-  background: #52565a;
-}
-
-.darkVersion .tradingInner .centerSideup table {border-color: #52565a;}
-
-.darkVersion .tradingInner .centerSideup table td {
-  background: rgba(82, 86, 90, 0.47);
-  color: #fff;
-}
-
-.darkVersion .tradingInner .centerSideup table td a {
-  color: #fff;
-}
-
-.darkVersion .tradingInner .leftSide .lattestTrans {
-    background: #797979;
-}
-
-.darkVersion .tradingInner .leftSide .lattestTrans table th {
-    border-color: #6c747b;
-    background: #52565a;
-    color: #fff;
-}
-
-.darkVersion .tradingInner .leftSide .lattestTrans table {
-    border-color: #52565a;
-}
-
-.darkVersion .tradingInner .leftSide .lattestTrans table td {
-    background: rgba(82, 86, 90, 0.51);
-    color: #ffffff;
-    border-color: #52565a;
-}
-
-.darkVersion .tradingInner .rightSide .calculators {
-    background: #797979;
-}
-
-.darkVersion .tradingInner .rightSide .calculators ul li a {
-    border-color: #fff;
-    color: #fff;
-}
-
-.darkVersion .tradingInner .rightSide .rightOrders ul li a {
-    color: #fff;
-    border-color: #fff;
-}
-
-.darkVersion .tradingInner .rightSide .rightOrders {
-    background: #797979;
-}
-
-.darkVersion .tradingInner .rightSide .rightOrders table th {
-    background: #52565a;
-    color: #fff;
-    border-color: #6c747b;
-}
-
-.darkVersion .tradingInner .rightSide .rightOrders table {
-    border-color: #52565a;
-}
-
-.darkVersion .tradingInner .rightSide .rightOrders table td {
-    background: #646769;
-    color: #fff;
-    border-color: #52565a;
-}
-
-.darkVersion .tradingInner .rightSide .rightOrders table td.plus {
-    color: #75ff6d;
-}
-
-.darkVersion .tradingInner .leftSide .lattestTrans table td.plus {
-    color: #75ff6d;
-}
-
-.darkVersion .tradingInner .centerSideup table td.plus {
-    color: #75ff6d;
-}
-.darkVersion .tradingInner .rightSide .calculators label {
-  color: #fff;
-}
-
-.darkVersion .tradingInner .rightSide .calculators input[type="number"] {
-  background: #52565a;
-  color: #fff;
-  border-color: #000;
-}
-.darkVersion .tradingInner .leftSide .tradingBlnces ul li span.plus {
-  color: #3eef34;
-}
-
-.darkVersion .tradingInner .centerSide .centerSideInner {
-  background: #797979;
-}
-
-.darkVersion .tradingInner .centerSide .centerSideInner {
-  position: relative;
-}
 .tradingCenter .lefts table th, .tradingCenter .lefts table td {
     width: 1%;
 }
@@ -3014,60 +2486,6 @@ border-color: green;
     margin-bottom: 3px;
     color: #3e3e3e;
 }
-.sellAlart {
-  position: fixed;
-  top: 0px;
-  left: 0px;
-  background: rgba(0, 0, 0, 0.34);
-  width: 100%;
-  height: 100%;
-  z-index: 99999999999;
-  display: none;
-}
-
-.sellAlart .innrs {
-background: #fff;
-width: 700px;
-padding: 20px 30px;
-text-align: center;
-position: absolute;
-top: 50%;
-left: 50%;
-margin-left: -370px;
-margin-top: -100px;
-}
-
-.sellAlart .innrs h3 {
-  font-size: 20px;
-  font-weight: bold;
-  margin: 0px;
-  line-height: normal;
-  margin-bottom: 9px;
-  font-family: 'Calibri', sans-serif;
-}
-
-.sellAlart .innrs p {
-  font-size: 16px;
-  margin: 0px;
-  line-height: normal;
-  margin-bottom: 9px;
-  font-family: 'Calibri', sans-serif;
-}
-
-.sellAlart .innrs a {
-  background: #319db8;
-  font-size: 16px;
-  margin: 0px;
-  line-height: normal;
-  margin-bottom: 9px;
-  font-family: 'Calibri', sans-serif;
-  display: inline-block;
-  font-weight: bold;
-  padding: 8px 46px;
-  text-decoration: none;
-  color: #fff;
-  border-radius: 25px;
-}
 
 .sellAlart .innrs {
   text-align: left;
@@ -3089,244 +2507,55 @@ margin-top: -100px;
   padding: 0px;
   text-decoration: underline;
 }
-
-
-.history {
-  background: #ececec;
-  padding: 10px;
-  float:left;
-  width:100%;
-  box-sizing:border-box;
-  margin-bottom: 10px;
+.orderD .openOrder {
+     height: auto; 
+     overflow: visible;
+     display: table; 
 }
 
-.history h3 {
-  margin: 0px;
-  font-family: 'Calibri', sans-serif;
-  font-size: 16px;
-  font-weight: bold;
-  line-height: normal;
-  padding: 10px 20px;
-  color: #fff;
-  margin: -10px -10px 20px;
-  background: #dedede !important;
-  color: #464646;
-}
-
-.history table {
-  width: 100%;
-  overflow: auto;
-  font-family: 'Calibri', sans-serif;
-  border: 1px solid #dedede;
-}
-
-.history table th {
-  width: 3%;
-  padding: 14px 10px;
-  font-weight: bold;
-  font-size: 16px;
-  border-bottom: 2px solid #dedede;
-  background: #f7f7f7;
-  vertical-align: middle;
-}
-
-.history table td {
-  width: 3%;
-  padding: 9px 10px;
-  font-size: 13px;
-  background: rgba(245, 245, 245, 0.7);
-  border-bottom: 2px solid #dedede;
-  text-align: center;
-}
-
-.history table td.plus {
-  color: green;
-}
-
-.history table td.plus.EOS {
-  color: red;
-}
-
-.darkVersion .history h3 {
-  background: #52565a !important;
-  color: #fff;
-  box-shadow: 0px 3px 15px -4px #000;
-}
-
-.darkVersion .history {
-  background: #797979;
-}
-
-.darkVersion .history table th {
-  color: #fff;
-  background: #52565a; border-color:#6c747b;
-}
-
-.darkVersion .history table {border-color: #52565a;}
-
-.darkVersion .history table td {
-  background: rgba(82, 86, 90, 0.47);
-  color: #fff;
-  border-color: #52565a;
-}
-
-.darkVersion .history table td a {
-  color: #fff;
-}
-
-
-.darkVersion .history table td.plus {
-    color: #3ef745;
-}
-
-.darkVersion .history table td.plus.EOS {
-    color: #f51b1b;
-}
-
-.darkVersion .tradingInner .centerSideup table td {
-    border-color: #52565a;
-}
-
-.darkVersion .tradingInner .centerSideup table th {
-    border-color: #6c747b;
-}
-
-.darkVersion .tradingInner .centerSideup table td.plus.EOS {
-    color: #f75454;
-}
-.tradingInner .centerSideup table th:nth-child(4), .tradingInner .centerSideup table th:nth-child(6), .tradingInner .centerSideup table th:last-child {
-  width: 15%;
-}
-
-.tradingInner .centerSideup table th {
-  font-size: 16px;
-  padding: 10px 10px;
-}
-
-.tradingInner .centerSideup table td:nth-child(4), .tradingInner .centerSideup table td:nth-child(6), .tradingInner .centerSideup table td:last-child {
-  width: 15%;
-}
-
-.tradingInner .centerSideup table td {
-  padding: 10px 5px;
-  width: 1%;
-}
-.tradingInner .rightSide .rightOrders ul li:first-child.ui-tabs-active a {
-  border-color: #319db8;
-  color: #319db8;
-}
-
-.tradingInner .rightSide .rightOrders ul li:nth-child(2).ui-tabs-active a {
-  border-color: red;
-  color: red;
-}
 
 .darkVersion div#tv_chart_container iframe {
   height: 113.1% !important;
   margin-top: -45px;
 }
 
-.tradingInner .rightSide .calculators h6 {
-  font-size: 13px;
-  font-family: 'Calibri', sans-serif;
-  display: block;
-  margin: 0px;
-  margin-bottom: 10px;
-  float: right;
-  margin-top: -44px;
-  line-height: normal;
+
+.darkVersion .wellcomBanner {
+  background: #52565a !important;
 }
 
-.darkVersion .tradingInner .rightSide .calculators h6 {
-  color: #fff;
-}
-
-.darkVersion .tradingInner .rightSide .rightOrders table td.plus {
-  color: #27e240;
-}
-
-.darkVersion .tradingInner .rightSide .rightOrders table td.minus {
-  color: #ff3f3f;
-}
-
-.tradingInner .rightSide .calculators #tabs2 input[type="submit"] {
-  background: #f12c2c;
-}
-table td:first-child {
-  cursor: pointer;
-}
-.tradingInner .leftSide {
-    width: 27%;
-    overflow: hidden;
-}
-.tradingInner .rightSide.rightSideBottom {
-  margin-left: 10px;
-}
-
-.tradingInner .leftSide .tradingBlnces ul li {
-    padding: 12.3px 10px;
-    margin-bottom: 10px;
-}
-
-.tradingInner .leftSide .tradingBlnces ul li:last-child {
-    margin-bottom: 0px;
-}
-
-.tradingInner .leftSide .lattestTrans table {
-    height: 378px;
-}
-
-.tradingInner .rightSide {
-    width: 37%;
-}
- 
-.tradingInner .rightSide .rightOrders {
-    width: 100%;
-    margin-left: 0px;
-}
-
-
-.tradingInner .rightSide.rightSideBottom {
-    width: 35.2%;
-    padding: 0px;
-    box-sizing: border-box;
-}
-
-.tradingInner .rightSide.rightSideBottom .calculators {
-    width: 100%;
-    margin: 0px;
-}
-
-.tradingInner .centerSideup {
-    width: 73%;
-    box-sizing: border-box;
-}
 body.darkVersion {
   background: #6c747b;
 }
-.darkVersion .footer a, .darkVersion .footer p, .darkVersion .footer span {
-  color: #fff !important;
+
+.darkVersion {
+  background: #6c747b !important;
 }
 
-.darkVersion .footer {
-  background: #797979;
+.darkVersion .mainBanner label {
+  background: #52565a !important;
 }
 
-.tradingInner .centerSideup table {
-    height: 378px;
-}
-.tradingInner .centerSideup table th:nth-child(3) {
-  width: 15%;
+.darkVersion .mainBanner .pmsField input[type="text"]:focus + label {
+  color: #fff;
+  background: #52565a !important;
 }
 
-.tradingInner .leftSide .tradingBlnces h3 a {
-  float: right;
-  font-size: 16px;
-  font-weight: bold;
-  color: #000;
+.mainBanner input[type="text"]:focus {
+  outline: none;
 }
 
-.darkVersion .tradingInner .leftSide .tradingBlnces h3 a {
+.darkVersion .mainBanner .pmsField .active-text + label {
+  background: #52565a;
+  color: #fff;
+}
+
+.mainBanner input[type="submit"] {
+  color: #0ca2b7;
+}
+
+.mainBanner input[type="submit"]:hover {
+  background: #0d9fb3;
   color: #fff;
 }
 .darkVersion .tableTop {
@@ -3362,7 +2591,7 @@ body.darkVersion {
 }
 
 .darkVersion .EOStable table tr td.minus {
-  color: #ff4e4e;
+  color: #f98fa1;
 }
 
 .darkVersion .EOStable table tr:hover {
@@ -3444,111 +2673,7 @@ body.darkVersion {
 .darkVersion .introAlart .innrs h3, .darkVersion .introAlart .innrs p, .darkVersion .introAlart .innrs p a {
   color: #fff;
 }
-.introAlart {
-  position: fixed;
-  top: 0px;
-  left: 0px;
-  background: rgba(0, 0, 0, 0.34);
-  width: 100%;
-  height: 100%;
-  z-index: 99999999999;
-  display: none;
-}
 
-.introAlart .innrs {
-background: #fff;
-width: 700px;
-padding: 20px 30px;
-text-align: center;
-position: absolute;
-top: 50%;
-left: 50%;
-margin-left: -370px;
-margin-top: -100px;
-}
-
-.introAlart .innrs h3 {
-  font-size: 20px;
-  font-weight: bold;
-  margin: 0px;
-  line-height: normal;
-  margin-bottom: 9px;
-  font-family: 'Calibri', sans-serif;
-}
-
-.sellAlart .innrs p {
-  font-size: 16px;
-  margin: 0px;
-  line-height: normal;
-  margin-bottom: 9px;
-  font-family: 'Calibri', sans-serif;
-}
-
-.introAlart .innrs a {
-  background: #319db8;
-  font-size: 16px;
-  margin: 0px;
-  line-height: normal;
-  margin-bottom: 9px;
-  font-family: 'Calibri', sans-serif;
-  display: inline-block;
-  font-weight: bold;
-  padding: 8px 46px;
-  text-decoration: none;
-  color: #fff;
-  border-radius: 25px;
-}
-
-.introAlart .innrs {
-  text-align: left;
-  border-radius: 10px;
-}
-
-.introAlart .innrs h3 {
-  color: #319db8;
-}
-
-.introAlart .innrs p {
-  line-height: 31px;
-  font-size: 15px;
-}
-
-.introAlart .innrs p a {
-  color: #000;
-  background: none;
-  padding: 0px;
-  text-decoration: underline;
-}
-.lightF {display:none;}
-.lightVersion .darkF {display:none;}
-.lightVersion .lightF {display:inline-block;}
-
-.darkVersion .mainBanner label {
-  background: #52565a !important;
-}
-
-.darkVersion .mainBanner .pmsField input[type="text"]:focus + label {
-  color: #fff;
-  background: #52565a;
-}
-
-.mainBanner input[type="text"]:focus {
-  outline: none;
-}
-
-.darkVersion .mainBanner .pmsField .active-text + label {
-  background: #52565a;
-  color: #fff;
-}
-
-.mainBanner input[type="submit"] {
-  color: #0ca2b7;
-}
-
-.mainBanner input[type="submit"]:hover {
-  background: #0d9fb3;
-  color: rgb(226, 196, 196);
-}
 
 .mainBanner form a {
   border-color: #0da2b7;
@@ -3581,71 +2706,269 @@ margin-top: -100px;
   text-decoration: underline;
 }
 
-.tradingInner .rightSide .calculators h4 span {
-  float: right;
-  font-size: 11px;
-  margin-top: 3px;
+
+.lightF {display:none;}
+.lightVersion .darkF {display:none;}
+.lightVersion .lightF {display:inline-block;}
+
+.darkVersion .footer a, .darkVersion .footer p, .darkVersion .footer span {
+  color: #fff !important;
+}
+.darkVersion .tradingHead, .darkVersion .tradingCenter, .darkVersion  .orderD {
+  background: #6c747b;
 }
 
- .tradingInner .rightSide .calculators #tabs1, .tradingInner .rightSide .calculators #tabs2 {
-  width: 48.5%;
-  float: left;
+.darkVersion .tradingHead .trading .lefts, .darkVersion .tradingHead .trading .rights ul li, .darkVersion .openDetail {
+  background: #52565a;
 }
 
-.tradingInner .rightSide .calculators #tabs1 {
-  margin-right: 5px;
+.darkVersion .tradingHead .trading .lefts > span {
+  background: #797979 !important;
 }
 
-.tradingInner .rightSide .calculators #tabs2 {
-  margin-left: 5px;
+.darkVersion .tradingHead .trading .lefts h4 small {
+  color: #fff !important;
+  opacity: 1;
 }
 
-.tradingInner .rightSide .calculators h5 {
-    font-size: 16px;
-    font-weight: bold;
-    font-family: 'Calibri', sans-serif;
-    display: block;
-    margin: 0px;
-    margin-bottom: 10px;
-    margin-left: 14px;
-    padding-bottom: 8px;
-    border-bottom: 2px solid #000;
+.darkVersion .tradingHead .trading .lefts p {
+  color: #fff !important;
+  text-decoration: underline;
 }
 
-.tradingInner .rightSide .calculators #tabs1 h5 {
-    color: #47c121;
-    border-color: #47c121;
+.darkVersion .tradingHead .trading .rights ul li p, .darkVersion .tradingHead .trading .rights ul li span, .darkVersion .tradingHead .trading .rights ul li {
+  color: #fff;
+  opacity: 1;
 }
 
-.tradingInner .rightSide .calculators #tabs2 h5 {
-    color: red;
-    border-color: red;
+.darkVersion .tradingHead .trading .rights ul li .plus {
+  color: #33ef33;
 }
 
+.darkVersion .tradingHead .trading .rights ul li .minus {
+  color: #f98fa1;
+}
 
-.darkVersion .tradingInner .centerSideup .centerSideInnerup .orderWrap h3 {
+.darkVersion .tradingCenter .lefts ul li a {
+  background: #52565a;
+  color: #fff;
+}
+
+.darkVersion .tradingCenter .lefts ul li.ui-tabs-active a {
+  background: #797979;
+  border-color: #363c4e;
+}
+#tabs-2, #tabs-3 {display:none;}
+.darkVersion .tradingCenter .lefts table tr th, .darkVersion .tradingCenter .lefts table tr td {
+  color: #fff;
+  background: #646769;
+  border-color: #52565a;
+}
+
+.darkVersion .tradingCenter .lefts table tr td.plus {
+  color: #47f947;
+}
+
+.darkVersion .tradingCenter .lefts table tr td.minus {
+  color: #f98fa1;
+}
+
+.darkVersion .tradingCenter .lefts {
+  border-color: #52565a;
+  background: #646769;
+}
+
+.darkVersion .tradingCenter .center {
+  border-color: #52565a;
+  background: #6c747b;
+}
+
+.darkVersion .tradingHead .trading,  .darkVersion .tradingCenter .left, .tradingCenter .right,  .darkVersion .tradingCenter .right table, .darkVersion .tradingCenter .center .calculator,  .darkVersion .orderD table {
+  border-color: #52565a;
+  background: #646769;
+}
+
+.darkVersion .tradingCenter .left table thead tr th, .darkVersion.tradingCenter .right h3, .darkVersion .tradingCenter .center .calculator h4, .darkVersion .orderD h3 {
+  background: #52565a !important;
+  color: #fff;
+}
+
+.darkVersion .tradingCenter .orderTacker h4 {
+  background: #52565a !important;
+  color: #fff;
+}
+
+.darkVersion .orderTacker {
+  border-color: #52565a;
+  background: #646769;
+}
+
+.darkVersion .orderTacker table thead tr th, .darkVersion .orderTacker table tr td {
+  color: #fff;
+  border-color: #52565a;
+}
+
+.darkVersion .orderTacker table tr td.plus {
+  color: #46fb46;
+}
+
+.darkVersion .orderTacker table tr td.plus.EOS {
+  color: #f98fa1;
+}
+.darkVersion .tradingCenter .center .calculator input[type="number"] {
+  border-radius: 23px;
+  height: 40px;
+  background: #52565a;
+  border: 1px solid #52565a;
+  -webkit-rtl-ordering: unset;
+  color: #fff;
+}
+
+.darkVersion .tradingCenter .center .calculator label {
+  color: #fff;
+}
+
+.darkVersion .tradingCenter .center .calculator h6 {
+  color: #52f752;
+}
+
+.darkVersion .tradingCenter .center .calculator .red h6 {
+  color: #f98fa1;
+}
+
+.darkVersion .tradingCenter .center .calculator h6 span {
+  color: #fff;
+}
+
+.darkVersion .orderD table thead tr th, .darkVersion .orderD table tr td {
+  color: #fff;
+  border-color: #52565a;
+}
+
+.darkVersion .orderD table tr td.plus {
+  color: #61f761;
+}
+
+.darkVersion .orderD table tr td.plus.EOS {
+  color: #f98fa1;
+}
+
+.darkVersion .orderD table tr td a {
+  color: #fff;
+  text-decoration: underline;
+}
+.darkVersion .orderWrap .orderView {
+    background: #505050;
+}
+.darkVersion .orderWrap .orderView a.closeView {
+    color: #fff;
+}
+.darkVersion .orderWrap .orderView h3 {
     background: none !important;
     box-shadow: none !important;
     color: #fff !important;
 }
-
-.darkVersion .orderWrap .orderView a.closeView {
-    color: #fff;
-}
-
 .darkVersion .orderWrap .orderView .viewBottom ul li {
     color: #fff;
 }
-
 .darkVersion .orderWrap .orderView .viewBottom ul li span {
     color: #fff;
 }
 
-.darkVersion .orderWrap .orderView {
-    background: #505050;
+.tradeWrap {
+    z-index: 99999999999;
 }
-.sellAlart .innrs p {
-  line-height: 30px;
+
+.darkVersion .openDetail .contrct p {
+  color: #fff;
+}
+.tradingCenter .lefts table tr td.lastTrans {
+  font-size: 20px;
+  padding: 16px 0px;
+}
+
+.tradingCenter .lefts table tr td.lastTrans i {
+  margin-left: 5px;
+}
+
+.tradingCenter .lefts table tr td.lastTrans.plus .fa-arrow-down {
+  display: none;
+}
+
+.tradingCenter .lefts table tr td.lastTrans.minus .fa-arrow-up {
+  display: none;
+}
+.tradeWrap .tradeView .viewBottom ul li a {
+    word-break: break-all;
+    width: 63%;
+    display: block;
+    float: right;
+    margin-top: -24px;
+    color: #0ca6bb;
+}
+
+.tradeWrap .tradeView .viewBottom ul li {
+    overflow: hidden;
+}
+
+.tradeWrap .tradeView {
+    margin-top: -260px;
+}
+.orderTab ul li {
+  display: inline-block;
+}
+
+.orderTab ul li a {
+  text-decoration: none;
+  font-size: 17px;
+  font-family: 'Calibri', sans-serif;
+  font-weight: bold;
+  padding: 10px 20px;
+  display: block;
+}
+
+.darkVersion .orderTab ul {
+  background: #52565a;
+  border-bottom: 2px solid #646769;
+}
+
+.darkVersion .orderTab ul li a {
+  color: #fff;
+}
+
+.darkVersion .orderTab ul li.ui-tabs-active a {
+  background: #646769;
+  color: #fff;
+}
+
+.orderTab .orderD table {
+  margin: 0px;
+}
+
+.orderTab .orderD div#tabss-2 {
+  display: none;
+}
+
+.orderTab .orderD {
+  padding-bottom: 37px;
+}
+
+.lightVersion .orderTab ul {
+  background: #eaeaea;
+  border-bottom: 2px solid #e2e2e2;
+}
+
+.lightVersion .orderTab ul li a {
+  color: #5f5f5f;
+}
+
+.lightVersion .orderTab ul li.ui-tabs-active a {
+  background: #c5c5c5;
+  color: #5f5f5f;
+}
+
+.tradingCenter .center .calculator input[type="submit"] {
+  background: #76c722;
 }
 
 @media only screen and (max-width: 600px)
@@ -3898,30 +3221,7 @@ div#tv_chart_container iframe {
 .EOStable table tr td:first-child, .EOStable table tr th:first-child {
   min-width: 10px;
 }
-.tradingInner .leftSide {
-  width: 100%;
-}
-
-.tradingInner .rightSide.rightSideBottom {
-  width: 100%;
-  margin: 0px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
-.tradingInner .rightSide.rightSideBottom .calculators {
-  box-sizing: border-box;
-}
-
-.tradingInner .rightSide {
-  width: 100%;
-}
-
-.tradingInner .centerSideup {
-  width: 100%;
-}
-
-.darkVersion .history table {
+.orderD .openOrder {
   display: block;
   overflow: auto;
 }

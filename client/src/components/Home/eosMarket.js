@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import $ from "jquery";
 import { Link } from 'react-router-dom';
+import $ from "jquery";
 
 import data from '../../app.json';
 var color = {background: data['theme_color']};
@@ -23,10 +23,20 @@ class EOS extends Component{
           .then(response => response.json())
           .then(data => this.setState({ tricker: data }));
 
-          fetch('https://uberdex-admin.herokuapp.com/getColors')
-          .then(response => response.json())
-          .then(data => {this.setState({colors:data.theme_color}); this.setState({logo:'https://uberdex-admin.herokuapp.com/images/byzantine/'+data.logo}); });
-      }
+        fetch('https://uberdex-admin.herokuapp.com/getColors')
+            .then(response => response.json())
+            .then(data => {if(data.theme_color=='')
+            {
+                this.setState({colors:'#0e9caf'});
+            }
+            else
+            {
+                this.setState({colors:data.theme_color}); this.setState({logo:'https://uberdex-admin.herokuapp.com/images/byzantine/'+data.logo});
+            }
+            }).catch(data => {
+                this.setState({colors:'#0e9caf'});
+            });
+        }
     render(){
         const { tricker } = this.state;
         return(

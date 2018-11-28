@@ -20,12 +20,30 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>UberDex</title>
+    <script>
+      fetch('https://uberdex-admin.herokuapp.com/getColors')
+      .then(response => response.json())
+      .then(data => {if(data.companyName=='')
+      {
+        $('#title').html('UberDex')
+      }
+      else
+      {
+        $('#title').html(data.companyName);
+      }
+       }).catch(data => {
+        $('#title').html('UberDex');
+      });
+  </script>
+      <title id="title">UberDex </title>
   </head>
   <body class="darkVersion">
     <noscript>
       You need to enable JavaScript to run this app.
     </noscript>
+    
+  <script src="%PUBLIC_URL%/jquery-1.11.3.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <div id="root"></div>
     <!--
       This HTML file is a template.
@@ -53,7 +71,7 @@
 <script>
 
   $(document).ready(function(){
-        $('.demo-big-content').addClass('darkVersion');
+      $('.demo-big-content').addClass('darkVersion');
       
       $('.fullscreen').click(function() {
         $('body').fullscreen();
@@ -82,9 +100,9 @@
           document.getElementById('sellPricetwo').value = myResults;
       });
       
-      $( function() {
-        $( "#tabs" ).tabs();
-      });
+      // $( function() {
+      //   $( "#tabs" ).tabs();
+      // });
       $('.basic').select2();
       $('.pmsField input').on('keyup',function () {
           if ($(this).val().length>0) {
@@ -98,7 +116,6 @@
 });
 
 $(document).ready(function(){
-  
   var background = $('.background').attr("style");
   var colors = $('.colors').attr("style");
 
