@@ -112,7 +112,7 @@ class Header extends Component {
                                 <li><Link to="/contact">Supports</Link></li>
                                 {this.props.scatterID ? 
                                     <span>
-                                        <li id="signout"><a href="/" onClick={this.handleSignout}>Sign out</a></li>
+                                        <li id="signout" onClick={this.handleSignout}><Link to="/">Sign out</Link></li>
                                         <li><Link to="/account" className="bgs">{this.props.scatterID.identity.accounts[0].name}</Link></li>
                                     </span>
                                 :

@@ -146,6 +146,7 @@ class Account extends Component {
     }
 
     async componentDidMount() {
+        if(!this.props.scatterID) window.location.href = "/";
         await this.getResources()
         await this.checkBalance();
         // await this.getTokens();
@@ -156,13 +157,44 @@ class Account extends Component {
         console.log(arguments);
         const eos = this.props.scatterEOS;
         let resp;
+        try {
         if (buy) {
             value = Number(value)
             resp = await eos.buyrambytes(this.props.scatterID.identity.accounts[0].name, this.props.scatterID.identity.accounts[0].name, value);
+            if (resp.broadcast && buy) {
+                this.setState({
+                    success: {
+                        message: 'Buying RAM succeeded!',
+                        trx: resp.transaction_id
+                    },
+                    error: false
+                })
+            }
         } else {
             value = Number(value)
             resp = await eos.sellram(this.props.scatterID.identity.accounts[0].name, value);
+            if (resp.broadcast && !buy) {
+                this.setState({
+                    success: {
+                        message: 'Selling RAM succeeded!',
+                        trx: resp.transaction_id
+                    },
+                    error: false
+                })
+            }
         }
+    } catch(e) {
+        if(typeof e === 'string') {
+            e = JSON.parse(e);
+            this.setState({
+                error: {
+                    message: 'Error: ' + e.error.details[0].message
+                },
+                success: false
+            })
+        } else console.log(e);
+        
+    }
 
         console.log("resp: ", resp);
 
@@ -211,6 +243,7 @@ class Account extends Component {
             }
         }
         let resp;
+        try {
         if (mortgage) resp = await eos.delegatebw(payload);
         else resp = await eos.undelegatebw(payload);
         if (resp.broadcast && mortgage) {
@@ -218,13 +251,39 @@ class Account extends Component {
                 success: {
                     message: 'Mortgage succeeded!',
                     trx: resp.transaction_id
-                }
+                },
+                error: false
+            })
+        } else if (resp.broadcast && !mortgage) {
+            this.setState({
+                success: {
+                    message: 'Redeem succeeded!',
+                    trx: resp.transaction_id
+                },
+                error : false
+            }) 
+        }  else if (resp.broadcast && !mortgage) {
+            this.setState({
+                success: {
+                    message: 'Error',
+                    trx: resp.transaction_id
+                },
+                error: false
             })
         }
 
-        console.log("paylaod: ", payload);
-
         console.log("response: ", resp);
+    } catch(e) {
+        if(typeof e === 'string') {
+            e = JSON.parse(e);
+            this.setState({
+                error: {
+                    message: 'Error: ' + e.error.details[0].message
+                },
+                success: false
+            })
+        } else console.log(e);
+    }
 
 
     }
@@ -340,7 +399,10 @@ class Account extends Component {
 
     render() {
         console.log(this.props.scatterEOS)
-        let success = <div>{this.state.success.message} Checkout the transaction: <a href={`https://eosflare.io/tx/${this.state.success.trx}`}>{this.state.success.trx}</a><button onClick={() => this.setState({ success: false })}>OK</button></div>
+        let success = <div className="successMessage">{this.state.success.message} Checkout the transaction: <a href={`https://eosflare.io/tx/${this.state.success.trx}`} target="_blank">{this.state.success.trx}</a></div>
+        let error = <div className="errorMessage">{this.state.error.message}</div>
+
+        
         return (
             <div className="AccountPage">
                 <div className="accountContainer">
@@ -352,6 +414,7 @@ class Account extends Component {
                     {this.state.view === 'withdraw' ? <Withdraw balance={this.state.balance} withdraw={this.withdraw} symbView={this.state.symbView} changeView={this.changeView} updateSuccess={this.updateSuccess} /> : null}
                     {this.state.view === 'deposit' ? <Deposit balance={this.state.balance} deposit={this.deposit} symbView={this.state.symbView} changeView={this.changeView} updateSuccess={this.updateSuccess} /> : null}
                     {this.state.success ? success : null}
+                    {this.state.error ? error : null}
                 </div>
             </div>
 

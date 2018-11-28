@@ -3547,6 +3547,28 @@ div#tv_chart_container iframe {
   color: #3795f4;
 }
 
+.successMessage {
+  border-radius: 5px;
+  background-color: rgb(35, 122, 0);
+  color: white;
+  padding: 3px 3px;
+  width: auto;
+  
+}
+
+.successMessage a {
+  color: white; 
+}
+
+.errorMessage {
+  border-radius: 5px;
+  background-color: rgb(255, 8, 0);
+  color: white;
+  padding: 3px 3px;
+  width: auto;
+  
+}
+
 
 
 
