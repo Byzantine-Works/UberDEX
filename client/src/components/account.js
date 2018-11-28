@@ -45,7 +45,9 @@ class Account extends Component {
             // accountName: this.props.scatterID.identity.accounts[0].name 
             accountName: 'vernisnotvic',
             view: 'wallet',
-            balance: false
+            balance: false,
+            success: false,
+            error: false
         }
 
         this.deposit = this.deposit.bind(this);
@@ -58,14 +60,15 @@ class Account extends Component {
     }
     async getResources() {
 
-        let response = await axios(`https://api.byzanti.ne/getAccount/${this.state.accountName}?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`)
+        //let response = await axios(`https://api.byzanti.ne/getAccount/vernisnotvic?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`)
+        let response = await axios(`https://api.byzanti.ne/getAccount/${this.props.scatterID.identity.accounts[0].name}?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`)
         console.log("resposne: ", response);
         response = response.data;
 
         let resources = {
             liquidBalance: Number(response.core_liquid_balance.split(' ')[0]) * 10000,
             staked: response.voter_info.staked,
-            redeeming: Number(response.refund_request.cpu_amount.split(' ')[0]) + Number(response.refund_request.net_amount.split(' ')[0]),
+            redeeming: 0,//Number(response.refund_request.cpu_amount.split(' ')[0]) + Number(response.refund_request.net_amount.split(' ')[0]),
             ram_quota: response.ram_quota,
             ram_usage: response.ram_usage,
             netWeight: response.net_weight,
@@ -84,7 +87,7 @@ class Account extends Component {
         console.log("exchange balance: ", response);
         let balSym = [];
         let balance = response.data.map(el => {
-            return { token: el.symbol, amount: el.amount}
+            return { token: el.symbol, amount: el.amount }
         })
         balance.forEach(async x => {
 
@@ -106,25 +109,21 @@ class Account extends Component {
 
         /*Get balance on chain*/
 
-        let tokensByAccount = await axios(`https://api.byzanti.ne/tokensByAccount/vernisnotvic?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`)
+        //let tokensByAccount = await axios(`https://api.byzanti.ne/tokensByAccount/vernisnotvic?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`)
+        let tokensByAccount = await axios(`https://api.byzanti.ne/tokensByAccount/${this.props.scatterID.identity.accounts[0].name}?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`)
         console.log(tokensByAccount);
         await tokensByAccount.data.forEach(async el => {
             if (balSym.includes(el.symbol)) {
                 let index = lodash.findIndex(balance, ['token', el.symbol])
                 balance[index].chainBal = el.balance;
-                balance[index].chainBalEquivalent = el.balance * balance[index].price;
             } else {
-                let p = await axios(`https://api.byzanti.ne/ticker?symbol=${el.symbol}&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`);
                 let obj = {};
                 obj.token = el.symbol;
                 const nulAm = 0;
                 obj.amount = (nulAm).toFixed(el.precision);
                 obj.precision = el.precision;
                 obj.chainBal = Number(el.balance);
-                obj.chainBalEquivalent = (el.balance * p.data[0].last).toFixed(5);
                 obj.chainBal = obj.chainBal.toFixed(el.precision);
-                obj.price = p.data[0].last;
-                obj.eosEquivalent = 0;
                 balance.push(obj);
             }
 
@@ -214,6 +213,14 @@ class Account extends Component {
         let resp;
         if (mortgage) resp = await eos.delegatebw(payload);
         else resp = await eos.undelegatebw(payload);
+        if (resp.broadcast && mortgage) {
+            this.setState({
+                success: {
+                    message: 'Mortgage succeeded!',
+                    trx: resp.transaction_id
+                }
+            })
+        }
 
         console.log("paylaod: ", payload);
 
@@ -252,68 +259,68 @@ class Account extends Component {
         }
 
         const eos = scatter.eos(offlineNetwork, Eos);
-    
+
 
 
         let exnonce = await axios(`https://api.byzanti.ne/exnonce?account=${account}&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`)
         exnonce = exnonce.data.nonce
         console.log(exnonce);
 
-            
-
-            const action = {
-                admin: 'admin',
-                from: account,
-                quantity: '1.0000 EOS@eosio.token',
-                nonce: exnonce
-            };
 
 
-            const offlineOptions = {
-                broadcast: false,
-                sign: true,
-                authorization: [{
-                        actor: account,
-                        permission: 'active'
-                    },
-                    {
-                        actor: 'admin',
-                        permission: 'active'
-                    }
-                ],
-            };
-
-            
-            let exchange = await eos.contract('exchange');
-            console.log("exchange: ", exchange);
-            let offTransaction = await exchange.withdraw(action, offlineOptions);
-            console.log(offTransaction);
+        const action = {
+            admin: 'admin',
+            from: account,
+            quantity: '1.0000 EOS@eosio.token',
+            nonce: exnonce
+        };
 
 
+        const offlineOptions = {
+            broadcast: false,
+            sign: true,
+            authorization: [{
+                actor: account,
+                permission: 'active'
+            },
+            {
+                actor: 'admin',
+                permission: 'active'
+            }
+            ],
+        };
 
-            let payload = {};
-            payload.user = account;
-            payload.token = 'EOS';
-            payload.amount = 1.0000;
-            payload.nonce = exnonce;
-            payload.signature = offTransaction.transaction.signatures[0];
-            payload.headers = offTransaction.transaction.transaction;
 
-            console.log(payload)
+        let exchange = await eos.contract('exchange');
+        console.log("exchange: ", exchange);
+        let offTransaction = await exchange.withdraw(action, offlineOptions);
+        console.log(offTransaction);
 
 
 
-            let withdrawApi = await fetch('https://api.byzanti.ne/exwithdrawscatter/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', {
-                method: 'POST',
-                headers: {
-                    //  'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(payload)
-            });
+        let payload = {};
+        payload.user = account;
+        payload.token = 'EOS';
+        payload.amount = 1.0000;
+        payload.nonce = exnonce;
+        payload.signature = offTransaction.transaction.signatures[0];
+        payload.headers = offTransaction.transaction.transaction;
 
-            console.log("withdraw ", withdrawApi);
-    
+        console.log(payload)
+
+
+
+        let withdrawApi = await fetch('https://api.byzanti.ne/exwithdrawscatter/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', {
+            method: 'POST',
+            headers: {
+                //  'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+
+        console.log("withdraw ", withdrawApi);
+
 
 
     }
@@ -322,9 +329,9 @@ class Account extends Component {
         console.log(arguments)
         if (frame === 'withdraw' || frame === 'deposit') this.setState({ symbView: symb });
         this.setState({ view: frame })
-
-
     }
+
+
 
 
 
@@ -333,17 +340,18 @@ class Account extends Component {
 
     render() {
         console.log(this.props.scatterEOS)
+        let success = <div>{this.state.success.message} Checkout the transaction: <a href={`https://eosflare.io/tx/${this.state.success.trx}`}>{this.state.success.trx}</a><button onClick={() => this.setState({ success: false })}>OK</button></div>
         return (
             <div className="AccountPage">
                 <div className="accountContainer">
                     {this.state.resources ? <Visualizer accountName={this.state.accountName} resources={this.state.resources} changeView={this.changeView} view={this.state.view} /> : null}
                     {this.state.symbols && this.state.view === 'wallet' ? <Wallet symbols={this.state.symbols} balance={this.state.balance} resources={this.state.resources} deposit={this.deposit} withdraw={this.withdraw} changeView={this.changeView} /> : null}
-                    {this.state.view === 'ram' ? <RamManager scatterEOS={this.props.scatterEOS} balance={this.state.resources.liquidBalance / 10000} redeem={this.state.resources.staked / 10000} manageRam={this.manageRam} changeView={this.changeView} /> : null}
-                    {this.state.view === 'cpu' ? <CpuManager balance={this.state.resources.liquidBalance / 10000} redeem={this.state.resources.cpuWeight / 10000} delegate={this.delegate} changeView={this.changeView} /> : null}
-                    {this.state.view === 'net' ? <NetManager balance={this.state.resources.liquidBalance / 10000} redeem={this.state.resources.netWeight / 10000} delegate={this.delegate} changeView={this.changeView} /> : null}
-                    {this.state.view === 'withdraw' ? <Withdraw balance={this.state.balance} withdraw={this.withdraw} symbView={this.state.symbView} changeView={this.changeView} /> : null}
-                    {this.state.view === 'deposit' ? <Deposit balance={this.state.balance} deposit={this.deposit} symbView={this.state.symbView} changeView={this.changeView} /> : null}
-
+                    {this.state.view === 'ram' ? <RamManager scatterEOS={this.props.scatterEOS} balance={this.state.resources.liquidBalance / 10000} redeem={this.state.resources.staked / 10000} manageRam={this.manageRam} changeView={this.changeView} updateSuccess={this.updateSuccess} /> : null}
+                    {this.state.view === 'cpu' ? <CpuManager balance={this.state.resources.liquidBalance / 10000} redeem={this.state.resources.cpuWeight / 10000} delegate={this.delegate} changeView={this.changeView} updateSuccess={this.updateSuccess} /> : null}
+                    {this.state.view === 'net' ? <NetManager balance={this.state.resources.liquidBalance / 10000} redeem={this.state.resources.netWeight / 10000} delegate={this.delegate} changeView={this.changeView} updateSuccess={this.updateSuccess} /> : null}
+                    {this.state.view === 'withdraw' ? <Withdraw balance={this.state.balance} withdraw={this.withdraw} symbView={this.state.symbView} changeView={this.changeView} updateSuccess={this.updateSuccess} /> : null}
+                    {this.state.view === 'deposit' ? <Deposit balance={this.state.balance} deposit={this.deposit} symbView={this.state.symbView} changeView={this.changeView} updateSuccess={this.updateSuccess} /> : null}
+                    {this.state.success ? success : null}
                 </div>
             </div>
 
