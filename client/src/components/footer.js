@@ -12,23 +12,23 @@ import Eos from 'eosjs';
 
 ScatterJS.plugins( new ScatterEOS() );
 
-// const network = { blockchain:'eos',
-//                 protocol:'https',
-//                 host:'proxy.eosnode.tools',
-//                 port:443,
-//                 chainId:'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906' }
+const network = { blockchain:'eos',
+                protocol:'https',
+                host:'proxy.eosnode.tools',
+                port:443,
+                chainId:'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906' }
 
-const network = {
-                    blockchain:'eos',
-                    protocol:'https://cors-anywhere.herokuapp.com/http',
-                    host:'13.52.54.111',
-                    eosVersion: 'bf28f8bb',
-                    port:8888,
-                    chainId:'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f',
-                    debug: false,
-                    verbose: false,
-                    latency: 200
-                }
+// const network = {
+//                     blockchain:'eos',
+//                     protocol:'https://cors-anywhere.herokuapp.com/http',
+//                     host:'13.52.54.111',
+//                     eosVersion: 'bf28f8bb',
+//                     port:8888,
+//                     chainId:'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f',
+//                     debug: false,
+//                     verbose: false,
+//                     latency: 200
+//                 }
 
 
 

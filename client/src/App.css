@@ -3365,6 +3365,7 @@ div#tv_chart_container iframe {
 .walletContainer a {
   color: #3796f4;
   text-decoration: none;
+  display: inline-block;
 }
 
 .walletContainer table {

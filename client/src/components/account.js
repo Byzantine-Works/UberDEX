@@ -31,7 +31,7 @@ const network = {
     sign: true
 }
 
-// const network = { blockchain:'eos',
+// const networkM = { blockchain:'eos',
 //                 protocol:'https',
 //                 host:'proxy.eosnode.tools',
 //                 port:443,
@@ -80,10 +80,11 @@ class Account extends Component {
     async checkBalance() {
 
         /*Get balance on exchange*/
-        let response = await axios('https://api.byzanti.ne/exbalance?account=taker1&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N')
+        let response = await axios('https://api.byzanti.ne/exbalance?account=ideos&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N');
+        console.log("exchange balance: ", response);
         let balSym = [];
         let balance = response.data.map(el => {
-            return { token: el.symbol.split('@')[0], amount: el.amount / Math.pow(10, el.precision), precision: el.precision }
+            return { token: el.symbol, amount: el.amount}
         })
         balance.forEach(async x => {
 
@@ -298,7 +299,7 @@ class Account extends Component {
             payload.signature = offTransaction.transaction.signatures[0];
             payload.headers = offTransaction.transaction.transaction;
 
-            console.log(payload);
+            console.log(payload)
 
 
 
