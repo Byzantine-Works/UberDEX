@@ -775,14 +775,14 @@ a, input[type="submit"] {
 }
 
 .tradingHead .trading .lefts {
-  width: 25%;
+  width: 22%;
   float: left;
   border-right: 1px solid #eaeaea;
 }
 
 .tradingHead .trading .rights {
   box-sizing: border-box;
-  width: 74.5%;
+  width: 77.5%;
   padding-left: 28px;
   float: right;
 }
@@ -847,7 +847,7 @@ a, input[type="submit"] {
 
 .tradingHead .trading .rights ul li span {
   color: #717171;
-  margin-right: 9px;
+  margin-right: 4px;
 }
 
 .tradingHead .trading .rights ul li span.plus {
@@ -1480,7 +1480,7 @@ body {
 
 .tradingHead .trading .lefts {
   background: #fff;
-  width: 25%;
+  width: 22%;
   margin-bottom: 10px;
   padding: 20px 20px;
   box-sizing: border-box;
@@ -1492,7 +1492,7 @@ body {
   background: #fff;
   border: 1px solid #e4e4e4;
   margin: 0px 5px;
-  padding: 28.2px 12px;
+  padding: 28.2px 8px;
   line-height: normal;
   text-align: center;
   border-radius: 9px;
@@ -2133,7 +2133,8 @@ body {
 }
 
 .orderTacker table {
-  height: 358px;
+  height: 382px;
+  overflow-x: hidden;
 }
 
 .orderD table tbody tr {cursor: pointer;}
@@ -2350,7 +2351,7 @@ div#tv_chart_container iframe {
   font-weight: bold;
 }
 .tradingCenter .lefts table {
-    height: 947px;
+    height: 971px;
     display: block;
     overflow: auto;
 }
@@ -2970,8 +2971,545 @@ body.darkVersion {
   background: #76c722;
 }
 
+.transactionPage {
+  position: relative;
+  overflow: hidden;
+}
+
+.transactionPage .loader {
+  position: absolute;
+  background: #fcfefc;
+  width: 100%;
+  text-align: center;
+  height: 100%;
+}
+
+.transactionPage .loader img {
+  width: 150px; margin-top:150px;
+}
+.tradingCenter .lefts table tr td {
+  font-size: 15px !important;
+}
+
+.orderTacker table tr td, .orderD table tbody tr td {
+  font-size: 15px !important;
+}
+
+.tradingCenter .center .calculator label {
+  font-size: 14px;
+}
+.darkVersion .tradingCenter .center .calculator input[type="number"] {
+    font-size: 17px;
+}
+
+.ldrHeader .innerLdrheader {
+  background: #eaeaea;
+  color: #969696;
+  padding: 12px 20px;
+}
+
+.ldrHeader {
+  padding-top: 20px;
+}
+
+.ldrHeader .innerLdrheader .coinName {
+  width: 30%;
+  float: left;
+}
+
+.ldrHeader .innerLdrheader .coinDetail {
+  width: 70%;
+  float: right;
+  text-align: right;
+}
+
+.ldrHeader .innerLdrheader .coinName h2 {
+  font-size: 27px;
+  margin: 0px;
+  font-weight: bold;
+  font-family: 'Calibri', sans-serif;
+  color: #000;
+  margin-top: 7px;
+}
+
+.ldrHeader .innerLdrheader .coinDetail h3 {
+  color: #000;
+  font-size: 20px;
+  font-family: 'Calibri', sans-serif;
+  margin: 0px;
+  font-weight: bold;
+  line-height: normal;
+  margin-top: 10px;
+}
+
+.ldrHeader .innerLdrheader .coinDetail p {
+  font-family: 'Calibri', sans-serif;
+  color: #000;
+  margin: 0px;
+}
+
+.LdrChart .container {
+  margin-top: 10px;
+  background: #eaeaea;
+  padding: 10px;
+  border: 8px solid #ddd;
+  box-sizing: border-box;
+}
+
+.searchHedear {
+  margin-top: 10px;
+}
+
+.searchHedear .searchInnerH {
+  text-align: right;
+  background: #eaeaea;
+  padding: 20px 20px;
+}
+
+.searchHedear .searchInnerH form {
+  position: relative;
+  display: inline-block;
+}
+
+.searchHedear .searchInnerH input {
+  border: 1px solid #d1d0d0;
+  padding: 10px 10px 10px 33px;
+  border-radius: 8px;
+  background: none;
+}
+
+.searchHedear .searchInnerH i {
+  position: absolute;
+  top: 11px;
+  left: 11px;
+}
+
+.filterNexchage .innnerExchange {}
+
+.filterNexchage {
+  margin-top: 10px;
+}
+
+.filterNexchage .filters {
+  width: 30%;
+  float: left;
+  background: #fafafa;
+}
+
+.filterNexchage .filters h3 {
+  margin: 0px;
+  background: #eaeaea;
+  color: #000;
+  padding: 2px 20px;
+  font-size: 20px;
+  font-family: 'Calibri', sans-serif;
+  font-weight: bold;
+}
+
+.filterNexchage .innnerExchange {
+  border: 2px solid #eaeaea;
+}
+
+.filterNexchage .filters label {
+  font-family: 'Calibri', sans-serif;
+  display: block;
+  margin-bottom: 5px;
+  margin-left: 11px;
+  font-weight: bold;
+}
+
+.filterNexchage .filters input {
+  width: 45%;
+  display: inline-block;
+  margin: 0 5px 10px;
+  border-radius: 10px;
+  font-size: 14px;
+  padding: 10px 20px;
+  border: 1px solid #d1d0d0;
+  box-sizing: border-box;
+}
+
+.filterNexchage .filters form {
+  padding: 20px 10px;
+}
+
+.filterNexchage .exchange tr th {
+  font-family: 'Calibri', sans-serif;
+  background: #eaeaea;
+  font-size: 17px;
+  font-weight: bold;
+  text-align: left;
+  padding: 12px 4px;
+}
+
+.filterNexchage .exchange table {
+  width: 100%;
+}
+
+.filterNexchage .exchange tr td {
+  font-family: 'Calibri', sans-serif;
+  background: #fafafa;
+  font-size: 16px;
+  text-align: left;
+  padding: 9px 4px;
+  border-bottom: 2px solid #eaeaea;
+}
+
+.filterNexchage .exchange {
+  box-sizing: border-box;
+  width: 70%;
+  float: left;
+  border-left: 2px solid #eaeaea;
+}
+
+.filterNexchage .exchange tr td label input {
+  visibility: hidden;
+  position: absolute;
+}
+
+.filterNexchage .exchange tr td label span {
+  border: 2px solid #d5d4d4;
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  border-radius: 5px;
+  text-align: center;
+  line-height: 22px;
+  vertical-align: middle;
+}
+
+.filterNexchage .exchange tr td label span i {
+  color: #727272;
+  display: none;
+  font-size: 15px;
+}
+
+.filterNexchage .exchange tr td label input:checked + span i {
+  display: inline-block;
+}
+
+.filterNexchage .exchange tr td label {
+  cursor: pointer;
+}
+
+.darkVersion .ldrHeader .innerLdrheader {
+  background: #52565a;
+}
+
+.darkVersion .ldrHeader .innerLdrheader .coinName h2 {
+  color: #fff;
+}
+
+.darkVersion .ldrHeader .innerLdrheader .coinDetail h3, .darkVersion .ldrHeader .innerLdrheader .coinDetail p {
+  color: #fff;
+}
+
+.darkVersion .LdrChart .container {
+  background: #646769;
+  border-color: #52565a;
+}
+
+
+.darkVersion .searchHedear .searchInnerH {
+  background: #52565a;
+}
+
+.darkVersion .searchHedear .searchInnerH input {
+  border-color: #b3b4b4 !important;
+  color: #fff;
+}
+
+.darkVersion .searchHedear .searchInnerH i {
+  color: #fff;
+}
+
+.darkVersion .filterNexchage .filters h3 {
+  background: #52565a;
+  color: #fff;
+}
+
+.darkVersion .filterNexchage .filters {
+  background: #646464;
+}
+
+.darkVersion .filterNexchage .innnerExchange {
+  border-color: #3d3d3d;
+}
+
+.darkVersion .filterNexchage .filters input {
+  background: none;
+  color: #fff;
+}
+
+.darkVersion .filterNexchage .filters input::placeholder {
+  color: #fff;
+}
+
+.darkVersion .filterNexchage .filters label {
+  color: #fff;
+}
+
+.darkVersion .filterNexchage .exchange tr th {
+  background: #52565a;
+  color: #fff;
+}
+
+.darkVersion .filterNexchage .exchange tr td {
+  color: #fff;
+  background: #646464;
+  border-color: #3d3d3d;
+}
+
+.darkVersion .filterNexchage .exchange {
+  border-color: #3d3d3d;
+}
+
+.filterNexchage .exchange table {
+  height: 303px;
+  display: block;
+  overflow: auto;
+}
+
+.filterNexchage .exchange tr td, .filterNexchage .exchange tr th {
+  width: 10%;
+  padding-right: 10px;
+  padding-left: 10px;
+}
+
+.filterNexchage .exchange tr td:first-child, .filterNexchage .exchange tr th:first-child {
+  width: 3%;
+}
+
+.filterNexchage .exchange tr td:last-child, .filterNexchage .exchange tr th:last-child {
+  text-align: right;
+  width: 1%;
+}
+
+.filterNexchage .exchange tr td label span i {
+  color: #fff;
+}
+.tradingHead .trading .lefts > span img {
+    width: 60%;
+}
+.tradingHead .trading .rights ul li {
+  font-size: 16px;
+}
+.tradingHead .trading .lefts p {
+  font-size: 17px;
+}
+.featureBottom {
+    margin-bottom: 0px;
+}
+
+.newsScroll {
+    padding: 10px 0px;
+}
+
+.newsScroll a {
+    font-size: 17px;
+    font-family: 'Calibri', sans-serif;
+    font-weight: bold;
+    text-decoration: none;
+    margin-right: 42px;
+}
+
+.darkVersion .newsScroll a {
+    color: #fff !important;
+}
+.darkVersion .tableTop p {
+  color: #fff !important;
+  border-color: #646769 !important;
+}
+.lightVersion .mainBanner input[type="submit"]:hover {
+  background: rgba(0, 0, 0, 0.28);
+}
+
+.lightVersion .mainBanner input[type="submit"] {
+  color: rgb(0, 0, 0);
+}
+
+.lightVersion .mainBanner form a:hover {
+  color: #000;
+}
+
+
+.announcementWrap {
+  padding: 30px 0px;
+}
+
+.announcementWrap .announceLeft {
+  width: 30%;
+  float: left;
+  padding: 30px 20px;
+}
+
+.announcementWrap .announceRight {
+  width: 60%;
+  float: left;
+  padding: 30px 0px 30px 40px;
+}
+
+.announcementWrap .announceLeft a {
+  text-decoration: none;
+  display: block;
+  font-size: 15px;
+  font-family: 'Calibri', sans-serif;
+  margin-bottom: 11px;
+  padding: 10px 20px;
+  border-bottom: 2px solid #646769;
+  line-height: 26px;
+  border-radius: 10px;
+}
+
+.announcementWrap .announceLeft a.active {
+  background: none !important;
+  border-radius: 9px;
+}
+
+.darkVersion .announcementWrap .announceLeft a {
+  color: #fff;
+}
+
+.lightVersion .announcementWrap .announceLeft a {
+  color: #fff;
+}
+
+.lightVersion .announcementWrap .announceLeft a.active {
+  color: #8d8c8c;
+}
+
+.announcementWrap .announceRight .annouceDetail h3 {
+  font-size: 22px;
+  font-family: 'Calibri', sans-serif;
+  font-weight: bold;
+  margin: 0px 0px 10px;
+}
+
+.announcementWrap .announceRight .annouceDetail p {
+  font-size: 15px;
+  font-family: 'Calibri', sans-serif;
+  line-height: 27px;
+}
+
+.darkVersion .announcementWrap .announceRight .annouceDetail h3,
+.darkVersion .announcementWrap .announceRight .annouceDetail p {
+  color: #fff;
+}
+
+.darkVersion .announcementWrap .announceLeft {
+  background: #52565a;
+}
+
+.darkVersion .announcementWrap .announcementInner {
+  background: #646769;
+  display: flex;
+}
+
+.lightVersion .announcementWrap .announceLeft {
+  background: #ececec;
+}
+
+.lightVersion .announcementWrap .announcementInner {
+  background: #f7f7f7;
+  display: flex;
+}
+.darkVersion .announcementWrap .announceLeft a {
+  background: #646769 !important;
+}
+
+.darkVersion .announcementWrap .announceLeft a.active {
+  background: none !important;
+}
+#detail5, #detail4, #detail3, #detail2 {display:none;}
+.darkVersion .tradeWrap .tradeView .viewBottom ul li h3 {
+  background: #0ca6bb !important;
+}
+
+.darkVersion .orderWrap .orderView .viewBottom ul li cite.tradeId, .darkVersion .tradeWrap .tradeView .viewBottom ul li cite.tradeId, .darkVersion .tradeWrap .tradeView .viewBottom ul li a {
+  color: #0ca6bb !important;
+}
+
+.darkVersion .transactionPage {
+  background: #6c747b;
+}
+
+.darkVersion .transactionPage .transTop {
+  background: #52565a;
+}
+
+.darkVersion .transactionPage .transTop h3 {
+  color: #fff;
+}
+
+.darkVersion .transactionPage .transTop cite {
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.58) !important;
+}
+
+.darkVersion .transactionPage .transTop p {
+  color: #fff!important;
+}
+
+.darkVersion .transactionPage .transTop p span {
+  color: rgba(255, 255, 255, 0.78)!important;
+}
+
+.darkVersion .transactionPage .transTop ul li {
+  color: #fff!important;
+}
+
+.darkVersion .transactionPage .transTop ul li span {
+  color: #fff !important;
+}
+.tradingCenter .center .calculator h6 {
+    overflow: hidden;
+}
+.tradingCenter .center .calculator h6 {
+  text-align: center;
+  float: none;
+  width: 100%;
+  font-size: 16px;
+}
+
+.tradingCenter .center .calculator h6 span {
+  float: none;
+  display: block;
+  font-size: 13px;
+}
+.darkVersion .EOStable table td a.tadeLink {
+  color: #fff !important;
+  text-decoration: underline;
+}
+.darkVersion .filterNexchage .exchange {
+  background: #646464;
+}
+
 @media only screen and (max-width: 600px)
 {
+  .ldrHeader .innerLdrheader .coinName {
+    width: 100%;
+}
+
+.ldrHeader .innerLdrheader .coinDetail {
+    width: 100%;
+    text-align: left;
+}
+
+div#lineChart4 > div {
+    width: 100% !important;
+}
+
+div#lineChart4 > div canvas {
+    width: 100% !important;
+}
+
+.filterNexchage .filters {
+    width: 100%;
+}
+
+.filterNexchage .exchange {
+    width: 100%;
+}
   .container {
       width: 90%;
       margin: 0 auto;

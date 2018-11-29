@@ -14,6 +14,7 @@ import traderule from './tradeRule';
 import announcements from './announcements';
 import failannouncement from './failAnnouncement';
 import TransactionPage from './transactionPage';
+import LDAR from './ldar';
 
 const Main = ()=> (
     <BrowserRouter>
@@ -30,6 +31,7 @@ const Main = ()=> (
     <Route path='/announcements' component={ announcements } />
     <Route path='/failannouncement' component={ failannouncement } />
     <Route path='/transaction' component={ TransactionPage } />
+    <Route path='/ldar' component={ LDAR } />
 </Switch>
 </BrowserRouter>
 

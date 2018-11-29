@@ -1,16 +1,16 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
 import Datafeed from './TVChartContainer/api/index';
-import logoss from './logoMain.png';
+import logoss from './logo_main.png';
 import logos from './logos.png';
 import $ from "jquery";
 
 import ScatterJS from 'scatterjs-core';
 import ScatterEOS from 'scatterjs-plugin-eosjs';
 import Eos from 'eosjs';
-import data from '../app.json';
-console.log(data);
-var logoUrl = '/img/'+data['logo'];
+import dp from '../app.json';
+var adminURL = dp['url'];
+var apiId = dp['apiId'];
 
 
 function handlelight(e)
@@ -51,7 +51,7 @@ function handleSignout(e){
  window.location.reload();
 }
   
-   
+
 
 const tryRequire = (path) => {
     try {
@@ -72,7 +72,8 @@ class Header extends Component{
   }
 
 componentDidMount() {
-    fetch('https://uberdex-admin.herokuapp.com/getColors')
+    //handledefualt();
+    fetch(adminURL+'/getColors/'+apiId)
     .then(response => response.json())
     .then(data => {if(data.logo=='')
     {
@@ -81,11 +82,12 @@ componentDidMount() {
     else
     {
         this.setState({colors:data.theme_color});
-        $('#logoImg').attr('src','https://uberdex-admin.herokuapp.com/images/byzantine/'+data.logo);
+        $('#logoImg').attr('src',adminURL+'/images/byzantine/'+data.logo);
     }
     }).catch(data => {
          this.setState({colors:'#0e9caf'});this.setState({logo:logoss});
     });
+    
 
 }
 render(){
@@ -95,7 +97,7 @@ render(){
             <div className="header ">
                 <div className="container clearfix">
                     <div className="logo">
-                        <a href="/"><img src={logoss} className="App-logo" id="logoImg" alt="" /></a>
+                        <Link to="/" className="link"><img src={logoss} className="App-logo" id="logoImg" alt="" /></Link>
                     </div>
                     <div className="menuSections">
                         <nav>

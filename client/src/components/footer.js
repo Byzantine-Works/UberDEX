@@ -8,6 +8,9 @@ import $ from "jquery";
 import ScatterJS from 'scatterjs-core';
 import ScatterEOS from 'scatterjs-plugin-eosjs';
 import Eos from 'eosjs';
+import dp from '../app.json';
+var adminURL = dp['url'];
+var apiId = dp['apiId'];
 
 ScatterJS.plugins( new ScatterEOS() );
 
@@ -114,8 +117,8 @@ class Footer extends Component{
       }
 
 componentDidMount() {
-   
-    fetch('https://uberdex-admin.herokuapp.com/getColors')
+
+    fetch(adminURL+'/getColors/'+apiId)
     .then(response => response.json())
     .then(data => {if(data.logo=='')
     {
@@ -124,13 +127,14 @@ componentDidMount() {
     else
     {
         this.setState({colors:data.theme_color});
-         this.setState({logo:'https://uberdex-admin.herokuapp.com/images/byzantine/'+data.logo});
+         this.setState({logo:adminURL+'/images/byzantine/'+data.logo});
+         this.setState({lightLogo:adminURL+'/images/byzantine/'+data.lightLogo});
     }
     }).catch(data => {
          this.setState({colors:'#0e9caf'});this.setState({logo:logoBlue});
     });
-    
-    fetch('https://uberdex-admin.herokuapp.com/getColors')
+
+    fetch(adminURL+'/getColors/'+apiId)
     .then(response => response.json())
     .then(data => {if(data.companyName=='')
     {
@@ -153,7 +157,7 @@ componentDidMount() {
                 <div className="footer">
                     <div className="container clearfix">
                         <img src={this.state.logo} className="darkF" />
-                        <img src={this.state.logo} className="lightF"/>
+                        <img src={this.state.lightLogo} className="lightF"/>
                         <p>Cryptocurrency investment is subject to high market risk, please make your investments cautiously.</p>
                         <span>© {this.state.companyName} 2018. All Right Reserved.</span>
                         <ul>
@@ -162,6 +166,7 @@ componentDidMount() {
                             <li><Link to="/contact" className="link">Contact</Link></li>
                             <li><Link to="/contact" className="link">Support</Link></li>
                             <li><Link to="/trade" className="link">How to Trade</Link></li>
+                            <li><a href="/ldar" className="">LDAR</a></li>
                         </ul>
                     </div>
                 </div>

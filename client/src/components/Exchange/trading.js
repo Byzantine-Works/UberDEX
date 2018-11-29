@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import $ from "jquery";
-import data from '../../app.json';
-var color = {background: data['theme_color']};
-var colors = {color: data['theme_color']};
+import dp from '../../app.json';
+var adminURL = dp['url'];
+var apiId = dp['apiId'];
 
 function handleClick(e) {
     e.preventDefault();
@@ -36,6 +36,21 @@ class tradingHead extends Component{
         fetch(API)
         .then(response => response.json())
         .then(data => {this.setState({ hits: data }); });
+        
+        fetch(adminURL+'/getColors/'+apiId)
+        .then(response => response.json())
+        .then(data => {if(data.theme_color=='')
+        {
+            this.setState({colors:'#0e9caf'});
+        }
+        else
+        {
+            this.setState({colors:data.theme_color}); 
+            this.setState({logo:adminURL+'/images/byzantine/'+data.logo});
+        }
+        }).catch(data => {
+            this.setState({colors:'#0e9caf'});
+        });
     }
 
 
@@ -49,10 +64,10 @@ class tradingHead extends Component{
                 {hits.map(hit =>
                     <div className="trading clearfix">
                         <div className="lefts">
-                            <span className=" background" style={color} >{hit.symbol}</span>
+                            <span className=" background" style={{'background': this.state.colors}} ><img src={"/coins/"+hit.symbol+".png"} /></span>
                             <h4>{hit.symbol} / <small> EOS</small></h4>
-                            <p className="ist colors" style={colors} onClick={handleClick}>Introduction</p>
-                            <p className="ind colors" style={colors} onClick={handleClicks}>Introduction</p>
+                            <p className="ist colors" style={{'color': this.state.colors}} onClick={handleClick}>Introduction</p>
+                            <p className="ind colors" style={{'color': this.state.colors}} onClick={handleClicks}>Introduction</p>
                         </div>
                         <div className="rights">
                             <ul>

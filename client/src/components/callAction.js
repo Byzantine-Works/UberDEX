@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-import data from '../app.json';
-var color = {background: data['theme_color']};
+import dp from '../app.json';
+var adminURL = dp['url'];
+var apiId = dp['apiId'];
 
 class Call_action extends Component{
     constructor(props) {
@@ -15,7 +16,7 @@ class Call_action extends Component{
 componentDidMount() {
    
 
-    fetch('https://uberdex-admin.herokuapp.com/getColors')
+    fetch(adminURL+'/getColors/'+apiId)
     .then(response => response.json())
     .then(data => {if(data.theme_color=='')
     {
