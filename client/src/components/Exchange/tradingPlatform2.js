@@ -744,11 +744,11 @@ async handleTakerSell() {
     
      
       data.signature = await scatter.getArbitrarySignature(pubKey, tradeBuffer, "test ordertake", false);
-      data.orderId = 'JhMUYWcBKKlqgDKXor3y'
+      data.orderId = '2xMUYWcBKKlqgDKXi7we'
       data.maker = 'ubermaker'
       console.log(data.signature);
 
-      fetch('http://local.byzanti.ne:8901/orderTake/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', {
+      fetch('https://api.byzanti.ne/orderTake/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', {
             method: 'POST', headers: {
     'Content-Type': 'application/json',
   },  body: JSON.stringify(data)})
