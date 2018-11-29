@@ -606,6 +606,7 @@ class tradingHead extends Component{
         this.handleTakerSell = this.handleTakerSell.bind(this);
         this.handleBuy = this.handleBuy.bind(this);
         this.registerUser = this.registerUser.bind(this);
+        this.ispkpaired = this.ispkpaired.bind(this);
 
      
       }
@@ -629,7 +630,7 @@ async handleBuy(e) {
     let amountSell = new BN(amountS);
     let nonceBN = new BN(1);
 
-    let orderBuffer = serialize.serializeOrder('exchange', 'IQ', 'EOS',  amountBuy, amountSell, nonceBN, 'ideosmaker');
+    let orderBuffer = serialize.serializeOrder('exchange', 'IQ', 'EOS',  amountBuy, amountSell, nonceBN, 'ubermaker');
   
     let orderHash = ecc.sha256(orderBuffer);
 
@@ -648,7 +649,7 @@ async handleBuy(e) {
           useraccount: scatter.identity.accounts[0].name
         };
 
-    let signature = ecc.sign(orderBuffer, '5JgJ9oKpfe2ywTJfhWQU64bDdjFTPx4vu9Bg5j7U4oYuJnqKLNH');   
+    let signature = ecc.sign(orderBuffer, '5Kbhuw48LRBY25KMDD2KH59EAgvHnhh66S863Nvz1PZBY9X2uph');   
     
     //let signature = await scatter.getArbitrarySignature('EOS6P7wP3HsdmGPsrrabPrweWQnTgxqdY8RTaUmVMVeXJec6hyNVm', orderBuffer, "test ordermake sig", false);    
     datas.hash = orderHash; 
@@ -701,11 +702,8 @@ async handleTakerSell() {
     var price = parseFloat($('#price').val());
 
     const scatter = this.props.scatterID;
-    const eos = scatter.eos(network, Eos)
-    let table = await eos.getTableRows('exchange');
-    console.log(table);
 
-    console.log(scatter.eos(network, Eos));
+    const eos = scatter.eos(network, Eos)
     
 
 
@@ -720,7 +718,7 @@ async handleTakerSell() {
     let amountSell = new BN(amountS);
     let nonceBN = new BN(1);
     
-    let orderBuffer = serialize.serializeOrder('exchange', 'IQ', 'EOS', amountBuy, amountSell, nonceBN, 'ideosmaker');
+    let orderBuffer = serialize.serializeOrder('exchange', 'IQ', 'EOS', amountBuy, amountSell, nonceBN, 'ubermaker');
   
     let orderHash = ecc.sha256(orderBuffer);
 
@@ -739,17 +737,18 @@ async handleTakerSell() {
             makerExchange: 'uberdex'
       }
 
-    //   let pubKey = await scatter.getPublicKey('eos');
-
-      data.signature = ecc.sign(tradeBuffer, '5JayPzuFPGq7KFy4kZ6iMXxHnLDrngHn3ekf1JKzXgT7jNxXQMc');
+      let pubKey = await scatter.getPublicKey('eos');
+  
+    //   data.signature = await ecc.sign(tradeBuffer, '5J4xG1aygXGJCNgkG4JVVQirgpxJ9M1s1Auh24ebVtYJ21QLfdv');
       data.hash = ecc.sha256(tradeBuffer);
+    
      
-      //data.signature = await scatter.getArbitrarySignature('EOS8k4SMa7JKF4LVi1fn9bc3aKnunhXb2JSg8a9xY3zCdkXgXqXQq', tradeBuffer, "test ordertake", false);
-      data.orderId = 'S_YHXWcBKKlqgDKXjnJu'
-      data.maker = 'ideosmaker'
+      data.signature = await scatter.getArbitrarySignature(pubKey, tradeBuffer, "test ordertake", false);
+      data.orderId = 'JhMUYWcBKKlqgDKXor3y'
+      data.maker = 'ubermaker'
       console.log(data.signature);
 
-      fetch('https://api.byzanti.ne/orderTake/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', {
+      fetch('http://local.byzanti.ne:8901/orderTake/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', {
             method: 'POST', headers: {
     'Content-Type': 'application/json',
   },  body: JSON.stringify(data)})
@@ -784,17 +783,42 @@ async handleTakerSell() {
         account: 'exchange',
         name: 'registeruser',
         authorization: [{
-            actor: 'ubertaker',
+            actor: this.props.scatterID.identity.accounts[0].name,
             permission: 'active'
         }], data :
         {
-            user: 'ubertaker',
+            user: this.props.scatterID.identity.accounts[0].name,
             publickey: pkHex
         }
     }]
     let dep = await eos.transaction({ actions: action})
     console.log(dep);
   }
+
+  async ispkpaired() {
+
+    const eosOptions = { expireInSeconds:60 }
+    const eos = this.props.scatterID.eos(network, Eos, eosOptions);
+    
+    
+    const action = [{
+        account: 'exchange',
+        name: 'ispkpaired',
+        authorization: [{
+            actor: this.props.scatterID.identity.accounts[0].name,
+            permission: 'active'
+        }], data :
+        {
+            user: this.props.scatterID.identity.accounts[0].name,
+        }
+    }]
+    let dep = await eos.transaction({ actions: action})
+    console.log(dep);
+
+  }
+
+
+
 
 refresh_data()
 {
@@ -1113,7 +1137,7 @@ setTimeout(
                                     </label>
                                     <input type="number"  id="sellPrice" onChange={changeSellPrice} />
                                     {tricker.map(hit =>
-                                        <input type="submit" value={'Buy '+hit.symbol} onClick={this.registerUser} className="background" style={color} />
+                                        <input type="submit" value={'Buy '+hit.symbol} onClick={this.handleBuy} className="background" style={color} />
                                     )}
                                 </div>
                                 <div className="red">

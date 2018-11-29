@@ -304,7 +304,7 @@ class Account extends Component {
         const eosOptions = { expireInSeconds: 60 }
         const eos = this.props.scatterID.eos(network, Eos, eosOptions);
         let contract = await eos.contract('eosio.token')
-        console.log("payload deposit: ", this.props.scatterID.identity.accounts[0].name, 'exchange', Number(quantity).toFixed(3) + ' ' + symbol, 'deposit')
+        console.log("payload deposit: ", this.props.scatterID.identity.accounts[0].name, 'exchange', Number(quantity).toFixed(4) + ' ' + symbol, 'deposit')
         let dep = await contract.transfer(this.props.scatterID.identity.accounts[0].name, 'exchange', Number(quantity).toFixed(4) + ' ' + symbol, 'deposit');
         console.log("dep: ", dep);
     }
