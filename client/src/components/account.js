@@ -11,6 +11,7 @@ import CpuManager from './Account/cpumanager';
 import NetManager from './Account/netmanager';
 import Withdraw from './Account/withdraw';
 import Deposit from './Account/deposit';
+import Transfer from './Account/transfer';
 
 import Eos from 'eosjs';
 import data from '../app.json';
@@ -56,12 +57,13 @@ class Account extends Component {
         this.changeView = this.changeView.bind(this);
         this.delegate = this.delegate.bind(this);
         this.manageRam = this.manageRam.bind(this);
+        this.transfer = this.transfer.bind(this);
         // this.getTokens = this.getTokens.bind(this);
     }
     async getResources() {
 
-        //let response = await axios(`https://api.byzanti.ne/getAccount/vernisnotvic?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`)
-        let response = await axios(`https://api.byzanti.ne/getAccount/${this.props.scatterID.identity.accounts[0].name}?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`)
+        let response = await axios(`https://api.byzanti.ne/getAccount/vernisnotvic?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`)
+        //let response = await axios(`https://api.byzanti.ne/getAccount/${this.props.scatterID.identity.accounts[0].name}?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`)
         console.log("resposne: ", response);
         response = response.data;
 
@@ -109,8 +111,8 @@ class Account extends Component {
 
         /*Get balance on chain*/
 
-        //let tokensByAccount = await axios(`https://api.byzanti.ne/tokensByAccount/vernisnotvic?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`)
-        let tokensByAccount = await axios(`https://api.byzanti.ne/tokensByAccount/${this.props.scatterID.identity.accounts[0].name}?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`)
+        let tokensByAccount = await axios(`https://api.byzanti.ne/tokensByAccount/vernisnotvic?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`)
+        //let tokensByAccount = await axios(`https://api.byzanti.ne/tokensByAccount/${this.props.scatterID.identity.accounts[0].name}?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`)
         console.log(tokensByAccount);
         await tokensByAccount.data.forEach(async el => {
             if (balSym.includes(el.symbol)) {
@@ -137,6 +139,7 @@ class Account extends Component {
     async getSymbols() {
         console.log("bal array: ", this.state.balance_tokens)
         let response = await axios('https://api.byzanti.ne/symbols?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N');
+        console.log("symbols response: ", response);
         let symbols = [];
         response.data.forEach(sym => {
             if (!this.state.balance_tokens.includes(sym.symbol)) symbols.push(sym.symbol);
@@ -154,6 +157,15 @@ class Account extends Component {
     }
 
     async manageRam(buy, value) {
+        if(value.toString().includes('.')) {
+            this.setState({
+                error: {
+                    message: 'The value needs to be a whole number'
+                },
+                success: false
+            })
+
+        }
         console.log(arguments);
         const eos = this.props.scatterEOS;
         let resp;
@@ -384,9 +396,17 @@ class Account extends Component {
 
     }
 
+    transfer(to, quantity, memo) {
+        const eosOptions = { expireInSeconds: 60 }
+        const eos = this.props.scatterID.eos(network, Eos, eosOptions);
+        eos.transfer(this.props.scatterID.accounts[0].name, to, quantity, memo);
+
+    }
+
     changeView(frame, symb) {
+        this.setState({error: false, success: false});
         console.log(arguments)
-        if (frame === 'withdraw' || frame === 'deposit') this.setState({ symbView: symb });
+        if (frame === 'withdraw' || frame === 'deposit' || frame === 'transfer') this.setState({ symbView: symb });
         this.setState({ view: frame })
     }
 
@@ -409,10 +429,11 @@ class Account extends Component {
                     {this.state.resources ? <Visualizer accountName={this.state.accountName} resources={this.state.resources} changeView={this.changeView} view={this.state.view} /> : null}
                     {this.state.symbols && this.state.view === 'wallet' ? <Wallet symbols={this.state.symbols} balance={this.state.balance} resources={this.state.resources} deposit={this.deposit} withdraw={this.withdraw} changeView={this.changeView} /> : null}
                     {this.state.view === 'ram' ? <RamManager scatterEOS={this.props.scatterEOS} balance={this.state.resources.liquidBalance / 10000} redeem={this.state.resources.staked / 10000} manageRam={this.manageRam} changeView={this.changeView} updateSuccess={this.updateSuccess} /> : null}
-                    {this.state.view === 'cpu' ? <CpuManager balance={this.state.resources.liquidBalance / 10000} redeem={this.state.resources.cpuWeight / 10000} delegate={this.delegate} changeView={this.changeView} updateSuccess={this.updateSuccess} /> : null}
+                    {this.state.view === 'cpu' ? <CpuManager balance={this.state.resources.liquidBalance / 10000} redeem={this.state.resources.cpuWeight / 10000} delegate={this.delegate} changeView={this.changeView} updateuccess={this.updateSuccess} /> : null}
                     {this.state.view === 'net' ? <NetManager balance={this.state.resources.liquidBalance / 10000} redeem={this.state.resources.netWeight / 10000} delegate={this.delegate} changeView={this.changeView} updateSuccess={this.updateSuccess} /> : null}
                     {this.state.view === 'withdraw' ? <Withdraw balance={this.state.balance} withdraw={this.withdraw} symbView={this.state.symbView} changeView={this.changeView} updateSuccess={this.updateSuccess} /> : null}
                     {this.state.view === 'deposit' ? <Deposit balance={this.state.balance} deposit={this.deposit} symbView={this.state.symbView} changeView={this.changeView} updateSuccess={this.updateSuccess} /> : null}
+                    {this.state.view === 'transfer' ? <Transfer balance={this.state.balance} deposit={this.deposit} symbView={this.state.symbView} changeView={this.changeView} updateSuccess={this.updateSuccess} /> : null}
                     {this.state.success ? success : null}
                     {this.state.error ? error : null}
                 </div>

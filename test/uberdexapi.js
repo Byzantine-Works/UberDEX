@@ -1117,7 +1117,7 @@ async function getAllBalances(user, symbol) {
 
 //Trade function
 async function extrade(admin, amountbuy, amountsell, nonce, amount, tradenonce, tokenbuy, tokensell, makerfee, takerfee, maker, taker, feeaccount, passedOrderHash, passedTradeHash, makerSignature, takerSignature) {
-    console.log("In extrade");
+    
     var trade = {};
     trade.admin = admin;
     trade.amountbuy = amountbuy;

@@ -26,7 +26,7 @@ class Wallet extends Component {
                                 <tr>
                                     <td><a href={'/exchange/?opt=' + sym.token}>{sym.token}</a></td>
                                     <td>{sym.amount}</td>
-                                    <td><a id={sym.token} onClick={(e) => this.props.changeView("withdraw", e.target.id)} style={{display:'inline-block'}}>Withdraw</a> / <a id={sym.token} onClick={(e) => this.props.changeView("deposit", e.target.id)} style={{display:'inline-block'}}>Deposit</a></td>
+                                    <td><a id={sym.token} onClick={(e) => this.props.changeView("withdraw", e.target.id)} style={{display:'inline-block'}}>Withdraw</a> / <a id={sym.token} onClick={(e) => this.props.changeView("deposit", e.target.id)} style={{display:'inline-block'}}>Deposit</a> / <a id={sym.token} onClick={(e) => this.props.changeView("transfer", e.target.id)} style={{display:'inline-block'}}>Transfer</a></td>
                                     <td>{sym.chainBal}</td>                                 
                                 </tr>
                             )

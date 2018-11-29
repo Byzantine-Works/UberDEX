@@ -21,12 +21,12 @@ class Home extends Component{
         };
     }
 
-    componentDidMount() {
+    // componentDidMount() {
    
-        fetch('https://uberdex-admin.herokuapp.com/getColors')
-        .then(response => response.json())
-        .then(data => {this.setState({colors:data.theme_color}); this.setState({logo:'https://uberdex-admin.herokuapp.com/images/byzantine/'+data.logo}); });
-    }
+    //     fetch('https://uberdex-admin.herokuapp.com/getColors')
+    //     .then(response => response.json())
+    //     .then(data => {this.setState({colors:data.theme_color}); this.setState({logo:'https://uberdex-admin.herokuapp.com/images/byzantine/'+data.logo}); });
+    // }
 
     render(){
         const { colors } = this.state;

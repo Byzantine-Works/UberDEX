@@ -99,7 +99,6 @@ export function serializeOrder(exchangeAccount, tokenBuy, tokenSell, amountBuyBN
 }
 
 export function serializeTrade(orderHash, amountBN, takerAccount, tradeNonceBN) {
-    console.log(tradeNonceBN)
     const serializedSize = orderHash.length + 3 * uint64_size;
     var tradeBuffer = Buffer.alloc(serializedSize);
     var offset = 0;

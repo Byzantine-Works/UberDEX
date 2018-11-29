@@ -647,9 +647,10 @@ async handleBuy(e) {
           nonce: 1,
           useraccount: scatter.identity.accounts[0].name
         };
-    
-    let signature = await scatter.getArbitrarySignature('EOS6P7wP3HsdmGPsrrabPrweWQnTgxqdY8RTaUmVMVeXJec6hyNVm', orderBuffer, "test ordermake sig", false);
 
+    let signature = ecc.sign(orderBuffer, '5JgJ9oKpfe2ywTJfhWQU64bDdjFTPx4vu9Bg5j7U4oYuJnqKLNH');   
+    
+    //let signature = await scatter.getArbitrarySignature('EOS6P7wP3HsdmGPsrrabPrweWQnTgxqdY8RTaUmVMVeXJec6hyNVm', orderBuffer, "test ordermake sig", false);    
     datas.hash = orderHash; 
     datas.signature = signature;
     console.log("datas: ", datas);
@@ -700,6 +701,11 @@ async handleTakerSell() {
     var price = parseFloat($('#price').val());
 
     const scatter = this.props.scatterID;
+    const eos = scatter.eos(network, Eos)
+    let table = await eos.getTableRows('exchange');
+    console.log(table);
+
+    console.log(scatter.eos(network, Eos));
     
 
 
@@ -717,8 +723,8 @@ async handleTakerSell() {
     let orderBuffer = serialize.serializeOrder('exchange', 'IQ', 'EOS', amountBuy, amountSell, nonceBN, 'ideosmaker');
   
     let orderHash = ecc.sha256(orderBuffer);
-    console.log("orderHash: ", orderHash)
-    var orderHashBuffer = Buffer.from(orderHash, 'hex')
+
+    var orderHashBuffer = Buffer.from(orderHash, 'hex');
     
 
     let tradeBuffer = serialize.serializeTrade(orderHashBuffer, amountBuy, account, nonceBN)
@@ -734,12 +740,12 @@ async handleTakerSell() {
       }
 
     //   let pubKey = await scatter.getPublicKey('eos');
-    //   console.log(pubKey);
 
-      data.hash = ecc.sha256(tradeBuffer)
-    //   data.signature = ecc.sign(tradeBuffer, pubKey);
-      data.signature = await scatter.getArbitrarySignature('EOS8k4SMa7JKF4LVi1fn9bc3aKnunhXb2JSg8a9xY3zCdkXgXqXQq', tradeBuffer, "test ordertake", false);
-      data.orderId = 'dPOkW2cBKKlqgDKXqcHu'
+      data.signature = ecc.sign(tradeBuffer, '5JayPzuFPGq7KFy4kZ6iMXxHnLDrngHn3ekf1JKzXgT7jNxXQMc');
+      data.hash = ecc.sha256(tradeBuffer);
+     
+      //data.signature = await scatter.getArbitrarySignature('EOS8k4SMa7JKF4LVi1fn9bc3aKnunhXb2JSg8a9xY3zCdkXgXqXQq', tradeBuffer, "test ordertake", false);
+      data.orderId = 'S_YHXWcBKKlqgDKXjnJu'
       data.maker = 'ideosmaker'
       console.log(data.signature);
 
@@ -756,24 +762,34 @@ async handleTakerSell() {
   }
 
   async registerUser() {
-    var myBuffer = [];
-    var str = 'EOS8k4SMa7JKF4LVi1fn9bc3aKnunhXb2JSg8a9xY3zCdkXgXqXQq';
-    var buffer = new Buffer(str, 'utf16le');
-    for (var i = 0; i < buffer.length; i++) {
-        myBuffer.push(buffer[i]);
-    }
+    // var myBuffer = [];
+    // var str = 'EOS8k4SMa7JKF4LVi1fn9bc3aKnunhXb2JSg8a9xY3zCdkXgXqXQq';
+    // var buffer = new Buffer(str, 'utf16le');
+    // for (var i = 0; i < buffer.length; i++) {
+    //     myBuffer.push(buffer[i]);
+    // }
+
+    const pk = ecc.PublicKey('EOS6QczLFh1jNRd1fVjqovPuuCtGauVf3QRLDRoa2pDfoAf5oPKtJ').toBuffer();
+    var pkPacked = new pk.constructor(pk.length + 1);
+    pkPacked.set(Uint8Array.of(0), 0);
+    pkPacked.set(pk, 1);
+    var pkHex = pkPacked.toString('hex');
+
+
     const eosOptions = { expireInSeconds:60 }
     const eos = this.props.scatterID.eos(network, Eos, eosOptions);
+    
+    
     const action = [{
         account: 'exchange',
         name: 'registeruser',
         authorization: [{
-            actor: 'ideostaker',
+            actor: 'ubertaker',
             permission: 'active'
         }], data :
         {
-            user: 'ideostaker',
-            publickey: myBuffer
+            user: 'ubertaker',
+            publickey: pkHex
         }
     }]
     let dep = await eos.transaction({ actions: action})
@@ -1097,7 +1113,7 @@ setTimeout(
                                     </label>
                                     <input type="number"  id="sellPrice" onChange={changeSellPrice} />
                                     {tricker.map(hit =>
-                                        <input type="submit" value={'Buy '+hit.symbol} onClick={this.handleBuy} className="background" style={color} />
+                                        <input type="submit" value={'Buy '+hit.symbol} onClick={this.registerUser} className="background" style={color} />
                                     )}
                                 </div>
                                 <div className="red">
