@@ -41,7 +41,7 @@ function handleClicks(e) {
   }
   
 
-function handleClickss(e){
+async function handleClickss(e){
         e.preventDefault();
         let scatter = ScatterJS.scatter;
         scatter = scatter.isExtension ? window.ScatterJS.scatter : scatter;

@@ -154,7 +154,7 @@ render(){
                                 <li><Link to="/market" className="link">Markets</Link></li>
                                 <li><Link to="/contact" className="link">Supports</Link></li>
                                 <li id="signin"><a href="/"  onClick={handleClick}>Sign In</a></li>
-                                <li id="signout"><a href="/"  onClick={handleSignout}>Sign out</a></li>
+                                <li id="signout"><a href="/"  onClick={this.handleSignout}>Sign out</a></li>
                                 <li><a href="/" className="bgs"  onClick={handlePublic}>Get Started</a></li>
                             </ul>
                         </nav>

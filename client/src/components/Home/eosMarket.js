@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
 import $ from "jquery";
-import { Link } from 'react-router-dom';
 
 import dp from '../../app.json';
 var adminURL = dp['url'];

@@ -229,8 +229,6 @@ function handleSignout(e){
 
   
 
-// Socket initialized to fetch nonce.
-const socket = openSocket('http://api.byzanti.ne:9090/');
 
 function getLanguageFromURL() {
 	const regex = new RegExp('[\\?&]lang=([^&#]*)');
@@ -525,7 +523,7 @@ function changeBuyPrice(e)
             
     }
     
-class tradingHead extends Component{
+class tradingHead extends Component {
      
 	static defaultProps = {
 		symbol: c+':EOS',
@@ -780,103 +778,6 @@ $('#sellPricetwo').val('');
           console.log("dep: ", dep);
       }
 
-      async withdraw() {
-        const eosOptions = { expireInSeconds:60 };
-        const scatter = this.props.scatterID;
-
-        const offlineNetwork = {
-            blockchain:'eos',
-            protocol:'https://cors-anywhere.herokuapp.com/http',
-            host:'13.52.54.111',
-            eosVersion: 'bf28f8bb',
-            port:8888,
-            chainId:'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f',
-            debug: false,
-            verbose: false,
-            latency: 200,
-            sign: true,
-            broadcast: false
-        };
-
-        const eos = scatter.eos(offlineNetwork, Eos, eosOptions);
-
-        const action = {
-            from: 'ideos',
-            quantity: '1.1111 EOS@eosio.token',
-            nonce: data,
-            admin: 'admin'
-        };
-
-        let contract = eos.contract('exchange');
-
-        let offTransaction = contract.withdraw(action);
-        console.log("Offline transaction: ", offTransaction);
-
-    
-
-
-        let randChannel = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-        socket.emit('user', ["FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N", randChannel]);
-    
-        await socket.on(randChannel, async (data) => {
-            // let data = 156;
-            console.log("nonce: ", data)
-            console.log("public key: ", scatter.identity.publicKey);
-
-     
-         let acts = [{
-            account: 'exchange',
-            name: 'withdraw',
-            authorization: [{
-                actor: 'ideos',
-                permission: 'active'
-            }],
-            action
-        }]
-        let actionTrans = {
-            contract:'exchange',
-            action:'userwithdraw',
-            params:['ideos', '1.1111 EOS@eosio.token', data]
-        }
-
-        console.log(scatter.identity.accounts[0])
-        let transaction = await scatter.createTransaction('eos', [actionTrans], scatter.identity.accounts[0], network);
-        console.log(transaction.transaction.actions[0].data);
-        
-        let transactionHeaders = {
-            expiration: transaction.transaction.expiration,
-            ref_block_num: transaction.transaction.ref_block_num,
-            ref_block_prefix: transaction.transaction.ref_block_prefix,
-            delay_sec: 369
-        };
-
-        let signature = await scatter.getArbitrarySignature(scatter.identity.publicKey, JSON.stringify(action));
-        // let w = await eos.transaction({ actions: acts});
-
-        let payload = {};
-        payload.user = 'ideos';
-        payload.token = 'EOS';
-        payload.amount = 1.1111;
-        payload.nonce = data;
-        payload.signature = signature;
-        payload.headers  = transactionHeaders;
-        console.log("payload: ", payload);
-
-
-        let withdrawApi = await fetch('https://api.byzanti.ne/exwithdrawscatter/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', {
-            method: 'POST',
-            headers: {
-         //  'Accept': 'application/json',
-           'Content-Type': 'application/json'
-        },  
-            body: JSON.stringify(payload)
-        });
-
-         console.log("withdraw ", withdrawApi);
-    });
-
-
-      }
 
       async handleTakerSell() {
         console.log("serialize: ", serialize);
@@ -1004,7 +905,7 @@ $('#sellPricetwo').val('');
 
 
     
-    componentDidMount() {
+    async componentDidMount() {
         /*   var url = new URL(window.location.href);
           console.log(url.href.substr(url.href.lastIndexOf('/') + 1));*/
        
@@ -1037,28 +938,28 @@ $('#sellPricetwo').val('');
           .then(response => response.json())
           .then(data => {this.setState({ tricker: data }); });
           
-          fetch(orders)
+          fetch(APISS)
           .then(response => response.json())
           .then(data => {this.setState({ orders: data }); });
           
-          fetch(orderBook11)
+          fetch(APIS)
           .then(response => response.json())
           .then(data => {this.setState({ orderBook: data['asks'], orderBooks: data['bids'] }); });
           
-          fetch(orderBook150)
+          fetch(APISs)
           .then(response => response.json())
           .then(data => {this.setState({ orderBookss: data['asks'], orderBookss: data['bids'] }); });
           
           fetch(orderTaker)
           .then(response => response.json())
           .then(data => {this.setState({ tacker: data }); var i=0; data.map(bids => {
-            if(i==0){if(bids.assetBuy==c){this.setState({mysign:"plus"})}else{this.setState({mysign:"minus"})}this.setState({myamount:bids.price});i++;}    });});
-
-
+                                     if(i==0){if(bids.assetBuy==c){this.setState({mysign:"plus"})}else{this.setState({mysign:"minus"})}this.setState({myamount:bids.price});i++;}    });});
+          
+      
           fetch('https://api.byzanti.ne/exbalance?account=taker1&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N')
           .then(response => response.json())
           .then(data => {this.setState({blc:data}); });
-            
+          
           var tradebook = 'https://api.byzanti.ne/tradebook?symbol='+c+'&size=10&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
           var NAPI = 'https://api.byzanti.ne/ordersByUser?user=taker1&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
           var OrderSell = 'https://api.byzanti.ne/orders?symbol=IQ&side=SELL&size=100&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
@@ -1072,61 +973,62 @@ $('#sellPricetwo').val('');
           fetch(tradebook)
           .then(response => response.json())
           .then(data => {this.setState({ tradebook: data }); });
-          
+  
           fetch(adminURL+'/getColors/'+apiId)
           .then(response => response.json())
           .then(data => {if(data.logo=='')
           {
-          this.setState({colors:'#0e9caf'});this.setState({logo:logoss});
+              this.setState({colors:'#0e9caf'});this.setState({logo:logoss});
           }
-          else {
-                this.setState({colors:data.theme_color}); 
-                $('#logoImg').attr('src',adminURL+'/images/byzantine/'+data.logo);
+          else
+          {
+              this.setState({colors:data.theme_color}); 
+              $('#logoImg').attr('src',adminURL+'/images/byzantine/'+data.logo);
           }
           }).catch(data => {
-                    this.setState({colors:'#0e9caf'});this.setState({logo:logoss});
+              this.setState({colors:'#0e9caf'});this.setState({logo:logoss});
           });
-          const widgetOptions = {
-                        debug: false,
-                        symbol: this.props.symbol,
-                        datafeed: Datafeed,
-                        interval: this.props.interval,
-                        container_id: this.props.containerId,
-                        library_path: this.props.libraryPath,
-                        locale: getLanguageFromURL() || 'en',
-                        disabled_features: ['use_localstorage_for_settings'],
-                        enabled_features: ['study_templates'],
-                        charts_storage_url: this.props.chartsStorageUrl,
-                        charts_storage_api_version: this.props.chartsStorageApiVersion,
-                        client_id: this.props.clientId,
-                        user_id: this.props.userId,
-                        fullscreen: this.props.fullscreen,
-                        autosize: this.props.autosize,
-                        studies_overrides: this.props.studiesOverrides,
-                        overrides: {
-                                "mainSeriesProperties.showCountdown": true,
-                                "paneProperties.background": bColor,
-                                "paneProperties.vertGridProperties.color": "#363c4e",
-                                "paneProperties.horzGridProperties.color": "#363c4e",
-                                "symbolWatermarkProperties.transparency": 90,
-                                "scalesProperties.textColor" : "#AAA",
-                                "mainSeriesProperties.candleStyle.wickUpColor": '#336854',
-                                "mainSeriesProperties.candleStyle.wickDownColor": '#7f323f',
-                        }
+             const widgetOptions = {
+              debug: false,
+              symbol: this.props.symbol,
+              datafeed: Datafeed,
+              interval: this.props.interval,
+              container_id: this.props.containerId,
+              library_path: this.props.libraryPath,
+              locale: getLanguageFromURL() || 'en',
+              disabled_features: ['use_localstorage_for_settings'],
+              enabled_features: ['study_templates'],
+              charts_storage_url: this.props.chartsStorageUrl,
+              charts_storage_api_version: this.props.chartsStorageApiVersion,
+              client_id: this.props.clientId,
+              user_id: this.props.userId,
+              fullscreen: this.props.fullscreen,
+              autosize: this.props.autosize,
+              studies_overrides: this.props.studiesOverrides,
+              overrides: {
+                  "mainSeriesProperties.showCountdown": true,
+                  "paneProperties.background": bColor,
+                  "paneProperties.vertGridProperties.color": "#363c4e",
+                  "paneProperties.horzGridProperties.color": "#363c4e",
+                  "symbolWatermarkProperties.transparency": 90,
+                  "scalesProperties.textColor" : "#AAA",
+                  "mainSeriesProperties.candleStyle.wickUpColor": '#336854',
+                  "mainSeriesProperties.candleStyle.wickDownColor": '#7f323f',
+              }
           };
-            
-            window.TradingView.onready(() => {
-            const widget = window.tvWidget = new window.TradingView.widget(widgetOptions);
-            
-            widget.onChartReady(() => {
-            console.log('Chart has loaded!')
-            });
-            });
-            
-            setTimeout(function(){
-            handledefualt();
-            
-            },3000);
+  
+          window.TradingView.onready(() => {
+              const widget = window.tvWidget = new window.TradingView.widget(widgetOptions);
+  
+              widget.onChartReady(() => {
+                  console.log('Chart has loaded!')
+              });
+          });
+          
+          setTimeout(function(){
+              handledefualt();
+                 
+          },3000);
 
             console.log("scatterID: ", this.props.scatterID);
             if(this.props.scatterID){
@@ -1148,12 +1050,6 @@ $('#sellPricetwo').val('');
             }
         }
 
-
-        // try{f
-
-   
-        
-    }
 
       
         

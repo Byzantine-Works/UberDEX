@@ -1,16 +1,10 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
 import $ from "jquery";
-<<<<<<< HEAD
-import { Link } from 'react-router-dom';
-import data from '../../app.json';
-var color = {background: data['theme_color']};
-=======
 
 import dp from '../../app.json';
 var adminURL = dp['url'];
 var apiId = dp['apiId'];
->>>>>>> 4bd420bb63ccdea47fad3415e1d8dcfd996d1171
 
 const API = 'https://api.byzanti.ne/ticker?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
 var apiCall = '';
@@ -118,11 +112,7 @@ class Home_banner extends Component{
                             }});
                             return    <tr id={hit.symbol}>
                                     <td><i className="fa fa-star"></i></td>
-<<<<<<< HEAD
-                                    <td><Link to={'/exchange/?opt='+hit.symbol}>{hit.symbol} / EOS</Link></td>
-=======
                                     <td><Link to={'/exchange/?opt='+hit.symbol} className="link">{hit.symbol} / EOS</Link></td>
->>>>>>> 4bd420bb63ccdea47fad3415e1d8dcfd996d1171
                                     <td className={hit.change < 0?'minus':'plus'}>{hit.last}</td>
                                     <td className={hit.change < 0?'minus':'plus'}>{hit.change}</td>
                                     <td>{hit.high}</td>
