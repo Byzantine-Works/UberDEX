@@ -209,23 +209,24 @@ var c = url.searchParams.get("opt");
   }
   
 
-function handlePublic(e){
-    // e.preventDefault();
-    //  var scatter =ScatterJS.scatter;
-    //  if(scatter.identity){   alert(scatter.identity.publicKey);}
+  function handlePublic(e){
+    e.preventDefault();
+     var scatter =ScatterJS.scatter;
+     if(scatter.identity){   alert(scatter.identity.publicKey);}
 //console.log(scatter.identity.publicKey);
 }
 
 function handlesign(e) {
-    // e.preventDefault();
-    // $('.signInPopup ').fadeIn();
+    e.preventDefault();
+    $('.signInPopup ').fadeIn();
   }
   
 function handleSignout(e){
-//     e.preventDefault();
-//      ScatterJS.scatter.forgetIdentity();
-//  window.location.reload();
+    e.preventDefault();
+     ScatterJS.scatter.forgetIdentity();
+ window.location.reload();
 }
+
   
 
 // Socket initialized to fetch nonce.
@@ -1078,41 +1079,40 @@ $('#sellPricetwo').val('');
           {
           this.setState({colors:'#0e9caf'});this.setState({logo:logoss});
           }
-          else
-          {
-          this.setState({colors:data.theme_color}); 
-          $('#logoImg').attr('src',adminURL+'/images/byzantine/'+data.logo);
+          else {
+                this.setState({colors:data.theme_color}); 
+                $('#logoImg').attr('src',adminURL+'/images/byzantine/'+data.logo);
           }
           }).catch(data => {
-          this.setState({colors:'#0e9caf'});this.setState({logo:logoss});
+                    this.setState({colors:'#0e9caf'});this.setState({logo:logoss});
           });
           const widgetOptions = {
-          debug: false,
-          symbol: this.props.symbol,
-          datafeed: Datafeed,
-          interval: this.props.interval,
-          container_id: this.props.containerId,
-          library_path: this.props.libraryPath,
-          locale: getLanguageFromURL() || 'en',
-          disabled_features: ['use_localstorage_for_settings'],
-          enabled_features: ['study_templates'],
-          charts_storage_url: this.props.chartsStorageUrl,
-          charts_storage_api_version: this.props.chartsStorageApiVersion,
-          client_id: this.props.clientId,
-          user_id: this.props.userId,
-          fullscreen: this.props.fullscreen,
-          autosize: this.props.autosize,
-          studies_overrides: this.props.studiesOverrides,
-          overrides: {
-          "mainSeriesProperties.showCountdown": true,
-          "paneProperties.background": bColor,
-          "paneProperties.vertGridProperties.color": "#363c4e",
-          "paneProperties.horzGridProperties.color": "#363c4e",
-          "symbolWatermarkProperties.transparency": 90,
-          "scalesProperties.textColor" : "#AAA",
-          "mainSeriesProperties.candleStyle.wickUpColor": '#336854',
-          "mainSeriesProperties.candleStyle.wickDownColor": '#7f323f',
-          }
+                        debug: false,
+                        symbol: this.props.symbol,
+                        datafeed: Datafeed,
+                        interval: this.props.interval,
+                        container_id: this.props.containerId,
+                        library_path: this.props.libraryPath,
+                        locale: getLanguageFromURL() || 'en',
+                        disabled_features: ['use_localstorage_for_settings'],
+                        enabled_features: ['study_templates'],
+                        charts_storage_url: this.props.chartsStorageUrl,
+                        charts_storage_api_version: this.props.chartsStorageApiVersion,
+                        client_id: this.props.clientId,
+                        user_id: this.props.userId,
+                        fullscreen: this.props.fullscreen,
+                        autosize: this.props.autosize,
+                        studies_overrides: this.props.studiesOverrides,
+                        overrides: {
+                                "mainSeriesProperties.showCountdown": true,
+                                "paneProperties.background": bColor,
+                                "paneProperties.vertGridProperties.color": "#363c4e",
+                                "paneProperties.horzGridProperties.color": "#363c4e",
+                                "symbolWatermarkProperties.transparency": 90,
+                                "scalesProperties.textColor" : "#AAA",
+                                "mainSeriesProperties.candleStyle.wickUpColor": '#336854',
+                                "mainSeriesProperties.candleStyle.wickDownColor": '#7f323f',
+                        }
           };
             
             window.TradingView.onready(() => {
@@ -1127,35 +1127,33 @@ $('#sellPricetwo').val('');
             handledefualt();
             
             },3000);
+
+            console.log("scatterID: ", this.props.scatterID);
+            if(this.props.scatterID){
+                const scatter = this.props.scatterID;
+                await scatter.connect("UberDEX");
+                const requiredFields = { accounts:[network] };
+                
+                await scatter.getIdentity(requiredFields);
+                const eosOptions = { expireInSeconds:60 }
+                const eos = this.props.scatterID.eos(network, Eos, eosOptions)
+                console.log("eos scatter: ", eos);
+                if(scatter.identity.accounts[0].name) this.setState({pairedScatter: true})
+                console.log(this.state.pairedScatter);
+                // console.log(scatter.eos(network, Eos))
+                $('#signin').hide();
+                $('#signout').css('display','inline-block');
+                $('.bgs').html(scatter.identity.accounts[0].name);
+    
             }
+        }
 
 
         // try{f
-        console.log("scatterID: ", this.props.scatterID);
-        if(this.props.scatterID){
-            const scatter = this.props.scatterID;
-            await scatter.connect("UberDEX");
-            const requiredFields = { accounts:[network] };
-            
-            await scatter.getIdentity(requiredFields);
-            const eosOptions = { expireInSeconds:60 }
-            const eos = this.props.scatterID.eos(network, Eos, eosOptions)
-            console.log("eos scatter: ", eos);
-            if(scatter.identity.accounts[0].name) this.setState({pairedScatter: true})
-            console.log(this.state.pairedScatter);
-            // console.log(scatter.eos(network, Eos))
-            $('#signin').hide();
-            $('#signout').css('display','inline-block');
-            $('.bgs').html(scatter.identity.accounts[0].name);
 
-        }
    
         
     }
-
-    async signIn(e){
-        e.preventDefault();
-        $('.signInPopup ').fadeIn();
 
       
         
