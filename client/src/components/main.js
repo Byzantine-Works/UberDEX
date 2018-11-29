@@ -16,6 +16,7 @@ import announcements from './announcements';
 import failannouncement from './failAnnouncement';
 import TransactionPage from './transactionPage';
 import Account from './account';
+import LDAR from './ldar';
 
 class Main extends Component{
     constructor(props) {
@@ -42,12 +43,14 @@ class Main extends Component{
             <Route path='/failannouncement' component={ failannouncement } />
             <Route path='/transaction' component={ TransactionPage } />
             <Route path='/account' component={(props) => {return <Account scatterEOS={this.props.scatterEOS} updateScatterID={this.props.updateScatterID} scatterID={this.props.scatterID}/>}} />
+            <Route path='/ldar' component={ LDAR } />
         </Switch>
 
   
         )
     }
 }
+
 
 
 export default Main;

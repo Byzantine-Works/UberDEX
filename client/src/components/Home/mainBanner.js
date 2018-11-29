@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
-import data from '../../app.json';
-var color = {background: data['theme_color']};
+import $ from "jquery";
+import dp from '../../app.json';
+var adminURL = dp['url'];
+var apiId = dp['apiId'];
 
 class Home_banner extends Component{
     constructor(props) {
@@ -14,17 +16,49 @@ class Home_banner extends Component{
 
 componentDidMount() {
    
-    fetch('https://uberdex-admin.herokuapp.com/getColors')
+    
+    fetch(adminURL+'/getColors/'+apiId)
     .then(response => response.json())
-    .then(data => {this.setState({colors:data.theme_color}); this.setState({logo:'https://uberdex-admin.herokuapp.com/images/byzantine/'+data.logo}); });
+    .then(data => {if(data.theme_color=='')
+    {
+        this.setState({colors:'#0e9caf'});
+    }
+    else
+    {
+        this.setState({colors:data.theme_color}); 
+        this.setState({logo:adminURL+'/images/byzantine/'+data.logo});
+    }
+    }).catch(data => {
+        this.setState({colors:'#0e9caf'});
+    });
+    
+    fetch('https://uberdex-admin.herokuapp.com/getContents')
+    .then(response => response.json())
+    .then(data => {if(data.mainTitle=='')
+    {
+        
+        $('#mainTitle').html('The First EOS based decentralized exchange in the world');
+        $('#mainDesc').html('No deposit / No withdrawal / Safe assets/ Open and transparency');
+    }
+    else
+    {
+        $('#mainTitle').html(data.mainTitle);
+        $('#mainDesc').html(data.mainContent);
+
+    }
+    }).catch(data => {
+        $('#mainTitle').html('The First EOS based decentralized exchange in the world');
+        $('#mainDesc').html('No deposit / No withdrawal / Safe assets/ Open and transparency');
+    });
+
 }
 render(){
     const { colors } = this.state;
         return(
             <div className="mainBanner">
                 <div className="container">
-                    <h1>The First EOS based decentralized exchange in the world</h1>
-                    <p>No deposit / No withdrawal / Safe assets/ Open and transparency</p>
+                    <h1 id="mainTitle">The First EOS based decentralized exchange in the world</h1>
+                    <p id="mainDesc">No deposit / No withdrawal / Safe assets/ Open and transparency</p>
                     <form>
                         <div className="pmsField">
                             <input type="text" placeholder="" />

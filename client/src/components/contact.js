@@ -3,17 +3,12 @@ import Header from './header';
 import Callaction from './callAction';
 import Footer from './footer';
 import $ from "jquery";
-import data from '../app.json';
-var color = {background: data['theme_color']};
+import dp from '../app.json';
+var adminURL = dp['url'];
+var apiId = dp['apiId'];
 
 class Contact extends Component{
-    constructor(props) {
-        super(props);
-        this.state = {
-            colors: [],
-            logo: [],
-        };
-    }
+
      postSignup = (e) => {
     e.preventDefault();
      let data = {
@@ -50,13 +45,44 @@ class Contact extends Component{
     
     }));
   }
+  constructor(props) {
+    super(props);
 
+
+  this.state = {
+      colors: [],
+      logo: [],
+      companyName: [],
+      companyEmail: [],
+      companyEmail: [],
+      companyPhone: [],
+      logo: [],
+      companyDesc:[],
+  };
+}
 
 componentDidMount() {
- 
-  fetch('https://uberdex-admin.herokuapp.com/getColors')
-  .then(response => response.json())
-  .then(data => {this.setState({colors:data.theme_color}); this.setState({logo:'https://uberdex-admin.herokuapp.com/images/byzantine/'+data.logo}); });
+    
+    fetch(adminURL+'/getColors/'+apiId)
+    .then(response => response.json())
+    .then(data => {if(data.theme_color=='')
+    {
+        this.setState({colors:'#0e9caf'});
+    }
+    else
+    {
+        this.setState({colors:data.theme_color}); 
+        this.setState({logo:adminURL+'/images/byzantine/'+data.logo});
+        this.setState({companyName:data.companyName}); 
+        this.setState({companyEmail:data.companyEmail}); 
+        this.setState({companyAddress:data.companyAddress}); 
+        this.setState({companyPhone:data.companyPhone}); 
+        this.setState({companyDesc:data.companyDesc});
+    }
+    }).catch(data => {
+        this.setState({colors:'#0e9caf'});
+    });
+    
 }
 render(){
   const { colors } = this.state;
@@ -66,11 +92,14 @@ render(){
                     <div className="container clearfix">
                         <div className="leftDetails">
                             <h3>How to contact us?</h3>
-                            <p>If you have any problem while using  uberDex and need help, or if you have any suggestion, please</p>
-                            <p>send email to 'support@uberDex.com'. We will deal with it for you as soon as possible.</p>
+                            <p>{this.state.companyDesc}</p>
+                            <p>If you have any problem while using  {this.state.companyName} and need help, or if you have any suggestion, please</p>
+                            <p>send email to '{this.state.companyEmail}'. We will deal with it for you as soon as possible.</p>
                             <p>information to contact us.</p>
-                            <p>Business cooperation email: bd@uberDex.io</p>
-                            <p>Technical support email: tech@uberDex.io</p>
+                            <p>Business cooperation email: {this.state.companyEmail}</p>
+                            <p>Technical support email: {this.state.companyEmail}</p>
+                            <p>Technical support Phone: {this.state.companyPhone}</p>
+                            <p>Address: {this.state.companyAddress}</p>
                         </div>
                         <div className="rightName">
                             <form name="contact" method="post" >

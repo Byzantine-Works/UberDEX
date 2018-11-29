@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
+import Datafeed from './TVChartContainer/api/index';
 import TradingCenter from './Exchange/tradingPlatform';
+import Callaction from './callAction';
 import Footer from './footer';
 import Header from './header';
 import Order from './Exchange/order.js';
@@ -27,12 +29,8 @@ class Home extends Component{
      
         return(
             <div className="marketPage">
-                {/* <div className="wellcomBanner background" style={color}>
-                    <Header updateScatterID={this.props.updateScatterID} scatterID={this.props.scatterID}/>
-                </div> */}
-                {/* <Trading /> */}
                 <TradingCenter updateOpenOrders={this.updateOpenOrders} scatterID={this.props.scatterID} updateScatterID={this.props.updateScatterID}/>
-                {/* <Order scatterID={this.props.scatterID} updateScatterID={this.props.updateScatterID} openOrders={this.state.openOrders}/> */}
+                <Callaction />
             </div>
         )
     }

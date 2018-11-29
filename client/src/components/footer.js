@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { Link } from 'react-router-dom';
 import scatter from './imgs/scatter.PNG';
 import logoBlue from './imgs/logoBlue.png';
 import logoBlueh from './imgs/logoBlueh.png';
@@ -7,7 +8,9 @@ import $ from "jquery";
 import ScatterJS from 'scatterjs-core';
 import ScatterEOS from 'scatterjs-plugin-eosjs';
 import Eos from 'eosjs';
-// import { Api, JsonRpc, RpcError, JsSignatureProvider } from 'eosjs';
+import dp from '../app.json';
+var adminURL = dp['url'];
+var apiId = dp['apiId'];
 
 ScatterJS.plugins( new ScatterEOS() );
 
@@ -38,15 +41,7 @@ function handleClicks(e) {
   }
   
 
-class Footer extends Component{
-    constructor(props) {
-        super(props);
-        console.log("props: ", props);
-        this.handleClickss = this.handleClickss.bind(this);
-        // this.setState = props.setState.bind(this);
-    }
-
-    async handleClickss(e){
+function handleClickss(e){
         e.preventDefault();
         let scatter = ScatterJS.scatter;
         scatter = scatter.isExtension ? window.ScatterJS.scatter : scatter;
@@ -86,22 +81,68 @@ class Footer extends Component{
     }
 
 
+class Footer extends Component{
+    constructor(props) {
+        super(props);
+    
+        this.state = {
+            colors: [],
+            logo: [],
+            companyName: [],
+        };
+      }
+
+componentDidMount() {
+
+    fetch(adminURL+'/getColors/'+apiId)
+    .then(response => response.json())
+    .then(data => {if(data.logo=='')
+    {
+          this.setState({colors:'#0e9caf'});this.setState({logo:logoBlue});
+    }
+    else
+    {
+        this.setState({colors:data.theme_color});
+         this.setState({logo:adminURL+'/images/byzantine/'+data.logo});
+         this.setState({lightLogo:adminURL+'/images/byzantine/'+data.lightLogo});
+    }
+    }).catch(data => {
+         this.setState({colors:'#0e9caf'});this.setState({logo:logoBlue});
+    });
+
+    fetch(adminURL+'/getColors/'+apiId)
+    .then(response => response.json())
+    .then(data => {if(data.companyName=='')
+    {
+        this.setState({companyName:'UberDex'});
+    }
+    else
+    {
+        this.setState({companyName:data.companyName});
+    }
+    }).catch(data => {
+        this.setState({companyName:'UberDex'});
+    });
+
+}
+
     render(){
        
         return(
             <div>
                 <div className="footer">
                     <div className="container clearfix">
-                        <img src={logoBlueh} className="darkF" />
-                        <img src={logoBlue} className="lightF"/>
+                        <img src={this.state.logo} className="darkF" />
+                        <img src={this.state.lightLogo} className="lightF"/>
                         <p>Cryptocurrency investment is subject to high market risk, please make your investments cautiously.</p>
-                        <span>© UberDex Inc 2018. All Right Reserved.</span>
+                        <span>© {this.state.companyName} 2018. All Right Reserved.</span>
                         <ul>
-                            <li><a href="/about">About </a></li>
-                            <li><a href="/user_agreement">User Agreement</a></li>
-                            <li><a href="/contact">Contact</a></li>
-                            <li><a href="/contact">Support</a></li>
-                            <li><a href="/trade">How to Trade</a></li>
+                            <li><Link to="/about" className="link">About</Link></li>
+                            <li><Link to="/user_agreement" className="link">User Agreement</Link></li>
+                            <li><Link to="/contact" className="link">Contact</Link></li>
+                            <li><Link to="/contact" className="link">Support</Link></li>
+                            <li><Link to="/trade" className="link">How to Trade</Link></li>
+                            <li><a href="/ldar" className="">LDAR</a></li>
                         </ul>
                     </div>
                 </div>

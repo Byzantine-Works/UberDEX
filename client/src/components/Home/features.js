@@ -64,8 +64,9 @@ import icony5 from '../imgs/icony5.png';
 import icony6 from '../imgs/icony6.png';
 import icony7 from '../imgs/icony7.png';
 
-import data from '../../app.json';
-var color = {color: data['theme_color']};
+import dp from '../../app.json';
+var adminURL = dp['url'];
+var apiId = dp['apiId'];
 
 class Features extends Component{
     constructor(props) {
@@ -79,9 +80,23 @@ class Features extends Component{
 
 componentDidMount() {
    
-    fetch('https://uberdex-admin.herokuapp.com/getColors')
+    fetch(adminURL+'/getColors/'+apiId)
     .then(response => response.json())
-    .then(data => {this.setState({colors:data.theme_color}); this.setState({logo:'https://uberdex-admin.herokuapp.com/images/byzantine/'+data.logo}); });
+    .then(data => {if(data.theme_color=='')
+    {
+        this.setState({companyName:'UberDex'});
+        this.setState({colors:'#0e9caf'});
+    }
+    else
+    {
+        this.setState({companyName:data.companyName});
+        this.setState({colors:data.theme_color}); 
+        this.setState({logo:adminURL+'/images/byzantine/'+data.logo});
+    }
+    }).catch(data => {
+        this.setState({companyName:'UberDex'});
+        this.setState({colors:'#0e9caf'});
+    });
 }
 render(){
     const { colors } = this.state;
@@ -159,7 +174,7 @@ render(){
                                 <img className="litr" src={iconr5}  />
                                 <img className="lity" src={icony5}  />
                                 <h4 className="colors"  style={{'color': this.state.colors}}>Friendly user Experience</h4>
-                                <p>Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum</p>
+                                <p>{this.state.companyName} aims to be the best performing and easiest-to-use decentralized Exchange.</p>
                             </li>
                             <li>
                                 <img className="drk" src={icon6}  />
@@ -171,7 +186,7 @@ render(){
                                 <img className="litr" src={iconr6}  />
                                 <img className="lity" src={icony6}  />
                                 <h4 className="colors"  style={{'color': this.state.colors}}>No need to trust, high security</h4>
-                                <p>Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum</p>
+                                <p>We relay orders between peers. {this.state.companyName} moves tokens between wallets. Together, we’re a new category where the platform itself is distributed.</p>
                             </li>
                             <li>
                                 <img className="drk" src={icon7}  />
@@ -183,7 +198,7 @@ render(){
                                 <img className="litr" src={iconr7}  />
                                 <img className="lity" src={icony7}  />
                                 <h4 className="colors"  style={{'color': this.state.colors}}>Open, high transparency</h4>
-                                <p>Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum</p>
+                                <p>Leverage blockchain technology to trade EOS tokens directly from your wallet. No middleman.</p>
                             </li>
                         </ul>
                     </div>

@@ -8,7 +8,7 @@ export default {
 
     getBars: function(symbolInfo, resolution, from, to, first, limit) {
 		var split_symbol = symbolInfo.name.split(/[:/]/)
-         
+        
 			const url = resolution === 'D' ? '/data/histoday' : resolution >= 60 ? '/data/histohour' : '/data/histominute'
 		console.log(`${api_root}${url}`);
         	const qs = {

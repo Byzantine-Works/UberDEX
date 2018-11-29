@@ -1,0 +1,533 @@
+@charset "utf-8";
+/* CSS Document */
+
+/*------------------------------------------------------------------
+[Master Stylesheet]
+
+Project:	Admin Side
+Version:	1.0
+-------------------------------------------------------------------*/
+
+/*------------------------------------------------------------------
+    1- CSS RESET
+-------------------------------------------------------------------*/
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address,
+big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl,
+dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas,
+details, embed,  figure, figcaption, footer, header, hgroup,  menu, nav, output, ruby, section, summary, time, mark, audio,
+video {	margin: 0; 	padding: 0;	border: 0;	font-size: 100%;	font: inherit;	vertical-align: baseline;}
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section { display: block; }
+ol, ul { list-style: none;}
+blockquote, q {	quotes: none;}
+blockquote:before, blockquote:after, q:before, q:after { content: ''; content: none; }
+table {	border-collapse: collapse; border-spacing: 0; }
+
+
+/*------------------------------------------------------------------
+    2- BASIC STYLES
+-------------------------------------------------------------------*/
+
+
+body { background: #fff; color: #000; font: 14px 'Calibri', Helvetica, sans-serif; overflow-x: hidden; }
+
+a { color: #666666; text-decoration: none;  -ms-transition: all 1s;  -o-transition: all 1s;  transition: all 1s;   }
+a:hover, a:active { outline: 0; }
+hr {margin: 50px 0;}
+
+::-moz-selection { background: #fe57a1; color: #fff; text-shadow: none; }
+::selection { background: #fe57a1; color: #fff; text-shadow: none; }
+
+.clearfix:before, .clearfix:after { content: ""; display: table; }
+.clearfix:after { clear: both; }
+.clearfix { *zoom: 1; }
+
+
+/*------------------------------------------------------------------
+    3- Main style
+-------------------------------------------------------------------*/
+
+header {
+    background-image: linear-gradient(22deg,#0ca6bb,#0e9aad 18%,#359db9 30%,#59a0c5 47%,#7296c9 72%,rgba(141,122,218,.81)),linear-gradient(180deg,#049cb0,#049cb0);
+    background-position: 0 0,0 0;
+    line-height: 100px;
+}
+
+header .logo img {
+    width: 70px;
+    vertical-align: middle;
+}
+
+header nav ul li {
+    display: inline-block;
+    margin-left: 40px;
+}
+
+header nav {text-align: right;}
+header nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-family: 'Calibri', sans-serif;
+    font-weight: 300;
+    font-size: 17px;
+}
+footer {
+    text-align: center;
+    padding: 30px 0px;
+    background: #fff;
+}
+
+footer img {
+    width: 123px;
+    margin-bottom: 10px;
+}
+
+footer p {
+    font-size: 18px;
+    margin: 0px;
+}
+
+.dashboard {
+    padding: 100px 0px;
+    background: #f3f3f3; min-height: 500px;
+}
+
+.dashboard h3 {
+    color: #6a9ac8;
+    font-size: 36px;
+    font-family: 'Calibri', sans-serif;
+    font-weight: bold;
+}
+
+.logoUpload {
+    padding: 100px 0px;
+    background: #f3f3f3;
+}
+
+.logoUpload h5 {
+    font-size: 22px;
+    font-family: 'Calibri', sans-serif;
+    font-weight: bold;
+    margin-bottom: 24px;
+}
+
+.logoUpload .innerDetail {
+    background: #fff;
+    padding: 50px 0px;
+    text-align: center;
+    border-radius: 7px;
+}
+
+.logoUpload .innerDetail label {
+    position: relative;
+    font-size: 20px;
+    font-family: 'Calibri', sans-serif;
+    background: #619cc6;
+    color: #fff;
+    padding: 10px 33px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+
+.logoUpload .innerDetail label input {
+    position: absolute;
+    visibility: hidden;
+}
+
+.logoUpload .innerDetail input[type="submit"] {
+    font-size: 20px;
+    font-family: 'Calibri', sans-serif;
+    color: #fff;
+    padding: 10px 33px;
+    border-radius: 6px;
+    background-image: linear-gradient(22deg,#0ca6bb,#0e9aad 18%,#359db9 30%,#59a0c5 47%,#7296c9 72%,rgba(141,122,218,.81)),linear-gradient(180deg,#049cb0,#049cb0);
+    border: 0px;
+    min-width: 233px;
+}
+
+.colorSetting {
+    padding: 100px 0px;
+    background: #f3f3f3;
+}
+
+.colorSetting .innerDetail {
+    background: #fff;
+    padding: 50px 60px;
+    border-radius: 7px;
+}
+
+.colorSetting .innerDetail h5 {
+    font-size: 22px;
+    font-family: 'Calibri', sans-serif;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.colorSetting .innerDetail label {
+    display: block;
+    position: relative;
+    margin-bottom: 11px;
+}
+
+.colorSetting .innerDetail label input {
+    position: absolute;
+    visibility: hidden;
+}
+
+.colorSetting .innerDetail label span {
+    background: #728ecd;
+    display: inline-block;
+    width: 200px;
+    height: 35px;
+    border-radius: 6px;
+    vertical-align: middle;
+    margin-right: 20px;
+}
+
+.colorSetting .innerDetail form input {
+    width: 203px;
+    height: 35px;
+}
+
+.colorSetting .innerDetail p {
+    font-size: 16px;
+    margin: 30px 0px;
+    font-family: 'Calibri', sans-serif;
+    font-weight: bold;
+    text-align: center;
+    width: 200px;
+}
+.colorSetting .innerDetail label i {
+    display: none;
+    font-size: 19px;
+}
+
+.colorSetting .innerDetail label span {
+    cursor: pointer;
+}
+
+.colorSetting .innerDetail label input:checked + span + i {
+    display: inline-block;
+}
+
+.colorSetting .innerDetail label input:checked + span {box-shadow: 0px 4px 14px -5px #000;}
+
+
+
+.PageContent {
+    padding: 100px 0px;
+    background: #f3f3f3;
+}
+
+.PageContent h5 {
+    font-size: 22px;
+    font-family: 'Calibri', sans-serif;
+    font-weight: bold;
+    margin-bottom: 24px;
+}
+
+.PageContent .innerDetail {
+    background: #fff;
+    padding: 50px 60px;
+    border-radius: 7px;
+}
+
+.PageContent .innerDetail input[type="submit"] {
+    font-size: 20px;
+    font-family: 'Calibri', sans-serif;
+    color: #fff;
+    padding: 10px 33px;
+    border-radius: 6px;
+    background-image: linear-gradient(22deg,#0ca6bb,#0e9aad 18%,#359db9 30%,#59a0c5 47%,#7296c9 72%,rgba(141,122,218,.81)),linear-gradient(180deg,#049cb0,#049cb0);
+    border: 0px;
+    min-width: 233px;
+}
+
+.PageContent .innerDetail textarea {
+    font-family: 'Calibri', sans-serif;
+    width: 100%;
+    height: 200px;
+    outline: 0px !important;
+    padding: 10px;
+    margin-bottom: 20px;
+    line-height: 24px; resize: none;
+    font-size: 15px;
+}
+
+.loginPage {
+    padding: 100px 0px;
+    background: #f3f3f3;
+}
+
+.loginPage .loginInner {
+    background: #fff;
+    padding: 50px 60px;
+    border-radius: 7px;
+    width: 500px;
+    margin: 0 auto;
+}
+
+.loginPage .loginInner h3 {
+    font-size: 22px;
+    font-family: 'Calibri', sans-serif;
+    font-weight: bold;
+    margin-bottom: 24px;
+}
+
+.loginPage .loginInner .field input {
+    width: 400px;
+    margin-bottom: 10px;
+    border: 1px solid #b9b8b8;
+    padding: 10px 10px;
+    font-family: 'Calibri', sans-serif;
+    color: #6f6f6f;
+    border-radius: 3px;
+}
+
+.loginPage .loginInner .field label {
+    display: block;
+    font-family: 'Calibri', sans-serif;
+    margin-bottom: 10px;
+    font-weight: 400;
+    font-size: 16px;
+    color: #6f6f6f;
+}
+
+.loginPage .loginInner 
+ input[type="submit"] {
+    font-size: 20px;
+    font-family: 'Calibri', sans-serif;
+    color: #fff;
+    padding: 7px 33px;
+    border-radius: 6px;
+    background-image: linear-gradient(22deg,#0ca6bb,#0e9aad 18%,#359db9 30%,#59a0c5 47%,#7296c9 72%,rgba(141,122,218,.81)),linear-gradient(180deg,#049cb0,#049cb0);
+    border: 0px;
+    margin-top: 21px;
+}
+
+.colorSetting .innerDetail label img {
+    width: 100%;
+    border-radius: 8px;
+}
+.colorSetting .innerDetail label input:checked + img {
+    border: 4px solid #119e0e;
+    box-shadow: 0px 5px 14px -3px #000;
+}
+
+.colorSetting .innerDetail {
+    text-align: center;
+}
+
+.colorSetting .innerDetail p {
+    width: 100%;
+}
+.loginPage .loginInner input[type="submit"] {
+    width: 100%;
+}
+
+.loginPage .loginInner .field input {
+    box-sizing: border-box;
+    width: 100%;
+    border: 1px solid #e0e0e0;
+}
+
+.loginPage .loginInner h3 {
+    text-align: center;
+    font-size: 26px;
+    margin-bottom: 15px;
+    color: #728dcd;
+}
+
+.loginPage .loginWrap {
+    background: #fff;
+    border-radius: 7px;
+    margin: 0 auto;
+    box-shadow: 0px 0px 11px -4px #000;
+}
+.loginPage .loginInner .field input {
+    padding: 12px 15px;
+    border-radius: 17px;
+    outline: 0px !important;
+}
+
+.loginPage .loginInner input[type="submit"] {
+    padding: 9px 10px;
+    border-radius: 17px;
+    outline: 0px !important;
+}
+
+.companyProfile {
+    background: #fff;
+    box-shadow: 0px 0px 9px -3px #000;
+    border-radius: 8px;
+    padding: 40px 0px;
+}
+
+.companyProfile .logoOptions {text-align: center;}
+.companyProfile .logoOptions span {
+    border-radius: 50%;
+    text-align: center;
+    width: 200px;
+    line-height: 200px;
+    height: 200px;
+    display: block;
+    margin: 0 auto;
+    overflow: hidden;
+    margin-bottom: 25px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.companyProfile .logoOptions span img {
+    width: 100%;
+    vertical-align: middle;
+}
+
+
+.companyProfile .logoOptions label {
+    position: relative;
+    font-size: 17px;
+    font-family: 'Calibri', sans-serif;
+    background: #619cc6;
+    color: #fff;
+    padding: 10px 25px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+
+.companyProfile .logoOptions label input {
+    position: absolute;
+    visibility: hidden;
+}
+
+.companyProfile .companyInfo  p {
+    font-size: 15px;
+    font-family: 'Calibri', sans-serif;
+    margin-bottom: 23px;
+    color: #ababab;
+    margin-top: 26px;
+}
+
+.companyProfile .companyInfo  label {
+    font-size: 15px;
+    font-family: 'Calibri', sans-serif;
+    margin-bottom: 10px;
+    color: #ababab;
+    display: block;
+}
+
+.companyProfile .companyInfo  h4 {
+    font-weight: bold;
+    font-size: 18px;
+    border-bottom: 1px solid #adadad;
+    padding-bottom: 7px;
+    margin-bottom: 26px;
+    padding-left: 7px;
+    width: 91%;
+}
+
+.companyProfile .companyInfo input[type="text"] {
+    outline: 0px;
+    width: 91%;
+    padding: 12px 14px;
+    margin-bottom: 18px;
+    border: 1px solid #dcdcdc;
+    border-radius: 7px;
+}
+
+.companyProfile .companyInfo input[type="submit"] {
+    position: relative;
+    font-size: 17px;
+    font-family: 'Calibri', sans-serif;
+    background: #619cc6;
+    color: #fff;
+    padding: 7px 35px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    border: 0px;
+}
+.PageContent .innerDetail.contentPage {
+    text-align: center;
+}
+
+.PageContent .innerDetail.contentPage h4 {
+    font-size: 16px;
+    text-align: left;
+    margin-left: 16px;
+    margin-bottom: 31px;
+    color: #a7a7a7;
+}
+
+.PageContent .innerDetail.contentPage h5 {
+    text-align: left;
+    font-size: 16px;
+    margin-bottom: 8px;
+    color: #389eba;
+}
+
+.PageContent .innerDetail.contentPage textarea {
+    border-radius: 7px;
+    border-color: #eaeaea;
+    margin-bottom: 28px;
+    height: 150px;
+}
+.colorSetting .innerDetail input[type="color"] {
+    width: 100%;
+    height: 51px;
+    margin-bottom: 16px;
+    border: 0px;
+    padding: 6px;
+    border-radius: 5px;
+}
+.colorSetting .innerDetail input[type="submit"] {
+    position: relative;
+    font-size: 17px;
+    font-family: 'Calibri', sans-serif;
+    background: #619cc6;
+    color: #fff;
+    padding: 7px 35px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    border: 0px;
+}
+
+.mce-tinymce {
+    margin-bottom: 36px !important;
+}
+.mce-statusbar {
+    display: none !important;
+}
+
+.PageContent .innerDetail.contentPage input[type="text"] {
+    font-family: 'Calibri', sans-serif;
+    width: 100%;
+    outline: 0px !important;
+    padding: 10px;
+    border-radius: 7px;
+    border: 1px solid #eaeaea;
+    margin-bottom: 28px;
+    line-height: 24px;
+    resize: none;
+    font-size: 15px;
+}
+
+.mce-tinymce {
+    box-shadow: none !important;
+    border: 1px solid #eaeaea;
+    border-radius: 6px !important;
+    overflow: hidden;
+}
+
+.mce-tinymce .mce-stack-layout-item.mce-toolbar {
+    display: inline-block !important;
+}
+
+.mce-tinymce .mce-container-body {
+    box-shadow: none !important;
+}
+
+.mce-tinymce div.mce-edit-area iframe {
+    height: 300px !important;
+}
+
+

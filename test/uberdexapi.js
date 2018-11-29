@@ -1116,7 +1116,7 @@ async function getAllBalances(user, symbol) {
 }
 
 //Trade function
-async function extrade(admin, amountbuy, amountsell, nonce, amount, tradenonce, tokenbuy, tokensell, makerfee, takerfee, maker, taker, feeaccount) {
+async function extrade(admin, amountbuy, amountsell, nonce, amount, tradenonce, tokenbuy, tokensell, makerfee, takerfee, maker, taker, feeaccount, passedOrderHash, passedTradeHash, makerSignature, takerSignature) {
     var trade = {};
     trade.admin = admin;
     trade.amountbuy = amountbuy;
@@ -1131,6 +1131,16 @@ async function extrade(admin, amountbuy, amountsell, nonce, amount, tradenonce, 
     trade.maker = maker;
     trade.taker = taker;
     trade.feeaccount = feeaccount;
+    trade.passedOrderHash = passedOrderHash;
+    trade.passedTradeHash = passedTradeHash;
+    trade.makerSignature = makerSignature;
+    trade.takerSignature = takerSignature;
+
+    //TODO remove this check when scatter integration works E2E
+    if (maker != 'maker1')
+        MAKER_ACCOUNT = maker;
+    if (taker != 'taker1')
+        TAKER_ACCOUNT = taker;
 
     // begin order, trade serialization, sign with maker1 and taker1 accounts and submit trade
     console.log('Trade ' + JSON.stringify(trade));
@@ -1153,18 +1163,41 @@ async function extrade(admin, amountbuy, amountsell, nonce, amount, tradenonce, 
         MAKER_ACCOUNT
     );
     var orderHash = ecc.sha256(orderBuffer);
+
+    //throw error if orderMake Hashes don't match
+    //TODO remove this check when scatter integration works E2E
+    // if (maker != 'maker1') {
+    //     if (passedOrderHash != orderHash)
+    //         throw new Error("makeOrder hashes don't match! " + "<gen>" + orderHash + "<received>" + passedOrderHash);
+    // }
+
     var orderHashBuffer = Buffer.from(orderHash, 'hex');
     console.log('orderBuffer - orderHashBuffer -> ', orderHashBuffer);
 
     //construct trade buffer
     var tradeBuffer = serializeTrade(orderHashBuffer, amountBN, TAKER_ACCOUNT, tradenonceBN);
     var tradeHash = ecc.sha256(tradeBuffer);
+
+    //throw error if orderTake Hashes don't match
+    //TODO remove this check when scatter integration works E2E
+    if (taker != 'taker1') {
+        if (passedTradeHash != tradeHash)
+            throw new Error("Generated Trade Hash & Scatter signed Trade hashes don't match! " + ":gen=>:" + tradeHash + ":rec=>:" + passedTradeHash);
+    }
+
     var tradeHashBuffer = Buffer.from(tradeHash, 'hex');
 
     console.log('tradeBuffer - tradeHashBuffer -> ', tradeHashBuffer);
 
     //construct makersignature - Using priv key to sign, with scatter, you'd construct signatureBuffer from scatter arbitrary sig
-    var makerSignature = ecc.sign(orderBuffer, MAKER_PRIV_KEY);
+    //filter for scatter option check
+    if (taker == 'taker1') {
+        console.log("MAKER SIG BEFORE=" + makerSignature);
+        makerSignature = ecc.sign(orderBuffer, MAKER_PRIV_KEY);
+        maker = 'maker1';
+        console.log("MAKER SIG AFTER=" + makerSignature);
+    }
+
     var makerSignatureBuffer = ecc.Signature.fromString(makerSignature).toBuffer();
     var makerSignaturePacked = new makerSignatureBuffer.constructor(makerSignatureBuffer.length + 1);
     makerSignaturePacked.set(Uint8Array.of(0), 0);
@@ -1174,8 +1207,13 @@ async function extrade(admin, amountbuy, amountsell, nonce, amount, tradenonce, 
     //Test - Maker PUB_KEY recovery
     console.log(' recover maker PK from sig/orderBuffer -> ' + ecc.recover(makerSignature, orderBuffer));
 
-    //construct takersignature
-    var takerSignature = ecc.sign(tradeBuffer, TAKER_PRIV_KEY);
+    //construct takersignature (sign via priv key for taker1 but allow for scatter E2E)
+    if (taker == 'taker1') {
+        console.log("TAKER SIG BEFORE=" + takerSignature);
+        takerSignature = ecc.sign(tradeBuffer, TAKER_PRIV_KEY);
+        console.log("TAKER SIG AFTER" + takerSignature);
+    }
+
     var takerSignatureBuffer = ecc.Signature.fromString(takerSignature).toBuffer();
     var takerSignaturePacked = new takerSignatureBuffer.constructor(takerSignatureBuffer.length + 1);
     takerSignaturePacked.set(Uint8Array.of(0), 0);
@@ -1228,6 +1266,22 @@ async function extrade(admin, amountbuy, amountsell, nonce, amount, tradenonce, 
     });
     //log(trxTrade);
     return trxTrade;
+}
+
+async function exregisteruseraccount(account) {
+    console.log("Get account for => " + account);
+    var accountInfo = await eos.getAccount(account);
+
+    console.log(accountInfo);
+    for (var i = 0, len = accountInfo.permissions.length; i < len; i++) {
+        console.log("permission type => " + accountInfo.permissions[i].perm_name);
+        console.log("key => " + accountInfo.permissions[i].required_auth.keys[0].key);
+        if (accountInfo.permissions[i].perm_name == 'active') {
+            var registerTrx = await exregisteruser(account, accountInfo.permissions[i].required_auth.keys[0].key);
+            console.log(registerTrx);
+            break;
+        }
+    }
 }
 
 async function exregisteruser(account, pubkey) {
@@ -1295,6 +1349,7 @@ async function exOfflineWithdrawal(
 }
 
 async function sendOfflineWithdrawal(user, token, amount, nonce, headers, userSignature) {
+    console.log("Cur Nonce is " + nonce);
     var extendedAsset;
     //simply deal with IQ specifics for now
     //TODO deal with different contracts and precisions here
@@ -1306,7 +1361,7 @@ async function sendOfflineWithdrawal(user, token, amount, nonce, headers, userSi
 
     const withdrawParams = {
         from: user,
-        nonce,
+        nonce: nonce,
         quantity: extendedAsset,
         admin: ADMIN_ACCOUNT
     };
@@ -1366,16 +1421,17 @@ async function sendOfflineWithdrawal(user, token, amount, nonce, headers, userSi
 
     const result = await dispatchEos.pushTransaction(offlineTransaction);
     console.log('result:', result);
+    return result;
 }
 
 //start EOS-API service
-var server = app.listen(process.env.EOS_API_PORT, function () {
-    //var host = process.env.host;//os.hostname();
-    var port = server.address().port;
-    log('EOS-Exchange Contract API listening at http://localhost:' + port);
-    log('Running mode => ' + mode);
-    log('eosConfig =>' + JSON.stringify(eosNetwork, null, 2));
-});
+// var server = app.listen(process.env.EOS_API_PORT, function () {
+//     //var host = process.env.host;//os.hostname();
+//     var port = server.address().port;
+//     log('EOS-Exchange Contract API listening at http://localhost:' + port);
+//     log('Running mode => ' + mode);
+//     log('eosConfig =>' + JSON.stringify(eosNetwork, null, 2));
+// });
 
 module.exports.exdeposit = exdeposit;
 module.exports.exwithdraw = exwithdraw;
@@ -1383,4 +1439,5 @@ module.exports.getAllBalances = getAllBalances;
 module.exports.getExBalances = getExBalances;
 module.exports.extrade = extrade;
 module.exports.exregisteruser = exregisteruser;
+module.exports.exregisteruseraccount = exregisteruseraccount;
 module.exports.exOfflineWithdrawal = exOfflineWithdrawal;

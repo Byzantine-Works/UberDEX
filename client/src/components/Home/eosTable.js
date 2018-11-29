@@ -1,8 +1,16 @@
 import React, {Component} from 'react';
+import { Link } from 'react-router-dom';
 import $ from "jquery";
+<<<<<<< HEAD
 import { Link } from 'react-router-dom';
 import data from '../../app.json';
 var color = {background: data['theme_color']};
+=======
+
+import dp from '../../app.json';
+var adminURL = dp['url'];
+var apiId = dp['apiId'];
+>>>>>>> 4bd420bb63ccdea47fad3415e1d8dcfd996d1171
 
 const API = 'https://api.byzanti.ne/ticker?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
 var apiCall = '';
@@ -50,10 +58,21 @@ class Home_banner extends Component{
         fetch(API)
           .then(response => response.json())
           .then(data => this.setState({ tricker: data }));
-          fetch('https://uberdex-admin.herokuapp.com/getColors')
-          .then(response => response.json())
-          .then(data => {this.setState({colors:data.theme_color}); this.setState({logo:'https://uberdex-admin.herokuapp.com/images/byzantine/'+data.logo}); });
-      }
+          fetch(adminURL+'/getColors/'+apiId)
+            .then(response => response.json())
+            .then(data => {if(data.theme_color=='')
+            {
+                this.setState({colors:'#0e9caf'});
+            }
+            else
+            {
+                this.setState({colors:data.theme_color});
+                this.setState({logo:adminURL+'/images/byzantine/'+data.logo});
+            }
+            }).catch(data => {
+                this.setState({colors:'#0e9caf'});
+            });
+        }
     
     render(){
         const { tricker } = this.state;
@@ -66,7 +85,7 @@ class Home_banner extends Component{
                             <i className="fa fa-search"></i>
                             <input type="text" placeholder="Search" id="searchMarket" onChange={searchMarket} />
                         </form>
-                        <p><i className="fa fa-star"></i> Favorites</p>
+                        <p  style={{'color': this.state.colors, 'border-color':this.state.colors}}><i className="fa fa-star"></i> Favorites</p>
                     </div>
                     <table>
                         <thead>
@@ -99,7 +118,11 @@ class Home_banner extends Component{
                             }});
                             return    <tr id={hit.symbol}>
                                     <td><i className="fa fa-star"></i></td>
+<<<<<<< HEAD
                                     <td><Link to={'/exchange/?opt='+hit.symbol}>{hit.symbol} / EOS</Link></td>
+=======
+                                    <td><Link to={'/exchange/?opt='+hit.symbol} className="link">{hit.symbol} / EOS</Link></td>
+>>>>>>> 4bd420bb63ccdea47fad3415e1d8dcfd996d1171
                                     <td className={hit.change < 0?'minus':'plus'}>{hit.last}</td>
                                     <td className={hit.change < 0?'minus':'plus'}>{hit.change}</td>
                                     <td>{hit.high}</td>
