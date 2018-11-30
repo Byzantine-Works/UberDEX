@@ -568,7 +568,6 @@ class tradingHead extends Component {
         this.signIn = this.signIn.bind(this);
         this.handleBuy = this.handleBuy.bind(this);
         this.deposit = this.deposit.bind(this);
-        this.withdraw = this.withdraw.bind(this);
         this.registerUser = this.registerUser.bind(this);
         this.checkBalance = this.checkBalance.bind(this);
         this.refresh_data = this.refresh_data.bind(this);
@@ -576,6 +575,12 @@ class tradingHead extends Component {
         this.refresh_data = this.refresh_data.bind(this);
         this.handleClicks = this.handleClicks.bind(this);         
         this.handleClick = this.handleClick.bind(this);       
+      }
+
+      signIn(e) {
+            e.preventDefault();
+            $('.signInPopup ').fadeIn();
+
       }
 
 
@@ -692,8 +697,7 @@ handleClicks=(orderId,e)=> {
         
   
   }
-refresh_data()
-{
+refresh_data() {
      
         var url = new URL(window.location.href);
          var c = url.searchParams.get("opt");
@@ -703,7 +707,7 @@ refresh_data()
         var APIS = 'https://api.byzanti.ne/orderBook?symbol='+c+'&side=BUY&size=10&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
         var APISS = 'https://api.byzanti.ne/orders?symbol='+c+'&side=BUY&size=22&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
         var orderTaker = 'https://api.byzanti.ne/tradebook?symbol='+c+'&size=100&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
-         var orderHistory= 'https://api.byzanti.ne/tradesByUser?user=taker1&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+        var orderHistory= 'https://api.byzanti.ne/tradesByUser?user=taker1&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
           fetch(orderHistory)
         .then(response => response.json())
         .then(data => {this.setState({ tradeHistory: data });});
@@ -747,13 +751,13 @@ refresh_data()
         fetch(tradebook)
         .then(response => response.json())
         .then(data => {this.setState({ tradebook: data }); });
-$('.sellAlart').hide();
-$('#price').val('');
-$('#buyPrice').val('');
-$('#sellPrice').val('');
-$('#priceTwo').val('');
-$('#BuyPricetwo').val('');
-$('#sellPricetwo').val('');
+        $('.sellAlart').hide();
+        $('#price').val('');
+        $('#buyPrice').val('');
+        $('#sellPrice').val('');
+        $('#priceTwo').val('');
+        $('#BuyPricetwo').val('');
+        $('#sellPricetwo').val('');
 }
 
       async checkBalance() {
@@ -1072,34 +1076,6 @@ $('#sellPricetwo').val('');
       // console.log(strlen(orderBooks));
         return(
             <div>
-                <div className="wellcomBanner background" style={{'background': this.state.colors}}>
-                    <div className="header ">
-                        <div className="container clearfix">
-                            <div className="logo">
-                            <Link to="/" className="link"><img src={logoss} className="App-logo" id="logoImg" alt="" /></Link>
-                            </div>
-                            <div className="menuSections">
-                                <nav>
-                                    <ul>
-                                        <li><Link to="/exchange/?opt=IQ" className="link">Exchange</Link></li>
-                                        <li><Link to="/market" className="link">Markets</Link></li>
-                                        <li><Link to="/contact" className="link">Supports</Link></li>
-                                        <li id="signin"><a href="/"  onClick={handlesign}>Sign In</a></li>
-                                        <li id="signout"><a href="/"  onClick={handleSignout}>Sign out</a></li>
-                                        <li><a href="/" className="bgs"  onClick={handlePublic}>Get Started</a></li>
-                                    </ul>
-                                </nav>
-                                <div className="othersOptions">
-                                    <a href="/" className="fullscreen"><i className="fa fa-expand-arrows-alt"> </i></a>
-                                    <a href="/" className="smallscreen"><i className="fa fa-expand-arrows-alt"> </i></a>
-                                    <a href="#" className="lightT" onClick={handlelight}><i className="fa fa-lightbulb"> </i></a>
-                                    <a href="#" className="darkt" onClick={handledark}><i className="fa fa-lightbulb"> </i></a>
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
                 <Trading />
 

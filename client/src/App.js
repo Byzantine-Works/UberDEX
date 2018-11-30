@@ -41,6 +41,7 @@ class App extends Component {
   }
 
   updateScatterID(id) {
+    console.log("scatter in App.js: ", id)
     this.setState({scatterID: id});
     this.setState({scatterEOS: id.eos(network, Eos)})
     }

@@ -64,7 +64,6 @@ render(){
         return(
             <div className="HomePage" >
                 <div className="wellcomBanner background" style={{'background': this.state.colors}}>
-                    <Header />
                     <Banner />
                 </div>
                 <EOS />
@@ -86,7 +85,6 @@ render(){
                     </div>
                 </div>
                 <Callaction />
-                <Footer />
             </div>
         )
     }
