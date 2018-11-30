@@ -39,7 +39,7 @@ var eosExchangeContract = "exchange";
 
 if (mode == undefined || mode == 'byzantinetestnet') {
     // eosNetwork = config.byzantinetestnet;
-    eosNetwork = config.localtestnet;
+    eosNetwork = config.byzantinetestnet;
     eosNetwork.keyProvider = [process.env.OWNER_KEY, process.env.ACTIVE_KEY, process.env.MAKER_KEY, process.env.TAKER_KEY, process.env.LEDGER_KEY, process.env.REDDY_KEY, process.env.ESCAPEUSER_KEY, process.env.ADMIN_KEY];
     MAKER_PRIV_KEY = process.env.MAKER_KEY;
     TAKER_PRIV_KEY = process.env.TAKER_KEY;
@@ -58,11 +58,11 @@ if (mode == undefined || mode == 'byzantinetestnet') {
     eosExchangeContract = config.byzantinetestnetaccount.eosExchangeContract;
 }
 
-const chainId = config.localtestnet.chainId;
-const httpEndpoint = config.localtestnet.httpEndpoint;
+const chainId = config.byzantinetestnet.chainId;
+const httpEndpoint = config.byzantinetestnet.httpEndpoint;
 const exchangeAccount = "exchange";
 const exchangeAdminAccount = "admin";
-
+console.log("network: ", eosNetwork);
 eos = Eos(eosNetwork);
 const uint64_size = 8;
 
@@ -1117,6 +1117,7 @@ async function getAllBalances(user, symbol) {
 
 //Trade function
 async function extrade(admin, amountbuy, amountsell, nonce, amount, tradenonce, tokenbuy, tokensell, makerfee, takerfee, maker, taker, feeaccount, passedOrderHash, passedTradeHash, makerSignature, takerSignature) {
+    
     var trade = {};
     trade.admin = admin;
     trade.amountbuy = amountbuy;
@@ -1152,6 +1153,16 @@ async function extrade(admin, amountbuy, amountsell, nonce, amount, tradenonce, 
     var nonceBN = new BN(trade.nonce);
     var tradenonceBN = new BN(trade.tradenonce);
 
+    console.log("arguments serialize order: ", 
+        EXCHANGE_ACCOUNT,
+        trade.tokenbuy,
+        trade.tokensell,
+        amountbuyBN,
+        amountsellBN,
+        nonceBN,
+        MAKER_ACCOUNT
+        )
+
     //construct order buffer
     var orderBuffer = serializeOrder(
         EXCHANGE_ACCOUNT,
@@ -1162,7 +1173,9 @@ async function extrade(admin, amountbuy, amountsell, nonce, amount, tradenonce, 
         nonceBN,
         MAKER_ACCOUNT
     );
+
     var orderHash = ecc.sha256(orderBuffer);
+    console.log("orderHash: ", orderHash);
 
     //throw error if orderMake Hashes don't match
     //TODO remove this check when scatter integration works E2E
@@ -1172,10 +1185,12 @@ async function extrade(admin, amountbuy, amountsell, nonce, amount, tradenonce, 
     // }
 
     var orderHashBuffer = Buffer.from(orderHash, 'hex');
+
     console.log('orderBuffer - orderHashBuffer -> ', orderHashBuffer);
 
     //construct trade buffer
     var tradeBuffer = serializeTrade(orderHashBuffer, amountBN, TAKER_ACCOUNT, tradenonceBN);
+    console.log("trade Buffer: ", tradeBuffer);
     var tradeHash = ecc.sha256(tradeBuffer);
 
     //throw error if orderTake Hashes don't match
@@ -1191,18 +1206,20 @@ async function extrade(admin, amountbuy, amountsell, nonce, amount, tradenonce, 
 
     //construct makersignature - Using priv key to sign, with scatter, you'd construct signatureBuffer from scatter arbitrary sig
     //filter for scatter option check
-    if (taker == 'taker1') {
+    if (maker == 'maker1') {
         console.log("MAKER SIG BEFORE=" + makerSignature);
         makerSignature = ecc.sign(orderBuffer, MAKER_PRIV_KEY);
         maker = 'maker1';
         console.log("MAKER SIG AFTER=" + makerSignature);
     }
+   
 
     var makerSignatureBuffer = ecc.Signature.fromString(makerSignature).toBuffer();
     var makerSignaturePacked = new makerSignatureBuffer.constructor(makerSignatureBuffer.length + 1);
     makerSignaturePacked.set(Uint8Array.of(0), 0);
     makerSignaturePacked.set(makerSignatureBuffer, 1);
     //log("makerSignaturePacked -> " + makerSignaturePacked);
+    console.log(makerSignatureBuffer, makerSignaturePacked)
 
     //Test - Maker PUB_KEY recovery
     console.log(' recover maker PK from sig/orderBuffer -> ' + ecc.recover(makerSignature, orderBuffer));
@@ -1264,7 +1281,7 @@ async function extrade(admin, amountbuy, amountsell, nonce, amount, tradenonce, 
             authorization: [EXCHANGE_ADMIN_ACCOUNT, feeaccount]
         });
     });
-    //log(trxTrade);
+    console.log(trxTrade);
     return trxTrade;
 }
 

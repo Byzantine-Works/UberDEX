@@ -3903,6 +3903,7 @@ div#tv_chart_container iframe {
 .walletContainer a {
   color: #3796f4;
   text-decoration: none;
+  display: inline-block;
 }
 
 .walletContainer table {
@@ -3966,7 +3967,18 @@ div#tv_chart_container iframe {
 
 .Tool #confirm {
   margin-left: 10px;
-  width: 100px
+  width: 100px;
+  cursor: pointer;
+}
+
+.Tool #confirm:focus {
+  outline: none;
+}
+
+.Tool #confirm:hover{
+  background-color: #3795f427;
+  border-color: #3795f4;
+  color: #3795f4;
 }
 
 .Tool input {
@@ -4083,6 +4095,31 @@ div#tv_chart_container iframe {
   border-color: #3795f4;
   color: #3795f4;
 }
+
+.successMessage {
+  position: absolute;
+  border-radius: 5px;
+  background-color: rgb(35, 122, 0);
+  color: white;
+  padding: 3px 3px;
+  width: auto;
+  
+}
+
+.successMessage a {
+  color: white; 
+}
+
+.errorMessage {
+  border-radius: 5px;
+  background-color: rgb(255, 8, 0);
+  color: white;
+  padding: 3px 3px;
+  width: auto;
+  
+}
+
+
 
 
 

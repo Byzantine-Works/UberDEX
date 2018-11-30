@@ -7,6 +7,8 @@ import ScatterJS from 'scatterjs-core';
 import ScatterEOS from 'scatterjs-plugin-eosjs';
 import Eos from 'eosjs';
 import Trading from './trading';
+import BN from 'bignumber.js';
+import ecc from 'eosjs-ecc'
 
 import data from '../../app.json';
 var color = {background: data['theme_color']};
@@ -15,6 +17,21 @@ var logoUrl = '/img/'+data['logo'];
 
 var backgroundss = data['theme_color'];
 var colorsss = data['theme_color'];
+
+const serialize = require('../../serialize');
+
+const network = {
+    blockchain:'eos',
+    protocol:'https://cors-anywhere.herokuapp.com/http',
+    host:'13.52.54.111',
+    eosVersion: 'bf28f8bb',
+    port:8888,
+    chainId:'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f',
+    debug: false,
+    verbose: false,
+    latency: 200,
+    sign: true
+}
 
 function tabsOnes(e)
 {
@@ -584,14 +601,231 @@ class tradingHead extends Component{
             colors: [],
             logo: [],
         };
-         this.refresh_data = this.refresh_data.bind(this);
-             this.refresh_r = this.refresh_r.bind(this);
+        this.refresh_data = this.refresh_data.bind(this);
+        this.refresh_r = this.refresh_r.bind(this);
+        this.handleTakerSell = this.handleTakerSell.bind(this);
+        this.handleBuy = this.handleBuy.bind(this);
+        this.registerUser = this.registerUser.bind(this);
+        this.ispkpaired = this.ispkpaired.bind(this);
+
      
       }
 refresh_r()
 {
     console.log('hi');
 }
+
+async handleBuy(e) {
+
+    let scatter = this.props.scatterID;
+
+    var amountB = BN(359.4218).multipliedBy(10000);
+    var amountS = BN(0.4144).multipliedBy(10000);
+
+    amountB = Math.floor(amountB / 10);
+
+    console.log(amountB, amountS);
+ 
+    let amountBuy = new BN(amountB);
+    let amountSell = new BN(amountS);
+    let nonceBN = new BN(1);
+
+    let orderBuffer = serialize.serializeOrder('exchange', 'IQ', 'EOS',  amountBuy, amountSell, nonceBN, 'ubermaker');
+  
+    let orderHash = ecc.sha256(orderBuffer);
+
+
+       let datas = {
+          side: "SELL",
+          assetBuy: "EOS",
+          assetSell: "IQ",
+          amountBuy: 0.4144,
+          amountSell: 359.4218,
+          price: 0.001153,
+          type: 2,
+          hash: orderHash,
+        //   expires: new Date(new Date(info.head_block_time + 'Z').getTime() + 60 * 1000).toISOString().split('.')[0],
+          nonce: 1,
+          useraccount: scatter.identity.accounts[0].name
+        };
+
+    let signature = ecc.sign(orderBuffer, '5Kbhuw48LRBY25KMDD2KH59EAgvHnhh66S863Nvz1PZBY9X2uph');   
+    
+    //let signature = await scatter.getArbitrarySignature('EOS6P7wP3HsdmGPsrrabPrweWQnTgxqdY8RTaUmVMVeXJec6hyNVm', orderBuffer, "test ordermake sig", false);    
+    datas.hash = orderHash; 
+    datas.signature = signature;
+    console.log("datas: ", datas);
+
+     fetch('https://api.byzanti.ne/orderMake/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', {
+     method: 'POST',headers: {
+  //  'Accept': 'application/json',
+    'Content-Type': 'application/json',
+  },  body: JSON.stringify(datas)})
+        .then(response => {
+            response.json()
+            console.log("response: ", response);
+        })
+        .then(() => {
+            fetch(`https://api.byzanti.ne/ordersByUser?user=${this.props.scatterID.identity.accounts[0].name}&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`)
+            .then(response => response.json())
+            .then(data => {
+                this.props.updateOpenOrders({ openOrders: data });
+                console.log("orders: ", data);
+            });
+
+        });
+     
+}
+
+async handleTakerSell() {
+
+    const network = {
+        blockchain: 'eos',
+        protocol: 'https://cors-anywhere.herokuapp.com/http',
+        host: '13.52.54.111',
+        eosVersion: 'bf28f8bb',
+        port: 8888,
+        chainId: 'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f',
+        debug: false,
+        verbose: false,
+        latency: 200,
+        sign: true
+    }
+    
+    var url = new URL(window.location.href);
+    var c = url.searchParams.get("opt");
+
+    const account = this.props.scatterID.identity.accounts[0].name;
+    console.log("account: ", account);
+
+    var bprice= parseFloat($('#buyPrice').val());
+    var eosAm= parseFloat($('#sellPrice').val());
+    var price = parseFloat($('#price').val());
+
+    const scatter = this.props.scatterID;
+
+    const eos = scatter.eos(network, Eos)
+    
+
+
+    var amountB = BN(359.4218).multipliedBy(10000);
+    var amountS = BN(0.4144).multipliedBy(10000);
+
+    amountB = Math.floor(amountB / 10);
+
+    console.log(amountB, amountS);
+ 
+    let amountBuy = new BN(amountB);
+    let amountSell = new BN(amountS);
+    let nonceBN = new BN(1);
+    
+    let orderBuffer = serialize.serializeOrder('exchange', 'IQ', 'EOS', amountBuy, amountSell, nonceBN, 'ubermaker');
+  
+    let orderHash = ecc.sha256(orderBuffer);
+
+    var orderHashBuffer = Buffer.from(orderHash, 'hex');
+    
+
+    let tradeBuffer = serialize.serializeTrade(orderHashBuffer, amountBuy, account, nonceBN)
+    let data = {
+            assetBuy: 'IQ',
+            assetSell: 'EOS',
+            amountBuy: 359.4218,
+            amountSell: 0.4144,
+            price: 0.001153,
+            taker: account,
+            takerExchange: 'uberdex',
+            makerExchange: 'uberdex'
+      }
+
+      let pubKey = await scatter.getPublicKey('eos');
+      console.log("pub key: ", pubKey)
+  
+    //   data.signature = await ecc.sign(tradeBuffer, '5J4xG1aygXGJCNgkG4JVVQirgpxJ9M1s1Auh24ebVtYJ21QLfdv');
+      data.hash = ecc.sha256(tradeBuffer);
+    
+     
+      data.signature = await scatter.getArbitrarySignature(pubKey, tradeBuffer, "test ordertake", false);
+      data.orderId = 'zBZ-YmcBKKlqgDKX-aHw'
+      data.maker = 'ubermaker'
+
+
+      fetch('https://api.byzanti.ne/orderTake/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', {
+            method: 'POST', headers: {
+    'Content-Type': 'application/json',
+  },  body: JSON.stringify(data)})
+        .then(response => {
+            response.json()
+            console.log("response: ", response);
+        })
+
+
+  }
+
+  async registerUser() {
+    // var myBuffer = [];
+    // var str = 'EOS8k4SMa7JKF4LVi1fn9bc3aKnunhXb2JSg8a9xY3zCdkXgXqXQq';
+    // var buffer = new Buffer(str, 'utf16le');
+    // for (var i = 0; i < buffer.length; i++) {
+    //     myBuffer.push(buffer[i]);
+    // }
+    const scatter = this.props.scatterID;
+
+    let pubKey = await scatter.getPublicKey('eos');
+    console.log("publickey: ", pubKey);
+
+    const pk = ecc.PublicKey(pubKey).toBuffer();
+    var pkPacked = new pk.constructor(pk.length + 1);
+    pkPacked.set(Uint8Array.of(0), 0);
+    pkPacked.set(pk, 1);
+    var pkHex = pkPacked.toString('hex');
+
+
+    const eosOptions = { expireInSeconds:60 }
+    const eos = this.props.scatterID.eos(network, Eos, eosOptions);
+    
+    
+    const action = [{
+        account: 'exchange',
+        name: 'registeruser',
+        authorization: [{
+            actor: this.props.scatterID.identity.accounts[0].name,
+            permission: 'active'
+        }], data :
+        {
+            user: this.props.scatterID.identity.accounts[0].name,
+            publickey: pkHex
+        }
+    }]
+    let dep = await eos.transaction({ actions: action})
+    console.log(dep);
+  }
+
+  async ispkpaired() {
+
+    const eosOptions = { expireInSeconds:60 }
+    const eos = this.props.scatterID.eos(network, Eos, eosOptions);
+    
+    
+    const action = [{
+        account: 'exchange',
+        name: 'ispkpaired',
+        authorization: [{
+            actor: this.props.scatterID.identity.accounts[0].name,
+            permission: 'active'
+        }], data :
+        {
+            user: this.props.scatterID.identity.accounts[0].name,
+        }
+    }]
+    let dep = await eos.transaction({ actions: action})
+    console.log(dep);
+
+  }
+
+
+
+
 refresh_data()
 {
      
@@ -784,35 +1018,6 @@ setTimeout(
       // console.log(strlen(orderBooks));
         return(
             <div>
-                <div className="wellcomBanner background" style={color}>
-                    <div className="header ">
-                        <div className="container clearfix">
-                            <div className="logo">
-                                <a href="/"><img src={logoss} className="App-logo" id="logoImg" alt="" /></a>
-                            </div>
-                            <div className="menuSections">
-                                <nav>
-                                    <ul>
-                                        <li><Link to="/exchange/?opt=IQ" className="link">Exchange</Link></li>
-                                        <li><Link to="/market" className="link">Markets</Link></li>
-                                        <li><Link to="/contact" className="link">Supports</Link></li>
-                                        <li id="signin"><a href="/"  onClick={handlesign}>Sign In</a></li>
-                                        <li id="signout"><a href="/"  onClick={handleSignout}>Sign out</a></li>
-                                        <li><a href="/" className="bgs"  onClick={handlePublic}>Get Started</a></li>
-                                    </ul>
-                                </nav>
-                                <div className="othersOptions">
-                                    <a href="/" className="fullscreen"><i className="fa fa-expand-arrows-alt"> </i></a>
-                                    <a href="/" className="smallscreen"><i className="fa fa-expand-arrows-alt"> </i></a>
-                                    <a href="#" className="lightT" onClick={handlelight}><i className="fa fa-lightbulb"> </i></a>
-                                    <a href="#" className="darkt" onClick={handledark}><i className="fa fa-lightbulb"> </i></a>
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <Trading />
 
             <div className="tradingCenter">
@@ -938,7 +1143,7 @@ setTimeout(
                                     </label>
                                     <input type="number"  id="sellPrice" onChange={changeSellPrice} />
                                     {tricker.map(hit =>
-                                        <input type="submit" value={'Buy '+hit.symbol} onClick={handleBuy} className="background" style={color} />
+                                        <input type="submit" value={'Buy '+hit.symbol} onClick={this.handleBuy} className="background" style={color} />
                                     )}
                                 </div>
                                 <div className="red">
@@ -966,7 +1171,7 @@ setTimeout(
                                     <label>Total <span>EOS</span></label>
                                     <input type="number" id="sellPricetwo" onChange={changeBuyPrice} />
                                     {tricker.map(hit =>
-                                        <input type="submit"  onClick={handleSell} value={'Sell '+hit.symbol} />
+                                        <input type="submit"  onClick={this.handleTakerSell} value={'Sell '+hit.symbol} />
                                     )}
                                 </div>
                             </div>

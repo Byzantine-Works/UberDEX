@@ -28,6 +28,7 @@ class CpuManager extends Component{
             <div className="ToolContainer">
                 <button className="returnButton" onClick={() => this.props.changeView("wallet")}>{"< Return"}</button>
                 <div className="Tool">
+                {this.props.success ? <div className="successMessage">{this.props.success.message} Checkout the transaction: <a href={`https://eosflare.io/tx/${this.props.success.trx}`} target="_blank">{this.props.success.trx}</a></div> : null}
                     <h4>CPU manager</h4>
                     <ul><button id="mortgageCPU" style={this.state.mortgage ? styleFocus : null} onClick={() => this.setState({mortgage: true})}>Mortgage</button>
                         <button id="redeemCPU" style={this.state.mortgage ? null : styleFocus} onClick={() => this.setState({mortgage: false})}>Redeem</button>
