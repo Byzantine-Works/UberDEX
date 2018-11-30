@@ -85,7 +85,7 @@ class Account extends Component {
     async checkBalance() {
 
         /*Get balance on exchange*/
-        let response = await axios('https://api.byzanti.ne/exbalance?account=ideos&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N');
+        let response = await axios('https://api.byzanti.ne/exbalance?account=ubermaker&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N');
         console.log("exchange balance: ", response);
         let balSym = [];
         let balance = response.data.map(el => {
@@ -303,9 +303,9 @@ class Account extends Component {
     async deposit(quantity, symbol) {
         const eosOptions = { expireInSeconds: 60 }
         const eos = this.props.scatterID.eos(network, Eos, eosOptions);
-        let contract = await eos.contract('everipediaiq')
+        let contract = await eos.contract('eosio.token')
         console.log("payload deposit: ", this.props.scatterID.identity.accounts[0].name, 'exchange', Number(quantity).toFixed(4) + ' ' + symbol, 'deposit')
-        let dep = await contract.transfer(this.props.scatterID.identity.accounts[0].name, 'exchange', Number(quantity).toFixed(3) + ' ' + symbol, 'deposit');
+        let dep = await contract.transfer(this.props.scatterID.identity.accounts[0].name, 'exchange', Number(quantity).toFixed(4) + ' ' + symbol, 'deposit');
         console.log("dep: ", dep);
     }
 

@@ -696,6 +696,7 @@ async handleTakerSell() {
     var c = url.searchParams.get("opt");
 
     const account = this.props.scatterID.identity.accounts[0].name;
+    console.log("account: ", account);
 
     var bprice= parseFloat($('#buyPrice').val());
     var eosAm= parseFloat($('#sellPrice').val());
@@ -738,15 +739,16 @@ async handleTakerSell() {
       }
 
       let pubKey = await scatter.getPublicKey('eos');
+      console.log("pub key: ", pubKey)
   
     //   data.signature = await ecc.sign(tradeBuffer, '5J4xG1aygXGJCNgkG4JVVQirgpxJ9M1s1Auh24ebVtYJ21QLfdv');
       data.hash = ecc.sha256(tradeBuffer);
     
      
       data.signature = await scatter.getArbitrarySignature(pubKey, tradeBuffer, "test ordertake", false);
-      data.orderId = '2xMUYWcBKKlqgDKXi7we'
+      data.orderId = 'zBZ-YmcBKKlqgDKX-aHw'
       data.maker = 'ubermaker'
-      console.log(data.signature);
+
 
       fetch('https://api.byzanti.ne/orderTake/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', {
             method: 'POST', headers: {
@@ -767,8 +769,12 @@ async handleTakerSell() {
     // for (var i = 0; i < buffer.length; i++) {
     //     myBuffer.push(buffer[i]);
     // }
+    const scatter = this.props.scatterID;
 
-    const pk = ecc.PublicKey('EOS6QczLFh1jNRd1fVjqovPuuCtGauVf3QRLDRoa2pDfoAf5oPKtJ').toBuffer();
+    let pubKey = await scatter.getPublicKey('eos');
+    console.log("publickey: ", pubKey);
+
+    const pk = ecc.PublicKey(pubKey).toBuffer();
     var pkPacked = new pk.constructor(pk.length + 1);
     pkPacked.set(Uint8Array.of(0), 0);
     pkPacked.set(pk, 1);
