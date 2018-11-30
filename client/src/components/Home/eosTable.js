@@ -2,8 +2,9 @@ import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
 import $ from "jquery";
 
-import data from '../../app.json';
-var color = {background: data['theme_color']};
+import dp from '../../app.json';
+var adminURL = dp['url'];
+var apiId = dp['apiId'];
 
 const API = 'https://api.byzanti.ne/ticker?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
 var apiCall = '';
@@ -51,7 +52,7 @@ class Home_banner extends Component{
         fetch(API)
           .then(response => response.json())
           .then(data => this.setState({ tricker: data }));
-          fetch('https://uberdex-admin.herokuapp.com/getColors')
+          fetch(adminURL+'/getColors/'+apiId)
             .then(response => response.json())
             .then(data => {if(data.theme_color=='')
             {
@@ -59,7 +60,8 @@ class Home_banner extends Component{
             }
             else
             {
-                this.setState({colors:data.theme_color}); this.setState({logo:'https://uberdex-admin.herokuapp.com/images/byzantine/'+data.logo});
+                this.setState({colors:data.theme_color});
+                this.setState({logo:adminURL+'/images/byzantine/'+data.logo});
             }
             }).catch(data => {
                 this.setState({colors:'#0e9caf'});
@@ -77,7 +79,7 @@ class Home_banner extends Component{
                             <i className="fa fa-search"></i>
                             <input type="text" placeholder="Search" id="searchMarket" onChange={searchMarket} />
                         </form>
-                        <p><i className="fa fa-star"></i> Favorites</p>
+                        <p  style={{'color': this.state.colors, 'border-color':this.state.colors}}><i className="fa fa-star"></i> Favorites</p>
                     </div>
                     <table>
                         <thead>

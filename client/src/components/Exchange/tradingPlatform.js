@@ -2,19 +2,15 @@ import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
 import Datafeed from '../TVChartContainer/api/index';
 import $ from "jquery";
-import logoss from '../logoMain.png';
+import logoss from '../logo_main.png';
 import ScatterJS from 'scatterjs-core';
 import ScatterEOS from 'scatterjs-plugin-eosjs';
 import Eos from 'eosjs';
 import Trading from './trading';
 
-import data from '../../app.json';
-var color = {background: data['theme_color']};
-var colors = {color: data['theme_color']};
-var logoUrl = '/img/'+data['logo'];
-
-var backgroundss = data['theme_color'];
-var colorsss = data['theme_color'];
+import dp from '../../app.json';
+var adminURL = dp['url'];
+var apiId = dp['apiId'];
 
 
 function tabsOnes(e)
@@ -75,6 +71,9 @@ function handlelight(e)
     $('body').addClass('lightVersion');
     $('.demo-big-content').removeClass('darkVersion');
     e.preventDefault();
+    var url = new URL(window.location.href);
+var c = url.searchParams.get("opt");
+
     const widgetOptions = {
         debug: false,
         symbol: c+':EOS',
@@ -110,6 +109,9 @@ function handlelight(e)
   function handledark(e)
   {
     e.preventDefault();
+    var url = new URL(window.location.href);
+var c = url.searchParams.get("opt");
+
     const widgetOptions = {
         debug: false,
         symbol: c+':EOS',
@@ -148,7 +150,23 @@ function handlelight(e)
   
   function handledefualt(e)
   {
-      
+    var bColor='#52565a';
+     if($('body').hasClass('lightVersion'))
+      {
+        $('.darkt').css('display', 'inline-block');
+$('.lightT').css('display', 'none');
+bColor='#fff';
+      }
+      else
+      {
+        $('.darkt').css('display', 'none');
+$('.lightT').css('display', 'inline-block');
+bColor='#52565a';
+      }
+//    $('.darkt').css('display', 'none');
+//    $('.lightT').css('display', 'inline-block');
+//    $('body').removeClass('lightVersion');
+//    $('body').addClass('darkVersion');   
 var url = new URL(window.location.href);
 var c = url.searchParams.get("opt");
     //e.preventDefault();
@@ -171,7 +189,7 @@ var c = url.searchParams.get("opt");
         studies_overrides: {},
         overrides: {
             "mainSeriesProperties.showCountdown": true,
-            "paneProperties.background": "#52565a",
+            "paneProperties.background": bColor,
             "paneProperties.vertGridProperties.color": "#363c4e",
             "paneProperties.horzGridProperties.color": "#363c4e",
             "symbolWatermarkProperties.transparency": 90,
@@ -303,7 +321,7 @@ function closeView(e){
         .then(response => response.json())
         .then(data => {if($('#apiType').val()=='make'){ if(data.orderId){
             
-            $('#contentToShow').html('Order Id : '+data.orderId);$('#msg').html('Success');$('.sellAlart').show();}else if(data.code){$('#contentToShow').html('Error Code : '+data.code);$('#msg').html('Error');$('.sellAlart').show();}}else{ if(data.tradeId){$('#contentToShow').html('Trade Id : '+data.tradeId+'<br />result : Created <br />BlockNumber : '+data.blockNumber+'<br />TransactionId : <a href="/transaction/?trxID='+data.transactionId+'&blocknumber='+data.blockNumber+'">'+data.transactionId+'</a>');console.log(data);$('#msg').html('Success');$('.sellAlart').show();}else{$('#contentToShow').html('Status Code : '+data.statusCode+"<br /> Message : "+data.message+"<br /> Code : "+data.code+"<br /> Order Id : "+ids);$('#msg').html('Error');$('.sellAlart').show();}}//window.location.reload()
+            $('#contentToShow').html('Order Id : '+data.orderId);$('#msg').html('Success');$('.sellAlart').show();}else if(data.code){$('#contentToShow').html('Error Code : '+data.code);$('#msg').html('Error');$('.sellAlart').show();}}else{ if(data.tradeId){$('#contentToShow').html('Trade Id : '+data.tradeId+'<br />result : Created <br />BlockNumber : '+data.blockNumber+'<br />TransactionId : <a target="_blank" href="/transaction/?trxID='+data.transactionId+'&blocknumber='+data.blockNumber+'">'+data.transactionId+'</a>');console.log(data);$('#msg').html('Success');$('.sellAlart').show();}else{$('#contentToShow').html('Status Code : '+data.statusCode+"<br /> Message : "+data.message+"<br /> Code : "+data.code+"<br /> Order Id : "+ids);$('#msg').html('Error');$('.sellAlart').show();}}//window.location.reload()
       }
         );
         
@@ -352,8 +370,8 @@ function closeView(e){
         "orderId": ids,
         "assetBuy": 'EOS',
         "assetSell":c,
-        "amountBuy": sellPrice,
-        "amountSell": bprice,
+        "amountBuy": bprice,
+        "amountSell": sellPrice,
         "price": pricess,
         "taker": "taker1",
         "maker": maker,
@@ -366,10 +384,10 @@ function closeView(e){
           var datas = 
     {
         "orderId": ids,
-        "assetBuy": c,
-        "assetSell":'EOS',
-        "amountBuy": sellPrice,
-        "amountSell": bprice,
+        "assetBuy": 'EOS',
+        "assetSell":c,
+        "amountBuy": bprice,
+        "amountSell": sellPrice,
         "price": pricess,
         "taker": "taker1",
         "maker": maker,
@@ -389,7 +407,7 @@ function closeView(e){
   },  body: JSON.stringify(datas)})
         .then(response => response.json())
         .then(data => {if($('#apiType').val()=='make'){ if(data.orderId){
-            $('#contentToShow').html('Order Id : '+data.orderId);$('#msg').html('Success');$('.sellAlart').show();}else if(data.code){$('#contentToShow').html('Error Code : '+data.code);$('#msg').html('Error');$('.sellAlart').show();}}else{ if(data.tradeId){$('#contentToShow').html('Trade Id : '+data.tradeId+'<br />result : Created <br />BlockNumber : '+data.blockNumber+'<br />TransactionId : <a href="/transaction/?trxID='+data.transactionId+'&blocknumber='+data.blockNumber+'">'+data.transactionId+'</a>');console.log(data);$('#msg').html('Success');$('.sellAlart').show();}else{$('#contentToShow').html('Status Code : '+data.statusCode+"<br /> Message : "+data.message+"<br /> Code : "+data.code+"<br /> Order Id : "+ids);$('#msg').html('Error');$('.sellAlart').show();}}//window.location.reload()
+            $('#contentToShow').html('Order Id : '+data.orderId);$('#msg').html('Success');$('.sellAlart').show();}else if(data.code){$('#contentToShow').html('Error Code : '+data.code);$('#msg').html('Error');$('.sellAlart').show();}}else{ if(data.tradeId){$('#contentToShow').html('Trade Id : '+data.tradeId+'<br />result : Created <br />BlockNumber : '+data.blockNumber+'<br />TransactionId : <a target="_blank" href="/transaction/?trxID='+data.transactionId+'&blocknumber='+data.blockNumber+'">'+data.transactionId+'</a>');console.log(data);$('#msg').html('Success');$('.sellAlart').show();}else{$('#contentToShow').html('Status Code : '+data.statusCode+"<br /> Message : "+data.message+"<br /> Code : "+data.code+"<br /> Order Id : "+ids);$('#msg').html('Error');$('.sellAlart').show();}}//window.location.reload()
       
        }
     );
@@ -513,6 +531,8 @@ class tradingHead extends Component{
             useraccount:'',
             colors: [],
             logo: [],
+            tradeHistory:[]
+            
         };
          this.refresh_data = this.refresh_data.bind(this);
           this.handleClicks = this.handleClicks.bind(this);         
@@ -615,6 +635,11 @@ refresh_data()
         var APIS = 'https://api.byzanti.ne/orderBook?symbol='+c+'&side=BUY&size=10&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
         var APISS = 'https://api.byzanti.ne/orders?symbol='+c+'&side=BUY&size=22&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
         var orderTaker = 'https://api.byzanti.ne/tradebook?symbol='+c+'&size=100&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+         var orderHistory= 'https://api.byzanti.ne/tradesByUser?user=taker1&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+          fetch(orderHistory)
+        .then(response => response.json())
+        .then(data => {this.setState({ tradeHistory: data });});
+    
         fetch(API)
         .then(response => response.json())
         .then(data => {this.setState({ tricker: data }); });
@@ -637,7 +662,7 @@ refresh_data()
                                                       if(i==0){if(bids.assetBuy==c){this.setState({mysign:"plus"})}else{this.setState({mysign:"minus"})}this.setState({myamount:bids.price});i++;}    });});
         
     
-        fetch('https://api.byzanti.ne/balance?account=taker1&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N')
+        fetch('https://api.byzanti.ne/exbalance?account=taker1&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N')
         .then(response => response.json())
         .then(data => {this.setState({blc:data}); });
         
@@ -669,12 +694,29 @@ $('#sellPricetwo').val('');
      
         var url = new URL(window.location.href);
          var c = url.searchParams.get("opt");
-      
+         var bColor='dark';
+      if($('body').hasClass('lightVersion'))
+      {
+            $('.darkt').css('display', 'none');
+    $('.lightT').css('display', 'inline-block');
+bColor='#fff';
+      }
+      else
+      {
+           $('.darkt').css('display', 'inline-block');
+   $('.lightT').css('display', 'none');
+bColor='#52565a';
+      }
         var API = 'https://api.byzanti.ne/ticker?symbol='+c+'&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
         var APISs = 'https://api.byzanti.ne/orderBook?symbol='+c+'&side=BUY&size=150&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
         var APIS = 'https://api.byzanti.ne/orderBook?symbol='+c+'&side=BUY&size=10&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
         var APISS = 'https://api.byzanti.ne/orders?symbol='+c+'&side=BUY&size=22&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
         var orderTaker = 'https://api.byzanti.ne/tradebook?symbol='+c+'&size=100&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+          var orderHistory= 'https://api.byzanti.ne/tradesByUser?user=taker1&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+          fetch(orderHistory)
+        .then(response => response.json())
+        .then(data => {this.setState({ tradeHistory: data });});
+    
         fetch(API)
         .then(response => response.json())
         .then(data => {this.setState({ tricker: data }); });
@@ -697,7 +739,7 @@ $('#sellPricetwo').val('');
                                    if(i==0){if(bids.assetBuy==c){this.setState({mysign:"plus"})}else{this.setState({mysign:"minus"})}this.setState({myamount:bids.price});i++;}    });});
         
     
-        fetch('https://api.byzanti.ne/balance?account=taker1&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N')
+        fetch('https://api.byzanti.ne/exbalance?account=taker1&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N')
         .then(response => response.json())
         .then(data => {this.setState({blc:data}); });
         
@@ -715,7 +757,7 @@ $('#sellPricetwo').val('');
         .then(response => response.json())
         .then(data => {this.setState({ tradebook: data }); });
 
-        fetch('https://uberdex-admin.herokuapp.com/getColors')
+        fetch(adminURL+'/getColors/'+apiId)
         .then(response => response.json())
         .then(data => {if(data.logo=='')
         {
@@ -724,7 +766,7 @@ $('#sellPricetwo').val('');
         else
         {
             this.setState({colors:data.theme_color}); 
-            $('#logoImg').attr('src','https://uberdex-admin.herokuapp.com/images/byzantine/'+data.logo);
+            $('#logoImg').attr('src',adminURL+'/images/byzantine/'+data.logo);
         }
         }).catch(data => {
             this.setState({colors:'#0e9caf'});this.setState({logo:logoss});
@@ -748,7 +790,7 @@ $('#sellPricetwo').val('');
 			studies_overrides: this.props.studiesOverrides,
 			overrides: {
 				"mainSeriesProperties.showCountdown": true,
-				"paneProperties.background": "#52565a",
+				"paneProperties.background": bColor,
 				"paneProperties.vertGridProperties.color": "#363c4e",
 				"paneProperties.horzGridProperties.color": "#363c4e",
 				"symbolWatermarkProperties.transparency": 90,
@@ -786,14 +828,15 @@ $('#sellPricetwo').val('');
         const { Orders } = this.state;
         const { OrderSells } = this.state;
         const { tradebook } = this.state;
+        const {tradeHistory} =this.state;
       // console.log(strlen(orderBooks));
         return(
             <div>
-                <div className="wellcomBanner background" style={color}>
+                <div className="wellcomBanner background" style={{'background': this.state.colors}}>
                     <div className="header ">
                         <div className="container clearfix">
                             <div className="logo">
-                                <a href="/"><img src={logoss} className="App-logo" id="logoImg" alt="" /></a>
+                            <Link to="/" className="link"><img src={logoss} className="App-logo" id="logoImg" alt="" /></Link>
                             </div>
                             <div className="menuSections">
                                 <nav>
@@ -919,7 +962,7 @@ $('#sellPricetwo').val('');
                             </div>
                         </div>
                     </div>
-                    <div className="center">
+                     <div className="center">
                     <div id={ this.props.containerId } className={ 'TVChartContainer' }></div>
 
                         <div className="clearfix"></div>
@@ -928,9 +971,9 @@ $('#sellPricetwo').val('');
                             <div className="clearfix">
                                 <div>
                                     {tricker.map(hit =>
-                                        <h6>Buy {hit.symbol} <span>Balance:{this.state.blc[0]}</span></h6>
+                                        <h6>Buy {hit.symbol} <span>Balance:{this.state.blc[0].amount+" EOS"}</span></h6>
                                     )}
-                                    <label>Price <span></span> </label>
+                                    <label>Price <span>EOS</span> </label>
                                     <input type="number" id="price" />
                                     <label>Amount {tricker.map(hit =>
                                         <span>{hit.symbol} </span>
@@ -938,22 +981,21 @@ $('#sellPricetwo').val('');
                                      <input type="hidden" id="buyPrices"  />
                                    
                                     <input type="number" id="buyPrice" onChange={changeSellPrice1} />
-                                    <label>Total  <span>EOS</span>
-                                    </label>
+                                    <label>Total <span>EOS </span> </label>
                                     <input type="number"  id="sellPrice" onChange={changeSellPrice} />
-                                    {tricker.map(hit =>
+                              {tricker.map(hit =>
                                         <input type="submit" value={'Buy '+hit.symbol} onClick={handleBuy} className="background" />
-                                    )}
-                                </div>
+                                    )}  </div>
                                 <div className="red">
                                     {tricker.map(hit =>
-                                        <h6>Sell {hit.symbol} <span>Balance:{this.state.blc[1]}</span></h6>
+                                        <h6>Sell {hit.symbol} <span>Balance:{this.state.blc[1].amount+" "+hit.symbol}</span></h6>
                                     )}
-                                    <label>Price <span></span> </label>
+                                    <label>Price <span>EOS</span></label>
                                     <input type="number"  id="priceTwo" />
-                                    <label>Amount {tricker.map(hit =>
-                                        <span>{hit.symbol} </span>
-                                    )}</label>
+
+                                    <label>Amounts <span>EOS</span> </label>
+                                   <input type="number" id="sellPricetwo" onChange={changeBuyPrice} />
+                                  
                                     <input type="hidden" id="BuyPricetwos"/>
 
                                     <input type="hidden" id="ID"/>
@@ -966,10 +1008,14 @@ $('#sellPricetwo').val('');
                                     <input type="hidden" id="makerexchange"/>
                                     <input type="hidden" id="side"/>
                                     <input type="hidden" id="apiType" />
-                                    <input type="number" id="BuyPricetwo"  onChange={changeBuyPrice1} />
-                                    <label>Total <span>EOS</span></label>
-                                    <input type="number" id="sellPricetwo" onChange={changeBuyPrice} />
-                                    {tricker.map(hit =>
+                                    
+                                   <label>Total  {tricker.map(hit =>
+                                        <span>{hit.symbol} </span>
+                                    )}
+                                    </label>
+                                       <input type="number" id="BuyPricetwo"  onChange={changeBuyPrice1} />
+                                                                       
+                                     {tricker.map(hit =>
                                         <input type="submit"  onClick={handleSell} value={'Sell '+hit.symbol} />
                                     )}
                                 </div>
@@ -1012,25 +1058,25 @@ $('#sellPricetwo').val('');
                                 </div>
                                 <div className="viewBottom clearfix">
                                     <ul>
-                                        <li><h3>Maker</h3></li>
+                                        <li><h3  style={{'background': this.state.colors}}>Maker</h3></li>
                                         <li><span>EOS Account Name</span> <cite>{tackers.maker}</cite> </li>
                                         <li><span>Total</span> <cite>{tackers.amountBuy} {tackers.assetBuy}</cite> </li>
                                         <li><span>Fee</span> <cite>{tackers.makerFee} {tackers.assetBuy}</cite> </li>
                                         <li><span>Maker Exchange</span> {tackers.makerExchange} <cite></cite> </li>
                                         <li><span>Time stamp</span> <cite>{tackers.timestamp}</cite> </li>
-                                        <li><span>Trade Id</span> <cite className="tradeId">{tackers.tradeId}</cite> </li>
-                                        <li><span>Transaction Id</span> <a href={'/transaction/?trxID='+tackers.transactionId+'&blocknumber='+tackers.blockNumber}>{tackers.transactionId}</a></li>
+                                        <li><span>Trade Id</span> <cite  style={{'color': this.state.colors}} className="tradeId">{tackers.tradeId}</cite> </li>
+                                        <li><span>Transaction Id</span> <a  style={{'color': this.state.colors}} target="_blank" href={'/transaction/?trxID='+tackers.transactionId+'&blocknumber='+tackers.blockNumber}>{tackers.transactionId}</a></li>
                                     </ul>
                                     
                                     <ul>
-                                        <li><h3>Taker</h3></li>
+                                        <li><h3 style={{'background': this.state.colors}}>Taker</h3></li>
                                         <li><span>EOS Account Name</span> <cite>{tackers.taker}</cite> </li>
-                                        <li><span>Total</span> <cite>{tackers.amountSell} EOS</cite> </li>
-                                        <li><span>Fee</span> <cite>{tackers.takerFee} EOS</cite> </li>
+                                        <li><span>Total</span> <cite>{tackers.amountSell} {tackers.assetBuy}</cite> </li>
+                                        <li><span>Fee</span> <cite>{tackers.takerFee} {tackers.assetSell}</cite> </li>
                                         <li><span>Taker Exchange</span> <cite>{tackers.takerExchange}</cite> </li>
                                         <li><span>Time stamp</span> <cite>{tackers.timestamp}</cite> </li>
-                                        <li><span>Trade Id</span> <cite className="tradeId">{tackers.tradeId}</cite> </li>
-                                        <li><span>Transaction Id</span> <a href={'/transaction/?trxID='+tackers.transactionId+'&blocknumber='+tackers.blockNumber}>{tackers.transactionId}</a></li>
+                                        <li><span>Trade Id</span> <cite style={{'color': this.state.colors}} className="tradeId">{tackers.tradeId}</cite> </li>
+                                        <li><span>Transaction Id</span> <a  style={{'color': this.state.colors}} target="_blank" href={'/transaction/?trxID='+tackers.transactionId+'&blocknumber='+tackers.blockNumber}>{tackers.transactionId}</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -1053,7 +1099,7 @@ $('#sellPricetwo').val('');
                     <div className="orderWrap" id={'view'+order.orderId}>
                         <div className="orderView">
                             <a href="/" className="closeView"  onClick={closeOrder}><i className="fa fa-times"></i></a>
-                            <h3>Order Detail</h3>
+                            <h3  style={{'color': this.state.colors}}>Order Detail</h3>
                             <div className="viewBottom clearfix">
                                 <ul>
                                     <li><span>Account Name</span> <cite>{order.useraccount}</cite> </li>
@@ -1065,7 +1111,7 @@ $('#sellPricetwo').val('');
                                     <li><span>Type</span> <cite>{order.type}</cite> </li>
                                     <li><span>Time stamp</span> <cite>{order.timestamp}</cite> </li>
                                     <li><span>Date</span> <cite>{order.created}</cite> </li>
-                                    <li><span>Order Id</span> <cite className="tradeId">{order.orderId}</cite> </li>
+                                    <li><span>Order Id</span> <cite style={{'color': this.state.colors}} className="tradeId">{order.orderId}</cite> </li>
                                 </ul>
                             </div>
                         </div>
@@ -1153,7 +1199,7 @@ $('#sellPricetwo').val('');
                                 </tr>
                             </thead>
                             <tbody>
-                            {tradebook.map(tradebooks =>{
+                            {tradeHistory.map(tradebooks =>{
                                 if(tradebooks.taker=='taker1')
                                 {
                                     if(tradebooks.assetBuy=='EOS')
@@ -1200,24 +1246,27 @@ $('#sellPricetwo').val('');
                             </div>
                             <div className="viewBottom clearfix">
                                 <ul>
-                                    <li><h3>Maker</h3></li>
+                                    <li><h3 style={{'background': this.state.colors}}>Maker</h3></li>
                                     <li><span>EOS Account Name</span> <cite>{tradebooks.maker}</cite> </li>
                                     <li><span>Total</span> <cite>{tradebooks.amountBuy} {tradebooks.assetBuy}</cite> </li>
                                     <li><span>Fee</span> <cite>{tradebooks.makerFee} {tradebooks.assetBuy}</cite> </li>
                                     <li><span>Maker Exchange</span> {tradebooks.makerExchange} <cite></cite> </li>
                                     <li><span>Time stamp</span> <cite>{tradebooks.timestamp}</cite> </li>
-                                    <li><span>Trade Id</span> <cite className="tradeId">{tradebooks.tradeId}</cite> </li>
-                                    
+                                    <li><span>Trade Id</span> <cite  style={{'color': this.state.colors}} className="tradeId">{tradebooks.tradeId}</cite> </li>
+                                            <li><span>Transaction Id</span> <a style={{'color': this.state.colors}} target="_blank" href={'/transaction/?trxID='+tradebooks.transactionId+'&blocknumber='+tradebooks.blockNumber}>{tradebooks.transactionId}</a></li>
+                                  
                                 </ul>
                                 
                                 <ul>
-                                    <li><h3>Taker</h3></li>
+                                    <li><h3 style={{'background': this.state.colors}}>Taker</h3></li>
                                     <li><span>EOS Account Name</span> <cite>{tradebooks.taker}</cite> </li>
-                                    <li><span>Total</span> <cite>{tradebooks.amountSell} EOS</cite> </li>
-                                    <li><span>Fee</span> <cite>{tradebooks.takerFee} EOS</cite> </li>
+                                    <li><span>Total</span> <cite>{tradebooks.amountSell} {tradebooks.assetBuy}</cite> </li>
+                                    <li><span>Fee</span> <cite>{tradebooks.takerFee} {tradebooks.assetSell}</cite> </li>
                                     <li><span>Taker Exchange</span> <cite>{tradebooks.takerExchange}</cite> </li>
                                     <li><span>Time stamp</span> <cite>{tradebooks.timestamp}</cite> </li>
-                                    <li><span>Trade Id</span> <cite className="tradeId">{tradebooks.tradeId}</cite> </li>
+                                    <li><span>Trade Id</span> <cite style={{'color': this.state.colors}}  className="tradeId">{tradebooks.tradeId}</cite> </li>
+                                          <li><span>Transaction Id</span> <a style={{'color': this.state.colors}} target="_blank" href={'/transaction/?trxID='+tradebooks.transactionId+'&blocknumber='+tradebooks.blockNumber}>{tradebooks.transactionId}</a></li>
+                                  
                                 </ul>
                             </div>
                         </div>

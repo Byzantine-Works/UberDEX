@@ -2,12 +2,40 @@ import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
 import $ from "jquery";
 
-import data from '../../app.json';
-var color = {background: data['theme_color']};
-var colors = {color: data['theme_color']};
+import dp from '../../app.json';
+var adminURL = dp['url'];
+var apiId = dp['apiId'];
 
 const API = 'https://api.byzanti.ne/ticker?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
-
+ function searchMarket(e)
+      { 
+        e.preventDefault();
+       var search=e.target.value;
+       search= search.toLowerCase();
+       if(search.length<2)
+       {
+          $('table tbody tr td:nth-child(2)').each(function(i,v){
+      $('table tbody tr').eq(i).show();
+    });
+     
+       }
+       else
+       {
+           $('table tbody tr td:nth-child(2)').each(function(i,v){
+       if($(this).html().toLowerCase().indexOf(search)>0)
+       {
+        $('table tbody tr').eq(i).show();
+       }
+       else
+       {
+         $('table tbody tr').eq(i).hide();
+       }
+    });
+       }
+      
+    //   console.log( $('.table tbody tr').html());
+ 
+      }
 class EOS extends Component{
     constructor(props) {
         super(props);
@@ -23,7 +51,7 @@ class EOS extends Component{
           .then(response => response.json())
           .then(data => this.setState({ tricker: data }));
 
-        fetch('https://uberdex-admin.herokuapp.com/getColors')
+          fetch(adminURL+'/getColors/'+apiId)
             .then(response => response.json())
             .then(data => {if(data.theme_color=='')
             {
@@ -31,7 +59,8 @@ class EOS extends Component{
             }
             else
             {
-                this.setState({colors:data.theme_color}); this.setState({logo:'https://uberdex-admin.herokuapp.com/images/byzantine/'+data.logo});
+                this.setState({colors:data.theme_color}); 
+                this.setState({logo:adminURL+'/images/byzantine/'+data.logo});
             }
             }).catch(data => {
                 this.setState({colors:'#0e9caf'});
@@ -45,9 +74,10 @@ class EOS extends Component{
                     <div className="tableTop clearfix">
                         <form>
                             <i className="fa fa-search"></i>
-                            <input type="text" placeholder="Search" />
+                                 <input type="text" placeholder="Search" id="searchMarket" onChange={searchMarket} />
+                       
                         </form>
-                        <p><i className="fa fa-star"></i> Favorites</p>
+                        <p style={{'color': this.state.colors, 'border-color':this.state.colors}}><i className="fa fa-star"></i> Favorites</p>
                     </div>
                     <table>
                         <thead>
@@ -59,6 +89,7 @@ class EOS extends Component{
                                 <th>24h High</th>
                                 <th>24h Low</th>
                                 <th>24h Volume <span><i className="fa fa-angle-up"></i><i className="fa fa-angle-down"></i></span></th>
+                                <th></th> 
                                 <th></th>
                             </tr>
                         </thead>
@@ -87,7 +118,8 @@ class EOS extends Component{
                                     <td>{hit.high}</td>
                                     <td>{hit.low}</td>
                                     <td>{hit.volume}</td>
-                                    <td><Link to={'/exchange/?opt='+hit.symbol} className="link trade colors" style={{'color': this.state.colors}}>Trade</Link> </td>
+                                    <td><Link to={'/exchange/?opt='+hit.symbol} className="link tadeLink trade colors" style={{'color': this.state.colors}}>Trade</Link> </td>
+                                    <td><Link to={'/ldar/?opt='+hit.symbol} className="link tadeLink trade colors" style={{'color': this.state.colors}}>LDAR</Link> </td>
                                 </tr>
                                 })}
                                 

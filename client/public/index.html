@@ -57,6 +57,7 @@
     -->
     
 <script src="%PUBLIC_URL%/jquery-1.11.3.min.js"></script>
+<script src="%PUBLIC_URL%/chartli.js"></script>
 <link href="%PUBLIC_URL%/select2.min.css" rel="stylesheet" />
 <script src="%PUBLIC_URL%/select2.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -70,7 +71,110 @@
 
 <script>
 
+
+
   $(document).ready(function(){
+    var chartliexample4 = echarts.init(document.getElementById('lineChart4'));
+        option = {
+            tooltip: {
+                trigger: 'axis'
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    mark: { show: false },
+                    dataView: { show: false, readOnly: false },
+                    magicType: { show: true, type: ['line', 'bar', 'stack', 'tiled'] },
+                    restore: { show: true, title: 'Refresh' },
+                    saveAsImage: { show: true, title: 'Save As Image' }
+                }
+            },
+            grid: {
+                show: false,
+                containLabel: true,
+                left: '10',
+                right: '30',
+                top: '70',
+                bottom: '10'
+
+            },
+            color: ['#7df07e', '#4bdd4c', '#4bdd4c', '#f98fa1', '#f98fa1', '#f98fa1'],
+
+            calculable: true,
+            xAxis: [
+                {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: ['0.035', '0.04', '0.045', '0.05', '0.045', '0.05', '0.055', '0.6', '0.065', '0.07', '0.075', '0.08']
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value'
+                }
+            ],
+            series: [
+                {
+                    name: '',
+                    type: 'line',
+                    smooth: true,
+                    itemStyle: { normal: { areaStyle: { type: 'default', shadowColor: 'rgba(0, 0, 0, 0.4)', shadowBlur: 30, opacity: 0.8 }, "lineStyle": { "opacity": 0 } } },
+                    data: [100, 70, 60, 30, 10, 0],
+                    symbol: 'image://asset/twitter.png',
+                    symbolSize:40
+                },
+                {
+                    name: '',
+                    type: 'line',
+                    smooth: true,
+                    itemStyle: { normal: { areaStyle: { type: 'default', shadowColor: 'rgba(0, 0, 0, 0.7)', shadowBlur: 30, opacity: 0.8 },"lineStyle": { "opacity": 0 } } },
+                    data: [250, 200, 150, 100, 70, 00],
+                    symbol: 'image://asset/whatsapp.png',
+                    symbolSize: 40
+                },
+                {
+                    name: '',
+                    type: 'line',
+                    smooth: true,
+                    itemStyle: { normal: { areaStyle: { type: 'default', shadowColor: 'rgba(0, 0, 0, 0.9)', shadowBlur: 30, opacity: 0.8 }, "lineStyle": { "opacity": 0 } } },
+
+                    data: [350, 300, 250, 200, 150, 0],
+                    symbol: 'image://asset/snapchat.png',
+                    symbolSize: 40
+                },
+                {
+                    name: '',
+                    type: 'line',
+                    smooth: true,
+                    itemStyle: { normal: { areaStyle: { type: 'default', shadowColor: 'rgba(0, 0, 0, 0.9)', shadowBlur: 30, opacity: 0.8 }, "lineStyle": { "opacity": 0 } } },
+                    data: [0, 0, 0, 0, 0, 0, 0, 10, 30, 60, 70, 100],
+                    symbol: 'image://asset/twitter.png',
+                    symbolSize:40
+                },
+                {
+                    name: '',
+                    type: 'line',
+                    smooth: true,
+                    itemStyle: { normal: { areaStyle: { type: 'default', shadowColor: 'rgba(0, 0, 0, 0.9)', shadowBlur: 30, opacity: 0.8 },"lineStyle": { "opacity": 0 } } },
+                    data: [0, 0, 0, 0, 0, 0, 20, 70, 100, 150, 200, 250],
+                    symbol: 'image://asset/whatsapp.png',
+                    symbolSize: 40
+                },
+                {
+                    name: '',
+                    type: 'line',
+                    smooth: true,
+                    itemStyle: { normal: { areaStyle: { type: 'default', shadowColor: 'rgba(0, 0, 0, 0.9)', shadowBlur: 30, opacity: 0.8 }, "lineStyle": { "opacity": 0 } } },
+
+                    data: [0, 0, 0, 0, 0, 0, 100, 150, 200, 250, 300, 350],
+                    symbol: 'image://asset/snapchat.png',
+                    symbolSize: 40
+                }
+            ]
+        };
+
+        chartliexample4.setOption(option);
+
       $('.demo-big-content').addClass('darkVersion');
       
       $('.fullscreen').click(function() {
@@ -158,7 +262,6 @@ $(document).ready(function(){
   });
 
 });
-
 
 
 </script>
