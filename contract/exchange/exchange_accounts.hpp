@@ -31,7 +31,7 @@ struct exaccount
     EOSLIB_SERIALIZE(exaccount, (owner)(balances)(executed_trades)(order_fills)(lock_block_number)(invalid_order_nonce)(public_key)(last_withdrawal_nonce))
 };
 
-typedef eosio::multi_index<N(exaccounts3), exaccount> exaccounts;
+typedef eosio::multi_index<N(exaccounts), exaccount> exaccounts;
 
 /**
     *  Provides an abstracted interface around storing balances for users. This class
