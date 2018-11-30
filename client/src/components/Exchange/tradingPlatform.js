@@ -1104,14 +1104,14 @@ refresh_data() {
                                     <tbody>
                                         {orderBooks.map(bids => 
                                             <tr>
-                                                <td className='minus' id={bids.price} data-id={bids.orderId} data-assetbuy={bids.assetSell} data-assetsell={bids.assetBuy} data-amountsell={bids.amountBuy} data-amountbuy={bids.amountSell} data-price={bids.price} data-maker={bids.useraccount} data-makerexchange={bids.source} data-side={bids.side}   onClick={handleClicks}>{parseFloat(bids.price).toFixed(4)}</td>
+                                                <td className='minus' id={bids.price} data-id={bids.orderId} data-assetbuy={bids.assetSell} data-assetsell={bids.assetBuy} data-amountsell={bids.amountBuy} data-amountbuy={bids.amountSell} data-price={bids.price} data-maker={bids.useraccount} data-makerexchange={bids.source} data-side={bids.side}   onClick={this.handleClicks}>{parseFloat(bids.price).toFixed(4)}</td>
                                                 <td id={bids.amountBuy}>{parseFloat(bids.amountBuy).toFixed(4)}</td>
                                                 <td id={bids.amountSell}>{parseFloat(bids.amountSell).toFixed(4)}</td>
                                             </tr>
                                         )}
                                         {orderBook.map(ask => 
                                             <tr>
-                                                <td className='plus' id={ask.price} data-id={ask.orderId} data-assetbuy={ask.assetSell} data-assetsell={ask.assetBuy} data-amountsell={ask.amountBuy} data-amountbuy={ask.amountSell} data-price={ask.price} data-maker={ask.useraccount} data-makerexchange={ask.source} data-side={ask.side} onClick={handleClick}>{parseFloat(ask.price).toFixed(4)}</td>
+                                                <td className='plus' id={ask.price} data-id={ask.orderId} data-assetbuy={ask.assetSell} data-assetsell={ask.assetBuy} data-amountsell={ask.amountBuy} data-amountbuy={ask.amountSell} data-price={ask.price} data-maker={ask.useraccount} data-makerexchange={ask.source} data-side={ask.side} onClick={this.handleClick}>{parseFloat(ask.price).toFixed(4)}</td>
                                                 <td id={ask.amountSell}>{parseFloat(ask.amountSell).toFixed(4)}</td>
                                                 <td id={ask.amountBuy}>{parseFloat(ask.amountBuy).toFixed(4)}</td>
                                             </tr>
@@ -1134,7 +1134,7 @@ refresh_data() {
                                         
                                         {orderBookss.map(ask => 
                                             <tr>
-                                                <td className='plus' id={ask.price} data-id={ask.orderId} data-assetbuy={ask.assetSell} data-assetsell={ask.assetBuy} data-amountsell={ask.amountBuy} data-amountbuy={ask.amountSell} data-price={ask.price} data-maker={ask.useraccount} data-makerexchange={ask.source} data-side={ask.side} onClick={handleClick}>{parseFloat(ask.price).toFixed(4)}</td>
+                                                <td className='plus' id={ask.price} data-id={ask.orderId} data-assetbuy={ask.assetSell} data-assetsell={ask.assetBuy} data-amountsell={ask.amountBuy} data-amountbuy={ask.amountSell} data-price={ask.price} data-maker={ask.useraccount} data-makerexchange={ask.source} data-side={ask.side} onClick={this.handleClick}>{parseFloat(ask.price).toFixed(4)}</td>
                                                 <td id={ask.amountSell}>{parseFloat(ask.amountSell).toFixed(4)}</td>
                                                 <td id={ask.amountBuy}>{parseFloat(ask.amountBuy).toFixed(4)}</td>
                                             </tr>
@@ -1157,7 +1157,7 @@ refresh_data() {
                                         
                                         {orderBookss.map(bids => 
                                             <tr>
-                                                <td className='minus' id={bids.price} data-id={bids.orderId} data-assetbuy={bids.assetSell} data-assetsell={bids.assetBuy} data-amountsell={bids.amountBuy} data-amountbuy={bids.amountSell} data-price={bids.price} data-maker={bids.useraccount} data-makerexchange={bids.source} data-side={bids.side}   onClick={handleClicks}>{parseFloat(bids.price).toFixed(4)}</td>
+                                                <td className='minus' id={bids.price} data-id={bids.orderId} data-assetbuy={bids.assetSell} data-assetsell={bids.assetBuy} data-amountsell={bids.amountBuy} data-amountbuy={bids.amountSell} data-price={bids.price} data-maker={bids.useraccount} data-makerexchange={bids.source} data-side={bids.side}   onClick={this.handleClicks}>{parseFloat(bids.price).toFixed(4)}</td>
                                                 <td id={bids.amountBuy}>{parseFloat(bids.amountBuy).toFixed(4)}</td>
                                                 <td id={bids.amountSell}>{parseFloat(bids.amountSell).toFixed(4)}</td>
                                             </tr>
