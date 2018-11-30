@@ -62,10 +62,7 @@ function handlePublic(e){
     console.log(scatter.identity);
 }
 
-function handleClick(e) {
-    e.preventDefault();
-    $('.signInPopup ').fadeIn();
-}
+
 
 const tryRequire = (path) => {
     try {
@@ -88,6 +85,7 @@ class Header extends Component {
     };
 
         this.handleSignout = this.handleSignout.bind(this);
+        this.handleClick = this.handleClick.bind(this)
     }
     handleSignout(e) {
         e.preventDefault();
@@ -136,6 +134,11 @@ class Header extends Component {
             }
     }
 
+    handleClick(e) {
+        e.preventDefault();
+        $('.signInPopup ').fadeIn();
+    }
+
 
 render(){
     const { logo } = this.state;   
@@ -155,10 +158,10 @@ render(){
                                 {this.props.scatterID ?
                                 <span>
                                     <li id="signout"><a href="/"  onClick={this.handleSignout}>Sign out</a></li>
-                                    <li><a href="/" className="bgs"  onClick={handlePublic}>{this.props.scatterID.identity.accounts[0].name}</a></li>
+                                    <li><Link to="/account" className="bgs" >{this.props.scatterID.identity.accounts[0].name}</Link></li>
                                 </span> :
                                 <span>
-                                    <li id="signin"><a href="/"  onClick={this.handleClick}>Sign In</a></li>
+                                    <li id="signin"><a onClick={this.handleClick}>Sign In</a></li>
                                     <li><a href="/" className="bgs"  onClick={handlePublic}>Get Started</a></li>
                                 </span>
                                 }
