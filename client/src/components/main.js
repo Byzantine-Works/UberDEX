@@ -21,8 +21,7 @@ import LDAR from './ldar';
 class Main extends Component{
     constructor(props) {
         super(props);
-        this.state = {
-            
+        this.state = {   
         }
     }
 
@@ -31,7 +30,7 @@ class Main extends Component{
         return (
         <Switch>
             <Route exact path='/' render={(props) => {return <Home updateScatterID={this.props.updateScatterID} scatterID={this.props.scatterID}/>}} />
-            <Route path='/exchange' render={(props) => {return <Exchange scatterEOS={this.props.scatterEOS} updateScatterID={this.props.updateScatterID} scatterID={this.props.scatterID}/>}}/>
+            <Route path='/exchange' render={(props) => {return <Exchange scatterEOS={this.props.scatterEOS} updateScatterID={this.props.updateScatterID} scatterID={this.props.scatterID} balance={this.props.balance}/>}}/>
             <Route path='/market' component={(props) => {return <Market updateScatterID={this.props.updateScatterID} scatterID={this.props.scatterID}/>}} />
             <Route path='/support' component={(props) => {return <Support updateScatterID={this.props.updateScatterID} scatterID={this.props.scatterID}/>}} />
             <Route path='/about' component={ About } />

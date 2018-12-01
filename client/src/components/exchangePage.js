@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import Datafeed from './TVChartContainer/api/index';
-import TradingCenter from './Exchange/tradingPlatform2';
+import TradingCenter from './Exchange/tradingPlatform';
 import Callaction from './callAction';
 import Footer from './footer';
 import Header from './header';
@@ -29,7 +29,7 @@ class Home extends Component{
      
         return(
             <div className="marketPage">
-                <TradingCenter updateOpenOrders={this.updateOpenOrders} scatterID={this.props.scatterID} updateScatterID={this.props.updateScatterID}/>
+                <TradingCenter updateOpenOrders={this.updateOpenOrders} scatterID={this.props.scatterID} updateScatterID={this.props.updateScatterID} balance={this.props.balance}/>
                 <Callaction />
             </div>
         )

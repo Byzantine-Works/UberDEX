@@ -35,9 +35,22 @@ class App extends Component {
     super(props);
     this.state = {
       colors: [],
-      scatterID: false
+      scatterID: false,
+      balance: false
     }
     this.updateScatterID = this.updateScatterID.bind(this);
+    this.updateBalance = this.updateBalance.bind(this);
+
+  }
+
+  updateBalance(balArr) {
+    let balance = {};
+    balArr.forEach(x => {
+      balance[x.symbol] = x.amount;
+    })
+    this.setState({balance});
+    console.log(balance)
+
   }
 
   updateScatterID(id) {
@@ -60,8 +73,8 @@ class App extends Component {
                     <div className="wellcomBanner background" style={{'background': this.state.colors}}>
                       <Header updateScatterID={this.updateScatterID} scatterID={this.state.scatterID} />
                     </div>
-                  <Main scatterID={this.state.scatterID} scatterEOS={this.state.scatterEOS}/>
-                  <Footer updateScatterID={this.updateScatterID} scatterID={this.state.scatterID}/>
+                  <Main scatterID={this.state.scatterID} scatterEOS={this.state.scatterEOS} balance={this.state.balance}/>
+                  <Footer updateScatterID={this.updateScatterID} scatterID={this.state.scatterID} updateBalance={this.updateBalance}/>
               </Content>
           </Layout>
       </div>

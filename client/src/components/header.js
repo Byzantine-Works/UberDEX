@@ -170,8 +170,8 @@ render(){
                         <div className="othersOptions">
                             <a href="/" className="fullscreen"><i className="fa fa-expand-arrows-alt"> </i></a>
                             <a href="/" className="smallscreen"><i className="fa fa-expand-arrows-alt"> </i></a>
-                            <a href="#" className="light"><i className="fa fa-lightbulb"> </i></a>
-                            <a href="#" className="dark" ><i className="fa fa-lightbulb"> </i></a>
+                            <a href="#" className="lightT" onClick={handlelight}><i className="fa fa-lightbulb"> </i></a>
+                            <a href="#" className="darkt" onClick={handledark}><i className="fa fa-lightbulb"> </i></a>
                             
                         </div>
                     </div>

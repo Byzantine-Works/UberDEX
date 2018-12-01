@@ -104,9 +104,6 @@ render(){
     const { hitss } = this.state;
         return(
             <div className="HomePage" >
-                <div className="wellcomBanner background" style={{'background': this.state.colors}}>
-                    <Header />
-                </div>
                 
                 {hits.map(hit =>
                     <div className="ldrHeader">
@@ -186,7 +183,6 @@ render(){
                         </div>
                     </div>
                 </div>
-                <Footer />
             </div>
         )
     }
