@@ -3910,10 +3910,15 @@ div#tv_chart_container iframe {
 }
 
 .walletContainer div {
-  background-color:#52565a;
+  background-color: #ecececb0;
   padding: 10px 10px;
   margin-bottom: 0px;
   height:30px;
+}
+
+.darkVersion .walletContainer div {
+  background-color:#52565a;
+
 }
 
 .walletContainer form input {
@@ -3925,9 +3930,9 @@ div#tv_chart_container iframe {
   border: 2px solid;
   color: #a9a4a4;
   outline: 0px !important;
-  background: #797979;
+  background: #7979793a;
   color: #fff;
-  border-color: #646769;
+  border-color: #64676948;
 }
 
 .walletContainer form i {
