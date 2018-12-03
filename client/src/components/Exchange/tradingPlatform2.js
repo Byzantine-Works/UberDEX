@@ -762,69 +762,6 @@ async handleTakerSell() {
 
   }
 
-  async registerUser() {
-    // var myBuffer = [];
-    // var str = 'EOS8k4SMa7JKF4LVi1fn9bc3aKnunhXb2JSg8a9xY3zCdkXgXqXQq';
-    // var buffer = new Buffer(str, 'utf16le');
-    // for (var i = 0; i < buffer.length; i++) {
-    //     myBuffer.push(buffer[i]);
-    // }
-    const scatter = this.props.scatterID;
-
-    let pubKey = await scatter.getPublicKey('eos');
-    console.log("publickey: ", pubKey);
-
-    const pk = ecc.PublicKey(pubKey).toBuffer();
-    var pkPacked = new pk.constructor(pk.length + 1);
-    pkPacked.set(Uint8Array.of(0), 0);
-    pkPacked.set(pk, 1);
-    var pkHex = pkPacked.toString('hex');
-
-
-    const eosOptions = { expireInSeconds:60 }
-    const eos = this.props.scatterID.eos(network, Eos, eosOptions);
-    
-    
-    const action = [{
-        account: 'exchange',
-        name: 'registeruser',
-        authorization: [{
-            actor: this.props.scatterID.identity.accounts[0].name,
-            permission: 'active'
-        }], data :
-        {
-            user: this.props.scatterID.identity.accounts[0].name,
-            publickey: pkHex
-        }
-    }]
-    let dep = await eos.transaction({ actions: action})
-    console.log(dep);
-  }
-
-  async ispkpaired() {
-
-    const eosOptions = { expireInSeconds:60 }
-    const eos = this.props.scatterID.eos(network, Eos, eosOptions);
-    
-    
-    const action = [{
-        account: 'exchange',
-        name: 'ispkpaired',
-        authorization: [{
-            actor: this.props.scatterID.identity.accounts[0].name,
-            permission: 'active'
-        }], data :
-        {
-            user: this.props.scatterID.identity.accounts[0].name,
-        }
-    }]
-    let dep = await eos.transaction({ actions: action})
-    console.log(dep);
-
-  }
-
-
-
 
 refresh_data()
 {

@@ -3912,12 +3912,12 @@ div#tv_chart_container iframe {
 .walletContainer div {
   background-color: #ecececb0;
   padding: 10px 10px;
-  margin-bottom: 0px;
   height:30px;
 }
 
 .darkVersion .walletContainer div {
   background-color:#52565a;
+  bottom: 0px;
 
 }
 
@@ -3941,14 +3941,30 @@ div#tv_chart_container iframe {
   left: 25px;
 }
 
+.walletContainer .zeroBalance {
+  float: right;
+  margin-top: -20px;
+  margin-right: 50px;
+  color: rgba(255, 255, 255, 0.527);
+  
+}
+
+.walletContainer .zeroBalance input[type='checkbox'] {
+  background: white;
+  border-radius: 2px;
+}
+
+
 .walletContainer table {
   width: 100%;
+  top: -20px;
 }
 
 .walletContainer table thead {
   width: 100%;
   font-weight: bold;
   background: #ecececb0;
+  
 }
 
 .darkVersion .walletContainer table thead {

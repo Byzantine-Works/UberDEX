@@ -823,6 +823,10 @@ bColor='#52565a';
 
     async handleBuy(e) {
 
+       var amBuy= parseFloat($('#buyPrice').val());
+       var amSell= parseFloat($('#sellPrice').val());
+       var price= parseFloat($('#price').val());
+
         let scatter = this.props.scatterID;
     
         var amountB = BN(359.4218).multipliedBy(10000);

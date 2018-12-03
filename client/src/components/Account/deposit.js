@@ -23,7 +23,6 @@ class Deposit extends Component{
         this.props.deposit(this.state.value, this.props.symbView);
     }
     render(){
-        console.log("props in withdraw: ", this.props);
         let balInd = lodash.findIndex(this.props.balance, ['token', this.props.symbView]);
         let bal = this.props.balance[balInd];
 
@@ -34,7 +33,7 @@ class Deposit extends Component{
                     <h4>Deposit</h4>
                     <ul><input onChange={this.loadData} type="number"></input>{this.props.symbView} <button id="confirm" onClick={this.sendData}>Confirm</button></ul>
                     <ul id="bal">Exchange balance: {(Number(bal.amount)+Number(this.state.value)).toFixed(4)} {this.props.symbView}</ul>
-                    <ul id="bal" style={this.state.value > bal.amount ? {color: 'red'} :  null}>Chain balance: {Number(bal.chainBal)-Number(this.state.value)} {this.props.symbView}</ul><br/>
+                    <ul id="bal" style={this.state.value > bal.amount ? {color: 'red'} :  null}>Chain balance: {(Number(bal.chainBal)-Number(this.state.value)).toFixed(this.props.tokens[this.props.symbView].precision)} {this.props.symbView}</ul><br/>
                     <ul>Resources can be redeemed at any time, EOS will be returned to your account in 3 days. Transfer or vote will cost some CPU and NET resources.</ul>
                 </div>
             </div>

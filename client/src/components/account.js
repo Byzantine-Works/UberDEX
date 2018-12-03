@@ -15,6 +15,7 @@ import Transfer from './Account/transfer';
 
 import Eos from 'eosjs';
 import data from '../app.json';
+import ecc from 'eosjs-ecc';
 var color = { background: data['theme_color'] };
 
 const socket = openSocket('https://api.byzanti.ne:9090/');
@@ -58,7 +59,7 @@ class Account extends Component {
         this.delegate = this.delegate.bind(this);
         this.manageRam = this.manageRam.bind(this);
         this.transfer = this.transfer.bind(this);
-        // this.getTokens = this.getTokens.bind(this);
+        this.ispkpaired = this.ispkpaired.bind(this);
     }
     async getResources() {
 
@@ -293,20 +294,92 @@ class Account extends Component {
             })
         } else console.log(e);
     }
+}
+
+async registerUser() {
+
+    const scatter = this.props.scatterID;
+
+    let pubKey = await scatter.getPublicKey('eos');
+    console.log("publickey: ", pubKey);
+
+    const pk = ecc.PublicKey(pubKey).toBuffer();
+    var pkPacked = new pk.constructor(pk.length + 1);
+    pkPacked.set(Uint8Array.of(0), 0);
+    pkPacked.set(pk, 1);
+    var pkHex = pkPacked.toString('hex');
 
 
-    }
+    const eosOptions = { expireInSeconds:60 }
+    const eos = this.props.scatterID.eos(network, Eos, eosOptions);
+    
+    
+    const action = [{
+        account: 'exchange',
+        name: 'registeruser',
+        authorization: [{
+            actor: this.props.scatterID.identity.accounts[0].name,
+            permission: 'active'
+        }], data :
+        {
+            user: this.props.scatterID.identity.accounts[0].name,
+            publickey: pkHex
+        }
+    }]
+    let dep = await eos.transaction({ actions: action})
+    console.log(dep);
+  }
+
+
+
+  async ispkpaired() {
+
+    const eosOptions = { expireInSeconds:60 }
+    const eos = Eos(network);
+    const exContract = await eos.contract('exchange');
+
+    let resp = await exContract.ispkpaired(this.props.scatterID.identity.accounts[0].name)
+    console.log(resp)
+    return resp;
+
+  }
+
+
 
     async deposit(quantity, symbol) {
         const eosOptions = { expireInSeconds: 60 }
         const eos = this.props.scatterID.eos(network, Eos, eosOptions);
-        let contract = await eos.contract('eosio.token')
+
+        let contract = await eos.contract(this.state.tokens[symbol].contract)
         console.log("payload deposit: ", this.props.scatterID.identity.accounts[0].name, 'exchange', Number(quantity).toFixed(4) + ' ' + symbol, 'deposit')
-        let dep = await contract.transfer(this.props.scatterID.identity.accounts[0].name, 'exchange', Number(quantity).toFixed(4) + ' ' + symbol, 'deposit');
-        console.log("dep: ", dep);
+
+        try{
+            let dep = await contract.transfer(this.props.scatterID.identity.accounts[0].name, 'exchange', Number(quantity).toFixed(this.state.tokens[symbol].precision) + ' ' + symbol, 'deposit');
+            if(dep.broadcast){
+                this.setState({
+                    success: {
+                        message: 'Deposit succeeded!',
+                        trx: dep.transaction_id
+                },
+                error: false
+            })
+        }
+
+        } catch(e) {
+            if(typeof e === 'string') {
+                e = JSON.parse(e);
+                this.setState({
+                    error: {
+                        message: 'Error: ' + e.error.details[0].message
+                    },
+                    success: false
+                })
+            } else console.log(e);
+
+        }
     }
 
-    async withdraw() {
+    async withdraw(symbol, value) {
         const eosOptions = { expireInSeconds: 60 };
         const scatter = this.props.scatterID;
         let account = scatter.identity.accounts[0].name
@@ -334,12 +407,14 @@ class Account extends Component {
         exnonce = exnonce.data.nonce
         console.log(exnonce);
 
+        let q = Number(value).toFixed(this.state.tokens[symbol].precision) + ' ' + symbol + '@' + this.state.tokens[symbol].contract;
+
 
 
         const action = {
             admin: 'admin',
             from: account,
-            quantity: '1.0000 EOS@eosio.token',
+            quantity: q,
             nonce: exnonce
         };
 
@@ -362,14 +437,14 @@ class Account extends Component {
         let exchange = await eos.contract('exchange');
         console.log("exchange: ", exchange);
         let offTransaction = await exchange.withdraw(action, offlineOptions);
-        console.log(offTransaction);
+       
 
 
 
         let payload = {};
         payload.user = account;
-        payload.token = 'EOS';
-        payload.amount = 1.0000;
+        payload.token = symbol;
+        payload.amount = Number(value);
         payload.nonce = exnonce;
         payload.signature = offTransaction.transaction.signatures[0];
         payload.headers = offTransaction.transaction.transaction;
@@ -377,17 +452,42 @@ class Account extends Component {
         console.log(payload)
 
 
+        try {
+        let withdrawApi = await axios.post('https://api.byzanti.ne/exwithdrawscatter/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', payload);
+        console.log("withdraw body: ", withdrawApi);
 
-        let withdrawApi = await fetch('https://api.byzanti.ne/exwithdrawscatter/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', {
-            method: 'POST',
-            headers: {
-                //  'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(payload)
-        });
+        if(withdrawApi.status === 200) {
+            this.setState({
+                success: {
+                    message: 'Withdrawal succeeded!',
+                    trx: withdrawApi.data.transactionId
+                },
+                error: false
+            })
 
-        console.log("withdraw ", withdrawApi);
+        }
+    }  catch(e) {
+        if(typeof e === 'string') {
+            e = JSON.parse(e);
+            this.setState({
+                error: {
+                    message: 'Error: ' + e.error.details[0].message
+                },
+                success: false
+            })
+        } else {
+             console.log(e);
+             console.log(JSON.parse(JSON.parse(JSON.stringify(e)).response.data.message).error.details[0].message);
+             this.setState({
+                error: {
+                    message: 'Error: ' + JSON.parse(JSON.parse(JSON.stringify(e)).response.data.message).error.details[0].message
+                },
+                success: false
+            })
+
+        }
+
+    }
 
 
 
@@ -398,14 +498,43 @@ class Account extends Component {
         const eosOptions = { expireInSeconds: 60 }
         const eos = this.props.scatterID.eos(network, Eos, eosOptions);
         let tokenContract = await eos.contract(contract);
+        try {
         let resp = await tokenContract.transfer(this.props.scatterID.identity.accounts[0].name, to, quantity, memo);
-        console.log(resp);
+        if(resp.broadcast){
+            this.setState({
+                success: {
+                    message: 'Transfer succeeded!',
+                    trx: resp.transaction_id
+            },
+            error: false
+        })
+    }
+        } catch(e) {
+            if(typeof e === 'string') {
+                e = JSON.parse(e);
+                this.setState({
+                    error: {
+                        message: 'Error: ' + e.error.details[0].message
+                    },
+                    success: false
+                })
+            } else {
+                this.setState({
+                    error: {
+                        message: 'Error: ' + e
+                    },
+                    success: false
+                })
+            }
+
+        }
+
 
     }
 
     changeView(frame, symb) {
         this.setState({error: false, success: false});
-        console.log(arguments)
+    
         if (frame === 'withdraw' || frame === 'deposit' || frame === 'transfer') this.setState({ symbView: symb });
         this.setState({ view: frame })
     }
@@ -413,12 +542,7 @@ class Account extends Component {
 
 
 
-
-
-
-
     render() {
-        console.log(this.props.scatterEOS)
         let success = <div className="successMessage">{this.state.success.message} Checkout the transaction: <a href={`https://eosflare.io/tx/${this.state.success.trx}`} target="_blank">{this.state.success.trx}</a></div>
         let error = <div className="errorMessage">{this.state.error.message}</div>
 
@@ -432,7 +556,7 @@ class Account extends Component {
                     {this.state.view === 'cpu' ? <CpuManager balance={this.state.resources.liquidBalance / 10000} redeem={this.state.resources.cpuWeight / 10000} delegate={this.delegate} changeView={this.changeView} updateuccess={this.updateSuccess} tokens={this.state.tokens}/> : null}
                     {this.state.view === 'net' ? <NetManager balance={this.state.resources.liquidBalance / 10000} redeem={this.state.resources.netWeight / 10000} delegate={this.delegate} changeView={this.changeView} updateSuccess={this.updateSuccess} tokens={this.state.tokens}/> : null}
                     {this.state.view === 'withdraw' ? <Withdraw balance={this.state.balance} withdraw={this.withdraw} symbView={this.state.symbView} changeView={this.changeView} updateSuccess={this.updateSuccess} /> : null}
-                    {this.state.view === 'deposit' ? <Deposit balance={this.state.balance} deposit={this.deposit} symbView={this.state.symbView} changeView={this.changeView} updateSuccess={this.updateSuccess} /> : null}
+                    {this.state.view === 'deposit' ? <Deposit balance={this.state.balance} deposit={this.deposit} symbView={this.state.symbView} changeView={this.changeView} updateSuccess={this.updateSuccess} tokens={this.state.tokens}/> : null}
                     {this.state.view === 'transfer' ? <Transfer balance={this.state.balance} transfer={this.transfer} symbView={this.state.symbView} changeView={this.changeView} updateSuccess={this.updateSuccess} tokens={this.state.tokens} /> : null}
                     {this.state.success ? success : null}
                     {this.state.error ? error : null}

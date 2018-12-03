@@ -5,10 +5,18 @@ class Wallet extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            search: ''
+            search: '',
+            zeroBal: true
         }
 
         this.search = this.search.bind(this);
+        this.zeroBalance = this.zeroBalance.bind(this);
+    }
+
+    zeroBalance() {
+        this.setState({zeroBal: !this.state.zeroBal});
+        console.log(this.state.zeroBal);
+
     }
 
     search(e){
@@ -23,7 +31,8 @@ class Wallet extends Component {
                 <form>
                     <i className="fa fa-search"></i>
                         <input type="text" placeholder="Search" id="searchMarket" onChange={this.search}></input>
-                    </form>
+                </form>
+                <span className="zeroBalance"><input type="checkbox" onChange={this.zeroBalance}/>  Hide the asset with 0 balance</span>
                 </div>
                 <table>
                     <thead>
@@ -51,7 +60,7 @@ class Wallet extends Component {
                             }
                         })
                         }
-                        {
+                        {this.state.zeroBal ? 
                             this.props.symbols.map(sym => {
                                 if(sym.includes(this.state.search)) {
                                 return (
@@ -65,7 +74,7 @@ class Wallet extends Component {
                                 } else return null
                             }
 
-                            )
+                            ) : null
                         }
                     </tbody>
                 </table>

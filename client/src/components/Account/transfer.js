@@ -18,7 +18,7 @@ class transfer extends Component{
         let resp = await axios('https://api.byzanti.ne/tokens?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N');
         let index = lodash.findIndex(resp.data, ["symbol", this.props.symbView]);
         this.setState({setting: resp.data[index]});
-        console.log(this.state.setting);
+      
     }
 
     loadData(e) {
@@ -31,13 +31,11 @@ class transfer extends Component{
     sendData() {
         let q = Number(this.state.inputs.quantity);
         let quantity = (q.toFixed(this.props.tokens[this.props.symbView].precision) + ' '+ this.props.symbView).toString();
-        console.log(quantity);
         this.props.transfer(this.state.inputs.to, quantity, this.state.inputs.memo, this.props.tokens[this.props.symbView].contract);
     }
     render(){
         let balInd = lodash.findIndex(this.props.balance, ['token', this.props.symbView]);
         let bal = this.props.balance[balInd];
-        console.log(this.state);
         return (
             <div className="ToolContainer">
                 <button className="returnButton" onClick={() => this.props.changeView("wallet")}>{"< Return"}</button>
