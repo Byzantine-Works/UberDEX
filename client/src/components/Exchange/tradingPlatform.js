@@ -859,10 +859,12 @@ bColor='#52565a';
               useraccount: scatter.identity.accounts[0].name
             };
     
-        let signature = ecc.sign(orderBuffer, '5Kbhuw48LRBY25KMDD2KH59EAgvHnhh66S863Nvz1PZBY9X2uph');   
+        // let signature = ecc.sign(orderBuffer, '5Kbhuw48LRBY25KMDD2KH59EAgvHnhh66S863Nvz1PZBY9X2uph');
+        let pubKey = this.props.account.publicKey;
+        console.log(pubKey);
         
-        //let signature = await scatter.getArbitrarySignature('EOS6P7wP3HsdmGPsrrabPrweWQnTgxqdY8RTaUmVMVeXJec6hyNVm', orderBuffer, "test ordermake sig", false);    
-        datas.hash = orderHash; 
+        let signature = await scatter.getArbitrarySignature(pubKey, orderBuffer, "test ordermake sig", false);  
+        datas.hash = orderHash;
         datas.signature = signature;
         console.log("datas: ", datas);
     
@@ -951,9 +953,10 @@ bColor='#52565a';
                 takerExchange: 'uberdex',
                 makerExchange: 'uberdex'
           }
+
     
-          let pubKey = await scatter.getPublicKey('eos');
-          console.log("pub key: ", pubKey)
+          let pubKey = this.props.account.publicKey;
+          console.log(pubKey);
       
         //   data.signature = await ecc.sign(tradeBuffer, '5J4xG1aygXGJCNgkG4JVVQirgpxJ9M1s1Auh24ebVtYJ21QLfdv');
           data.hash = ecc.sha256(tradeBuffer);

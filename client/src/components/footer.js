@@ -145,10 +145,12 @@ class Footer extends Component {
             let id = await scatter.getIdentity(requiredFields);
 
             const account = id.accounts.find(x => x.blockchain === 'eos');
+            console.log("account: ", account);
+            console.log("scatter: ", scatter);
 
             const eosOptions = { expireInSeconds: 60 }
 
-            this.props.updateScatterID(scatter)
+            this.props.updateScatterID(scatter, account)
             const eos = scatter.eos(network, Eos, eosOptions)
             console.log("Scatter eos: ", eos);
             $('.signInPopup ').fadeOut();
