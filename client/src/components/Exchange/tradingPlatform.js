@@ -8,7 +8,8 @@ import ScatterEOS from 'scatterjs-plugin-eosjs';
 import Eos from 'eosjs';
 import Trading from './trading';
 import BN from 'bignumber.js';
-import ecc from 'eosjs-ecc'
+import ecc from 'eosjs-ecc';
+import axios from 'axios';
 
 import dp from '../../app.json';
 var adminURL = dp['url'];
@@ -865,26 +866,32 @@ bColor='#52565a';
         let signature = await scatter.getArbitrarySignature(pubKey, orderBuffer, "test ordermake sig", false);  
         datas.hash = orderHash;
         datas.signature = signature;
-        console.log("datas: ", datas);
     
-         fetch('https://api.byzanti.ne/orderMake/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', {
-         method: 'POST',headers: {
-      //  'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },  body: JSON.stringify(datas)})
-            .then(response => {
-                response.json()
-                console.log("response: ", response);
-            })
-            .then(() => {
-                fetch(`https://api.byzanti.ne/ordersByUser?user=${this.props.scatterID.identity.accounts[0].name}&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`)
+        let ordMakeResp = await axios.post('https://api.byzanti.ne/orderMake/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', datas);
+        console.log(ordMakeResp);
+    
+        let json = ordMakeResp.data;
+        if(ordMakeResp.status === 200) {
+            console.log(json)
+                $('#contentToShow').html('Order Id : '+json.orderId);$('#msg').html('Success');$('.sellAlart').show();
+        } else if(json.code){
+                $('#contentToShow').html('Error Code : '+json.code);$('#msg').html('Error');
+                $('.sellAlart').show();
+        } else { 
+                if(json.tradeId){$('#contentToShow').html('Trade Id : '+json.tradeId+'<br />result : Created <br />BlockNumber : '+json.blockNumber+'<br />TransactionId : <a target="_blank" href="/transaction/?trxID='+json.transactionId+'&blocknumber='+json.blockNumber+'">'+json.transactionId+'</a>');
+                    console.log(json);
+                    $('#msg').html('Success');$('.sellAlart').show();
+                }else{
+                    $('#contentToShow').html('Status Code : '+json.statusCode+"<br /> Message : "+json.message+"<br /> Code : "+json.code+"<br /> Order Id : ");
+                    $('#msg').html('Error');$('.sellAlart').show();}//window.location.reload()
+            }
+    
+        fetch(`https://api.byzanti.ne/ordersByUser?user=${this.props.scatterID.identity.accounts[0].name}&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`)
                 .then(response => response.json())
                 .then(data => {
                     this.props.updateOpenOrders({ openOrders: data });
                     console.log("orders: ", data);
                 });
-    
-            });
          
     }
     
@@ -956,13 +963,12 @@ bColor='#52565a';
     
           let pubKey = this.props.account.publicKey;
           console.log(pubKey);
-      
-        //   data.signature = await ecc.sign(tradeBuffer, '5J4xG1aygXGJCNgkG4JVVQirgpxJ9M1s1Auh24ebVtYJ21QLfdv');
+
           data.hash = ecc.sha256(tradeBuffer);
         
          
           data.signature = await scatter.getArbitrarySignature(pubKey, tradeBuffer, "test ordertake", false);
-          data.orderId = 'IEVgZ2cBKKlqgDKXtYdW'
+          data.orderId = 'cYbwdWcBKKlqgDKXSmcW'
           data.maker = 'ubermaker'
     
     
