@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import $ from "jquery";
 import dp from '../app.json';
 var adminURL = dp['url'];
 var apiId = dp['apiId'];
@@ -29,6 +30,24 @@ componentDidMount() {
     }).catch(data => {
         this.setState({colors:'#0e9caf'});
     });
+    
+    fetch(adminURL+'/getColors/'+apiId)
+    .then(response => response.json())
+    .then(data => {if(data.footerTitle=='')
+    {
+        $('#titless').html('Ready to buy EOS');
+        $('#fContent').html('Get started with $50 or less');
+    }
+    else
+    {
+        $('#titless').html(data.footerTitle);
+        $('#fContent').html(data.footerContent);
+
+    }
+    }).catch(data => {
+        $('#titless').html('Ready to buy EOS');
+        $('#fContent').html('Get started with $50 or less');
+    });
 }
 render(){
     const { colors } = this.state;
@@ -40,8 +59,8 @@ render(){
                             <input type="text" placeholder="Email Address" />
                             <input type="submit" value="Get Started" />
                         </form>
-                        <h5>Ready to buy EOS?</h5>
-                        <h5>Get started with $50 or less</h5>
+                        <h5 id="titless">Ready to buy EOS?</h5>
+                        <h5 id="fContent">Get started with $50 or less</h5>
                     </div>
                 </div>
             </div>

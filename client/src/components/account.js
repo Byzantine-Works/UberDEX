@@ -84,6 +84,7 @@ class Account extends Component {
     }
 
     async checkBalance() {
+        console.log("resources: ", this.state.resources)
 
         /*Get balance on exchange*/
         let response = await axios(`https://api.byzanti.ne/exbalance?account=${this.props.scatterID.identity.accounts[0].name}&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`);
@@ -95,12 +96,6 @@ class Account extends Component {
         balance.forEach(async x => {
 
             balSym.push(x.token);
-            if (x.token === 'EOS') {
-                x.price = 1;
-                x.eosEquivalent = x.amount;
-                x.chainBal = this.state.resources.liquidBalance / 10000;
-                x.chainBalEquivalent = x.chainBal;
-            }
 
         })
 
@@ -133,7 +128,7 @@ class Account extends Component {
     }
 
     async getSymbols() {
-        console.log("bal array: ", this.state.balance_tokens)
+
         let response = await axios('https://api.byzanti.ne/symbols?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N');
         console.log("symbols response: ", response);
         let symbols = [];

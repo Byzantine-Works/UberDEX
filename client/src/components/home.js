@@ -31,6 +31,7 @@ class Home extends Component{
         this.state = {
             colors: [],
             logo: [],
+            hitss: [],
         };
     }
 
@@ -54,6 +55,13 @@ class Home extends Component{
         this.setState({companyName:'UberDex'});
     });
     
+    var API = adminURL+'/getNews/'+apiId;
+    fetch(API)
+    .then(response => response.json())
+    .then(data => {console.log(data.hits);this.setState({ hitss: data.hits }); });
+
+     
+    
     setTimeout(function(){
         handledefualt();
            
@@ -61,6 +69,7 @@ class Home extends Component{
 }
 render(){
     const { colors } = this.state;
+    const { hitss } = this.state;
         return(
             <div className="HomePage" >
                 <div className="wellcomBanner background" style={{'background': this.state.colors}}>
@@ -71,16 +80,9 @@ render(){
                 <div className="newsScroll">
                     <div className="container">
                         <marquee>
-                            <a style={{'color': this.state.colors}} href="/announcements">{this.state.companyName} Lists EOSYX/EOS, INF/EOS Exchange Pairs Announcement</a>
-                            <a style={{'color': this.state.colors}} href="/announcements">{this.state.companyName} Joints with PTI to Hold the First PTI Airdrop</a>
-                            <a style={{'color': this.state.colors}} href="/announcements">{this.state.companyName} Lists FAST/EOS, SHARE/EOS, ECTT/EOS Exchange Fairs Announcement</a>
-                            <a style={{'color': this.state.colors}} href="/announcements">{this.state.companyName} Lists ARN/EOS New Exchange Pair Announcement</a>
-                            <a style={{'color': this.state.colors}} href="/announcements">{this.state.companyName} Lists YDAPP/EOS, CRASH/EOS Exchange Pairs Announcement</a>
-                            <a style={{'color': this.state.colors}} href="/announcements">{this.state.companyName} Delists PUB/EOS Exchange Pair Announcement</a>
-                            <a style={{'color': this.state.colors}} href="/announcements">{this.state.companyName} Resumed DBET/EOS Transaction Announcement</a>
-                            <a style={{'color': this.state.colors}} href="/announcements">{this.state.companyName} Suspends DBET/EOS Trade Announcement</a>
-                            <a style={{'color': this.state.colors}} href="/announcements">{this.state.companyName} Lists GYM/EOS Exchange Pair Announcement</a>
-                            <a style={{'color': this.state.colors}} href="/announcements">{this.state.companyName} Finishes the First Airdrop of TKC and Lists TKC at 03:00 (UTC) on 22 November</a>
+                            {hitss.map(hit =>
+                                <a style={{'color': this.state.colors}} href="/announcements">{hit._source.tickerTitle}</a>
+                            )} 
                         </marquee>
                     </div>
                 </div>

@@ -32,7 +32,7 @@ componentDidMount() {
         this.setState({colors:'#0e9caf'});
     });
     
-    fetch('https://uberdex-admin.herokuapp.com/getContents')
+    fetch(adminURL+'/getContents/'+apiId)
     .then(response => response.json())
     .then(data => {if(data.mainTitle=='')
     {

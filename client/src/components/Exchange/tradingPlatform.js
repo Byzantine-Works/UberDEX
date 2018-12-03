@@ -696,6 +696,7 @@ $('#sellPricetwo').val('');
 }
     
     componentDidMount() {
+        
       /*   var url = new URL(window.location.href);
         console.log(url.href.substr(url.href.lastIndexOf('/') + 1));*/
      
@@ -997,6 +998,7 @@ bColor='#52565a';
       // console.log(strlen(orderBooks));
         return(
             <div>
+
                 <Trading />
 
             <div className="tradingCenter">

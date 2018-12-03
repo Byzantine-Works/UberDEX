@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import Main from './components/main';
 import Header from './components/header';
 import Footer from './components/footer';
-import data from './app.json';
 import  Eos from 'eosjs';
 
 import './App.css';
 
 import { Layout, Content } from 'react-mdl';
-var color = {background: data['theme_color']};
+import dp from './app.json';
+var adminURL = dp['url'];
+var apiId = dp['apiId'];
 
 const network = { blockchain:'eos',
                 protocol:'https',
@@ -35,6 +36,7 @@ class App extends Component {
     super(props);
     this.state = {
       colors: [],
+      logo: [],
       scatterID: false,
       balance: false
     }
@@ -53,30 +55,48 @@ class App extends Component {
 
   }
 
-
-  updateScatterID(id, account) {
+  updateScatterID(id) {
     if(!id) {
       this.setState({scatterID: false});
       this.setState({scatterEOS: false})
-      this.setState({account: false})
     } else {
       this.setState({scatterID: id});
       this.setState({scatterEOS: id.eos(network, Eos)});
-      this.setState({account});
     }
   }
 
   
+  componentDidMount() {
+   
+    fetch(adminURL+'/getColors/'+apiId)
+    .then(response => response.json())
+    .then(data => {if(data.theme_color=='')
+    {
+        this.setState({colors:'#0e9caf'});
+        this.setState({companyName:'UberDex'});
+    }
+    else
+    {
+        this.setState({companyName:data.companyName});
+        this.setState({colors:data.theme_color});
+        this.setState({logo:adminURL+'/images/byzantine/'+data.logo});
+    }
+    }).catch(data => {
+        this.setState({colors:'#0e9caf'});
+        this.setState({companyName:'UberDex'});
+    });
+    
+}
   render() {
     return (
       <div className="demo-big-content">
           <Layout>
               <Content>
                   <div className="page-content" />
-                    <div className="wellcomBanner background" style={{'background': this.state.colors}}>
+                    <div className="wellcomBanner background PreviousHeader" style={{'background': this.state.colors}}>
                       <Header updateScatterID={this.updateScatterID} scatterID={this.state.scatterID} />
                     </div>
-                  <Main scatterID={this.state.scatterID} scatterEOS={this.state.scatterEOS} balance={this.state.balance} account={this.state.account}/>
+                  <Main scatterID={this.state.scatterID} scatterEOS={this.state.scatterEOS} balance={this.state.balance}/>
                   <Footer updateScatterID={this.updateScatterID} scatterID={this.state.scatterID} updateBalance={this.updateBalance}/>
               </Content>
           </Layout>
