@@ -29,7 +29,7 @@ class Home extends Component{
      
         return(
             <div className="marketPage">
-                <TradingCenter updateOpenOrders={this.updateOpenOrders} scatterID={this.props.scatterID} updateScatterID={this.props.updateScatterID} balance={this.props.balance}/>
+                <TradingCenter updateOpenOrders={this.updateOpenOrders} scatterID={this.props.scatterID} updateScatterID={this.props.updateScatterID} balance={this.props.balance} account={this.props.account}/>
                 <Callaction />
             </div>
         )
