@@ -68,9 +68,6 @@ class Home extends Component{
        // console.log(this.state.transactionTrx.actions[0]);
         return(
             <div className="HomePage" >
-                <div className="wellcomBanner background"  style={{'background': this.state.colors}}>
-                    <Header />
-                </div>
                 <div class="transactionPage">
                 <div className="loader">
                     <img src={loader} />
@@ -183,7 +180,6 @@ class Home extends Component{
                         </div>
                     </div>
                 </div>
-                <Footer />
             </div>
         )
     }

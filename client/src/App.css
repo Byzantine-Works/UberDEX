@@ -292,25 +292,6 @@ table {	border-collapse: collapse; border-spacing: 0; }
   display: none !important;
 }
 
-.litb {
-  display: none !important;
-}
-.litg {
-  display: none !important;
-}
-.litl {
-  display: none !important;
-}
-.litp {
-  display: none !important;
-}
-.litr {
-  display: none !important;
-}
-.lity {
-  display: none !important;
-}
-
 .lightVersion .drk {
   display: none !important;
 }
@@ -319,56 +300,6 @@ table {	border-collapse: collapse; border-spacing: 0; }
   display: inline-block !important;
 }
 
-.lightVersion .features[rel="#d5364f"] .lit {
-  display: none !important;
-}
-
-.lightVersion .features[rel="#d5364f"] .litr {
-  display: inline-block !important;
-}
-
-.lightVersion .features[rel="#5fb158"] .lit {
-  display: none !important;
-}
-
-.lightVersion .features[rel="#5fb158"] .litg {
-  display: inline-block !important;
-}
-
-.lightVersion .features[rel="#fce050"] .lit {
-  display: none !important;
-}
-
-.lightVersion .features[rel="#fce050"] .lity {
-  display: inline-block !important;
-}
-
-
-.lightVersion .features[rel="#e88745"] .lit {
-  display: none !important;
-}
-
-.lightVersion .features[rel="#e88745"] .litb {
-  display: inline-block !important;
-}
-
-
-.lightVersion .features[rel="#8630ad"] .lit {
-  display: none !important;
-}
-
-.lightVersion .features[rel="#8630ad"] .litp {
-  display: inline-block !important;
-}
-
-
-.lightVersion .features[rel="#79edee"] .lit {
-  display: none !important;
-}
-
-.lightVersion .features[rel="#79edee"] .litl {
-  display: inline-block !important;
-}
 
 .EOStable .container {
   border-bottom: 2px solid #d8d8d8;
@@ -3486,9 +3417,23 @@ body.darkVersion {
 .darkVersion .filterNexchage .exchange {
   background: #646464;
 }
+.exchangeHeader {
+  margin-top: -100px;
+}
+.defultClass {
+  display: none;
+}
+
+.defultClass:first-child {
+  display: block;
+}
 
 @media only screen and (max-width: 600px)
 {
+  .callAction .callInner form input[type="text"] {
+    width: 51%;
+}
+
   .ldrHeader .innerLdrheader .coinName {
     width: 100%;
 }
@@ -3942,9 +3887,14 @@ div#tv_chart_container iframe {
 }
 
 .walletContainer .zeroBalance {
+  color: rgba(0, 0, 0, 0.479);
   float: right;
   margin-top: -20px;
   margin-right: 50px;
+  
+}
+
+.darkVersion .walletContainer .zeroBalance {
   color: rgba(255, 255, 255, 0.527);
   
 }
