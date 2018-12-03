@@ -858,8 +858,6 @@ bColor='#52565a';
               nonce: 1,
               useraccount: scatter.identity.accounts[0].name
             };
-    
-        // let signature = ecc.sign(orderBuffer, '5Kbhuw48LRBY25KMDD2KH59EAgvHnhh66S863Nvz1PZBY9X2uph');
         let pubKey = this.props.account.publicKey;
         console.log(pubKey);
         
