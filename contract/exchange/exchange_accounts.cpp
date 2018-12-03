@@ -131,17 +131,17 @@ void exchange_accounts::adjust_fees_balance(account_name fees_account,
   {
     existing_accounts.emplace(fees_account, [&](auto &exa) {
       exa.owner = fees_account;
-      exa.balances[token_buy_symbol] = taker_fee;
-      exa.balances[token_sell_symbol] = maker_fee;
+      exa.balances[token_buy_symbol] = maker_fee;
+      exa.balances[token_sell_symbol] = taker_fee;
       print("New fees account balance for ", name{fees_account}, ", symbol ", token_buy_symbol, " = ", taker_fee, ", symbol ", token_sell_symbol, " = ", maker_fee, "\n");
     });
   }
   else
   {
     existing_accounts.modify(itr, _this_contract, [&](auto &exa) {
-      const auto &b1 = exa.balances[token_buy_symbol] += taker_fee;
+      const auto &b1 = exa.balances[token_buy_symbol] += maker_fee;
       eosio_assert(b1 >= 0, "overdrawn balance 2");
-      const auto &b2 = exa.balances[token_sell_symbol] += maker_fee;
+      const auto &b2 = exa.balances[token_sell_symbol] += taker_fee;
       eosio_assert(b2 >= 0, "overdrawn balance 3");
       print("New fees account balance for ", name{fees_account}, ", symbol ", token_buy_symbol, " = ", b1, ", symbol ", token_sell_symbol, " = ", b2, "\n");
     });
@@ -154,7 +154,7 @@ void exchange_accounts::get_userregisteredkey(account_name user)
   //print("Public Key for account: ", name{user});
   exaccounts existing_accounts(_this_contract, _this_contract);
   auto itr = existing_accounts.find(user);
-  eosio_assert(itr != existing_accounts.end(), "Exchange account should exist to pair public_key");
+  eosio_assert(itr != existing_accounts.end(), "User account should exist to query for public_key");
 
   if (itr != existing_accounts.end())
   // {
@@ -272,7 +272,7 @@ void exchange_accounts::update_order(account_name maker, const checksum256 &orde
     }
     int64_t new_fill = safe_add(order_fill, amount);
     print("Amount is => ", amount, " Newfill is => ", new_fill);
-    eosio_assert(new_fill <= amount_buy, "Exceeded the order amount\n");
+    //eosio_assert(new_fill <= amount_buy, "Exceeded the order amount\n");
     order_fills[order_hash] = new_fill;
 
     // Update token balances.

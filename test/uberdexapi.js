@@ -1138,10 +1138,10 @@ async function extrade(admin, amountbuy, amountsell, nonce, amount, tradenonce, 
     trade.takerSignature = takerSignature;
 
     //TODO remove this check when scatter integration works E2E
-    if (maker != 'maker1')
-        MAKER_ACCOUNT = maker;
-    if (taker != 'taker1')
+    if (taker != 'taker1'){
         TAKER_ACCOUNT = taker;
+        MAKER_ACCOUNT = maker;
+    }
 
     // begin order, trade serialization, sign with maker1 and taker1 accounts and submit trade
     console.log('Trade ' + JSON.stringify(trade));

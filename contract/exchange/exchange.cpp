@@ -240,7 +240,7 @@ void exchange::onTransfer(const currency::transfer &t, account_name code)
     auto a = extended_asset(t.quantity, code);
     eosio_assert(a.is_valid(), "invalid quantity in transfer");
     eosio_assert(a.amount != 0, "zero quantity is disallowed in transfer");
-    eosio_assert(a.amount > 0 || t.memo == "withdraw", "withdrew tokens without withdraw in memo");
+    eosio_assert(a.amount > 0 || t.memo == "withdraw", "withdrew these tokens without withdraw in memo");
     eosio_assert(a.amount < 0 || t.memo == "deposit", "received tokens without deposit in memo");
     print("exchange.onTransfer => block_num:", tapos_block_num(), "\r\n");
     _accounts.adjust_balance_on_deposit(t.from, a, tapos_block_num());
