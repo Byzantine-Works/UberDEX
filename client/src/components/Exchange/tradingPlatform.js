@@ -7,10 +7,15 @@ import ScatterJS from 'scatterjs-core';
 import ScatterEOS from 'scatterjs-plugin-eosjs';
 import Eos from 'eosjs';
 import Trading from './trading';
+import BN from 'bignumber.js';
+import ecc from 'eosjs-ecc'
 
 import dp from '../../app.json';
 var adminURL = dp['url'];
 var apiId = dp['apiId'];
+
+const serialize = require('../../serialize');
+
 
 
 function tabsOnes(e)
@@ -534,9 +539,11 @@ class tradingHead extends Component{
             tradeHistory:[]
             
         };
-         this.refresh_data = this.refresh_data.bind(this);
-          this.handleClicks = this.handleClicks.bind(this);         
-                this.handleClick = this.handleClick.bind(this);         
+        this.refresh_data = this.refresh_data.bind(this);
+        this.handleClicks = this.handleClicks.bind(this);         
+        this.handleClick = this.handleClick.bind(this);
+        this.handleBuy = this.handleBuy.bind(this);
+        this.handleTakerSell = this.handleTakerSell.bind(this);         
     
       }
       handleClick=(orderId)=> {
@@ -689,6 +696,7 @@ $('#sellPricetwo').val('');
 }
     
     componentDidMount() {
+        
       /*   var url = new URL(window.location.href);
         console.log(url.href.substr(url.href.lastIndexOf('/') + 1));*/
      
@@ -813,6 +821,161 @@ bColor='#52565a';
                
         },3000);
     }
+
+    async handleBuy(e) {
+
+       var amBuy= parseFloat($('#buyPrice').val());
+       var amSell= parseFloat($('#sellPrice').val());
+       var price= parseFloat($('#price').val());
+
+        let scatter = this.props.scatterID;
+    
+        var amountB = BN(359.4218).multipliedBy(10000);
+        var amountS = BN(0.4144).multipliedBy(10000);
+    
+        amountB = Math.floor(amountB / 10);
+    
+        console.log(amountB, amountS);
+     
+        let amountBuy = new BN(amountB);
+        let amountSell = new BN(amountS);
+        let nonceBN = new BN(1);
+    
+        let orderBuffer = serialize.serializeOrder('exchange', 'IQ', 'EOS',  amountBuy, amountSell, nonceBN, 'ubermaker');
+      
+        let orderHash = ecc.sha256(orderBuffer);
+    
+    
+           let datas = {
+              side: "SELL",
+              assetBuy: "EOS",
+              assetSell: "IQ",
+              amountBuy: 0.4144,
+              amountSell: 359.4218,
+              price: 0.001153,
+              type: 2,
+              hash: orderHash,
+            //   expires: new Date(new Date(info.head_block_time + 'Z').getTime() + 60 * 1000).toISOString().split('.')[0],
+              nonce: 1,
+              useraccount: scatter.identity.accounts[0].name
+            };
+    
+        let signature = ecc.sign(orderBuffer, '5Kbhuw48LRBY25KMDD2KH59EAgvHnhh66S863Nvz1PZBY9X2uph');   
+        
+        //let signature = await scatter.getArbitrarySignature('EOS6P7wP3HsdmGPsrrabPrweWQnTgxqdY8RTaUmVMVeXJec6hyNVm', orderBuffer, "test ordermake sig", false);    
+        datas.hash = orderHash; 
+        datas.signature = signature;
+        console.log("datas: ", datas);
+    
+         fetch('https://api.byzanti.ne/orderMake/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', {
+         method: 'POST',headers: {
+      //  'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },  body: JSON.stringify(datas)})
+            .then(response => {
+                response.json()
+                console.log("response: ", response);
+            })
+            .then(() => {
+                fetch(`https://api.byzanti.ne/ordersByUser?user=${this.props.scatterID.identity.accounts[0].name}&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`)
+                .then(response => response.json())
+                .then(data => {
+                    this.props.updateOpenOrders({ openOrders: data });
+                    console.log("orders: ", data);
+                });
+    
+            });
+         
+    }
+    
+    async handleTakerSell() {
+    
+        const network = {
+            blockchain: 'eos',
+            protocol: 'https://cors-anywhere.herokuapp.com/http',
+            host: '13.52.54.111',
+            eosVersion: 'bf28f8bb',
+            port: 8888,
+            chainId: 'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f',
+            debug: false,
+            verbose: false,
+            latency: 200,
+            sign: true
+        }
+        
+        var url = new URL(window.location.href);
+        var c = url.searchParams.get("opt");
+    
+        const account = this.props.scatterID.identity.accounts[0].name;
+        console.log("account: ", account);
+    
+        var bprice= parseFloat($('#buyPrice').val());
+        var eosAm= parseFloat($('#sellPrice').val());
+        var price = parseFloat($('#price').val());
+    
+        const scatter = this.props.scatterID;
+    
+        const eos = scatter.eos(network, Eos)
+        
+    
+    
+        var amountB = BN(359.422).multipliedBy(1000);
+        var amountS = BN(0.4144).multipliedBy(10000);
+    
+        // amountB = Math.floor(amountB / 10);
+    
+        console.log(amountB, amountS);
+     
+        let amountBuy = new BN(amountB);
+        let amountSell = new BN(amountS);
+        let nonceBN = new BN(1);
+
+        console.log(
+            'exchange', 'IQ', 'EOS', amountBuy, amountSell, nonceBN, 'ubermaker'
+        )
+        
+        let orderBuffer = serialize.serializeOrder('exchange', 'IQ', 'EOS', amountBuy, amountSell, nonceBN, 'ubermaker');
+      
+        let orderHash = ecc.sha256(orderBuffer);
+    
+        var orderHashBuffer = Buffer.from(orderHash, 'hex');
+        
+    
+        let tradeBuffer = serialize.serializeTrade(orderHashBuffer, amountBuy, account, nonceBN)
+        let data = {
+                assetBuy: 'IQ',
+                assetSell: 'EOS',
+                amountBuy: 359.4218,
+                amountSell: 0.4144,
+                price: 0.001153,
+                taker: account,
+                takerExchange: 'uberdex',
+                makerExchange: 'uberdex'
+          }
+    
+          let pubKey = await scatter.getPublicKey('eos');
+          console.log("pub key: ", pubKey)
+      
+        //   data.signature = await ecc.sign(tradeBuffer, '5J4xG1aygXGJCNgkG4JVVQirgpxJ9M1s1Auh24ebVtYJ21QLfdv');
+          data.hash = ecc.sha256(tradeBuffer);
+        
+         
+          data.signature = await scatter.getArbitrarySignature(pubKey, tradeBuffer, "test ordertake", false);
+          data.orderId = 'IEVgZ2cBKKlqgDKXtYdW'
+          data.maker = 'ubermaker'
+    
+    
+          fetch('https://api.byzanti.ne/orderTake/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', {
+                method: 'POST', headers: {
+        'Content-Type': 'application/json',
+      },  body: JSON.stringify(data)})
+            .then(response => {
+                response.json()
+                console.log("response: ", response);
+            })
+    
+    
+      }
     
     render(){
        var {myamount}=0;
@@ -832,8 +995,9 @@ bColor='#52565a';
       // console.log(strlen(orderBooks));
         return(
             <div>
-                <div className="wellcomBanner background" style={{'background': this.state.colors}}>
-                    <div className="header ">
+                
+                <div className="wellcomBanner background exchangeHeader" style={{'background': this.state.colors}}>
+                    <div className="header" updateScatterID={this.updateScatterID} scatterID={this.state.scatterID}>
                         <div className="container clearfix">
                             <div className="logo">
                             <Link to="/" className="link"><img src={logoss} className="App-logo" id="logoImg" alt="" /></Link>
@@ -844,9 +1008,16 @@ bColor='#52565a';
                                         <li><Link to="/exchange/?opt=IQ" className="link">Exchange</Link></li>
                                         <li><Link to="/market" className="link">Markets</Link></li>
                                         <li><Link to="/contact" className="link">Supports</Link></li>
-                                        <li id="signin"><a href="/"  onClick={handlesign}>Sign In</a></li>
-                                        <li id="signout"><a href="/"  onClick={handleSignout}>Sign out</a></li>
-                                        <li><a href="/" className="bgs"  onClick={handlePublic}>Get Started</a></li>
+                                        {this.props.scatterID ?
+                                        <span>
+                                            <li id="signout"><a href="/"  onClick={handleSignout}>Sign out</a></li>
+                                            <li><Link to="/account" className="bgs" >{this.props.scatterID.identity.accounts[0].name}</Link></li>
+                                        </span> :
+                                        <span>
+                                            <li id="signin"><a onClick={handlesign}>Sign In</a></li>
+                                            <li><a href="/" className="bgs"  onClick={handlePublic}>Get Started</a></li>
+                                        </span>
+                                        }
                                     </ul>
                                 </nav>
                                 <div className="othersOptions">
@@ -971,7 +1142,10 @@ bColor='#52565a';
                             <div className="clearfix">
                                 <div>
                                     {tricker.map(hit =>
-                                        <h6>Buy {hit.symbol} <span>Balance:{this.state.blc[0].amount+" EOS"}</span></h6>
+                                        <h6>Buy {hit.symbol} <span>Balance:
+                                        {(this.props.scatterID ? 
+                                            (this.props.balance.EOS ? this.props.balance.EOS : 0.0000 ) : 
+                                            this.state.blc[0].amount) +" EOS"}</span></h6>
                                     )}
                                     <label>Price <span>EOS</span> </label>
                                     <input type="number" id="price" />
@@ -983,12 +1157,23 @@ bColor='#52565a';
                                     <input type="number" id="buyPrice" onChange={changeSellPrice1} />
                                     <label>Total <span>EOS </span> </label>
                                     <input type="number"  id="sellPrice" onChange={changeSellPrice} />
-                              {tricker.map(hit =>
-                                        <input type="submit" value={'Buy '+hit.symbol} onClick={handleBuy} className="background" />
-                                    )}  </div>
+                              {tricker.map(hit => {
+                                        return <span>
+                                                    <input type="submit" value={'Buy '+hit.symbol} onClick={handleBuy} className="background" />
+                                                    {this.props.scatterID ? <input type="submit" value={'Buy '+hit.symbol+ ' with Scatter'} onClick={this.handleTakerSell} className="background" /> :
+                                                    <input type="submit" value={'Signin'} onClick={() => { $('.signInPopup ').fadeIn();}} className="background" />}
+                                                </span>
+                                    })}
+                                    </div>
+
+
                                 <div className="red">
                                     {tricker.map(hit =>
-                                        <h6>Sell {hit.symbol} <span>Balance:{this.state.blc[1].amount+" "+hit.symbol}</span></h6>
+                                        <h6>Sell {hit.symbol} <span>Balance: 
+                                        {(this.props.scatterID ? 
+                                            (this.props.balance[hit.symbol] ? this.props.balance[hit.symbol] : 0.0000 ) : 
+                                            this.state.blc[1].amount) +" "+hit.symbol}
+                                            </span></h6>
                                     )}
                                     <label>Price <span>EOS</span></label>
                                     <input type="number"  id="priceTwo" />
@@ -1013,11 +1198,14 @@ bColor='#52565a';
                                         <span>{hit.symbol} </span>
                                     )}
                                     </label>
-                                       <input type="number" id="BuyPricetwo"  onChange={changeBuyPrice1} />
-                                                                       
-                                     {tricker.map(hit =>
-                                        <input type="submit"  onClick={handleSell} value={'Sell '+hit.symbol} />
-                                    )}
+                                       <input type="number" id="BuyPricetwo"  onChange={changeBuyPrice1} />  
+                                       {tricker.map(hit => {
+                                        return <span>
+                                                 <input type="submit" value={'Sell '+hit.symbol} onClick={handleSell} className="background" />
+                                                {this.props.scatterID ? <input type="submit" value={'Sell '+hit.symbol+ ' with Scatter'} onClick={this.handleBuy} className="background" /> :
+                                                <input type="submit" value={'Signin'} onClick={() => { $('.signInPopup ').fadeIn();}} className="background" />}
+                                            </span>
+                                    })}
                                 </div>
                             </div>
                         </div>

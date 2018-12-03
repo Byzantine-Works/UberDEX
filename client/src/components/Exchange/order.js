@@ -51,22 +51,27 @@ class Order extends Component{
             Orders: [],
             OrderSells: [],
             tradebook: [],
-            useraccount:'',
+            useraccount: this.props.scatterID ? this.props.scatterID.identity.accounts[0].name : 'maker1'
         };
-      }
 
+        this.cancelOrder = this.cancelOrder.bind(this);
+      }
     
     componentDidMount() {
 
         var url = new URL(window.location.href);
          var c = url.searchParams.get("opt");
+         console.log("useraccount: ", this.state.useraccount);
 
                 var tradebook = 'https://api.byzanti.ne/tradebook?symbol='+c+'&size=10&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
-                var API = 'https://api.byzanti.ne/ordersByUser?user=taker1&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+                var API = `https://api.byzanti.ne/ordersByUser?user=${this.state.useraccount}&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`;
                 var OrderSell = 'https://api.byzanti.ne/orders?symbol=IQ&side=SELL&size=100&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
                 fetch(API)
                 .then(response => response.json())
-                .then(data => {this.setState({ Orders: data }); });
+                .then(data => {
+                    this.setState({ Orders: data });
+                    console.log("orders: ", data);
+                });
                 fetch(OrderSell)
                 .then(response => response.json())
                 .then(data => {this.setState({ OrderSells: data }); });
@@ -75,8 +80,24 @@ class Order extends Component{
                 .then(response => response.json())
                 .then(data => {this.setState({ tradebook: data }); });
                 
-           // console.logthis.state.sc
-        //alert(scatter.identity.publicKey);
+    }
+
+
+    cancelOrder() {
+        let orderId = "s7QzDGcBJNEeaSKiPxYY";
+        let orderHash = "da5698be17b9b46962335799779fbeca8ce5d491c0d26243bafef9ea1837a9d8";
+
+        fetch(`https://api.byzanti.ne/ordersByUser?user=${this.state.useraccount}&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`,{
+                method: 'POST',
+                headers: {
+                //  'Accept': 'application/json',
+                'Content-Type': 'application/json'
+                },
+        body: JSON.stringify({orderId, orderHash})
+    })
+        .then(response => response.json())
+        .then()
+
     }
 
 

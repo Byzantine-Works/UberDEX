@@ -292,25 +292,6 @@ table {	border-collapse: collapse; border-spacing: 0; }
   display: none !important;
 }
 
-.litb {
-  display: none !important;
-}
-.litg {
-  display: none !important;
-}
-.litl {
-  display: none !important;
-}
-.litp {
-  display: none !important;
-}
-.litr {
-  display: none !important;
-}
-.lity {
-  display: none !important;
-}
-
 .lightVersion .drk {
   display: none !important;
 }
@@ -319,56 +300,6 @@ table {	border-collapse: collapse; border-spacing: 0; }
   display: inline-block !important;
 }
 
-.lightVersion .features[rel="#d5364f"] .lit {
-  display: none !important;
-}
-
-.lightVersion .features[rel="#d5364f"] .litr {
-  display: inline-block !important;
-}
-
-.lightVersion .features[rel="#5fb158"] .lit {
-  display: none !important;
-}
-
-.lightVersion .features[rel="#5fb158"] .litg {
-  display: inline-block !important;
-}
-
-.lightVersion .features[rel="#fce050"] .lit {
-  display: none !important;
-}
-
-.lightVersion .features[rel="#fce050"] .lity {
-  display: inline-block !important;
-}
-
-
-.lightVersion .features[rel="#e88745"] .lit {
-  display: none !important;
-}
-
-.lightVersion .features[rel="#e88745"] .litb {
-  display: inline-block !important;
-}
-
-
-.lightVersion .features[rel="#8630ad"] .lit {
-  display: none !important;
-}
-
-.lightVersion .features[rel="#8630ad"] .litp {
-  display: inline-block !important;
-}
-
-
-.lightVersion .features[rel="#79edee"] .lit {
-  display: none !important;
-}
-
-.lightVersion .features[rel="#79edee"] .litl {
-  display: inline-block !important;
-}
 
 .EOStable .container {
   border-bottom: 2px solid #d8d8d8;
@@ -585,9 +516,10 @@ table {	border-collapse: collapse; border-spacing: 0; }
   border-color: #fff;
 }
 .lightVersion .wellcomBanner {
-  background-image: -webkit-linear-gradient(68deg,#0ca6bb,#0e9aad 18%,#359db9 30%,#59a0c5 47%,#7296c9 72%,rgba(141,122,218,.81)),-webkit-linear-gradient(270deg,#049cb0,#049cb0);
-  background-image: linear-gradient(22deg,#0ca6bb,#0e9aad 18%,#359db9 30%,#59a0c5 47%,#7296c9 72%,rgba(141,122,218,.81)),linear-gradient(180deg,#049cb0,#049cb0);
+  /* background-image: -webkit-linear-gradient(68deg,#0ca6bb,#0e9aad 18%,#359db9 30%,#59a0c5 47%,#7296c9 72%,rgba(141,122,218,.81)),-webkit-linear-gradient(270deg,#049cb0,#049cb0); */
+  /* background-image: linear-gradient(22deg,#0ca6bb,#0e9aad 18%,#359db9 30%,#59a0c5 47%,#7296c9 72%,rgba(141,122,218,.81)),linear-gradient(180deg,#049cb0,#049cb0); */
   background-position: 0 0,0 0;
+  background: rgb(14, 156, 175);
 }
 
 .EOStable div a {
@@ -975,8 +907,9 @@ a, input[type="submit"] {
 
 .tradingCenter .center .calculator .clearfix div {
   width: 50%;
+  height: 100%;
   float: left;
-  padding: 10px 20px;
+  padding: 0px 20px;
   box-sizing: border-box;
 }
 
@@ -1028,7 +961,7 @@ a, input[type="submit"] {
   width: 100%;
   font-weight: 400;
   border: 0px;
-  margin-bottom: 32px;
+  margin-bottom: 5px;
   background: #2bbd21;
   padding: 7px 0px;
   border-radius: 8px;
@@ -1120,7 +1053,7 @@ body {
 }
 
 .wellcomBanner {
-  box-shadow: 0px 0px 13px -2px #000;
+  /* box-shadow: 0px 0px 13px -2px #000; */
   position: relative;
   z-index: 999;
 }
@@ -1730,6 +1663,7 @@ body {
     color: #868686;
     margin: 0px;
 }
+
 
 .mdl-layout.mdl-js-layout.is-upgraded {
   position: static;
@@ -3483,9 +3417,23 @@ body.darkVersion {
 .darkVersion .filterNexchage .exchange {
   background: #646464;
 }
+.exchangeHeader {
+  margin-top: -100px;
+}
+.defultClass {
+  display: none;
+}
+
+.defultClass:first-child {
+  display: block;
+}
 
 @media only screen and (max-width: 600px)
 {
+  .callAction .callInner form input[type="text"] {
+    width: 51%;
+}
+
   .ldrHeader .innerLdrheader .coinName {
     width: 100%;
 }
@@ -3676,6 +3624,7 @@ div#tv_chart_container iframe {
 
 .tradingCenter .center .calculator .clearfix div {
   width: 100%;
+  height: 100%;
 }
 
 .orderD .openOrder tr th, .orderD .openOrder tr td {
@@ -3762,7 +3711,419 @@ div#tv_chart_container iframe {
   display: block;
   overflow: auto;
 }
+}
+.AccountPage {
+  /* background-color: rgb(247, 247, 247); */
+  color: #464646;
+  margin-top: 0px;
+}
+
+.darkVersion .AccountPage {
+  background: none;
+}
+
+.accountContainer {
+  width: 1170px;
+  margin: 0 auto;
+  /* background-color: rgb(247, 247, 247); */
+}
+
+.darkVersion .accountContainer {
+  background: none;
+}
+
+/* #646769 */
+.visualizerContainer {
+  display: grid;
+  grid-template-areas: 
+  "a b c"
+  "d e f"
+  "g h i";
+  gap: 30px;
+  border-color: rgb(150, 150, 150);
+  padding: 30px;
+  margin-top: 20px;
+  background-color: white;
+  box-shadow: 0 0 8px #ddd;
+  font-weight: bold;
+}
+
+.darkVersion .visualizerContainer {
+  background-color: #646769;
+  color: white;
+  box-shadow: none;
+}
+
+.visualizerContainer #net, #cpu, #ram {
+  border-radius: 10px;
+  cursor: pointer;
+  padding: 5px 15px;
+}
+
+.visualizerContainer #available, #staked, #redeem {
+  padding: 5px 15px;
+
+}
+
+.visualizerContainer div #full {
+  width: 300px;
+  height: 30px;
+  background-color: rgba(0, 0, 0, 0.11);
+  border-radius: 20px;
+}
+
+.visualizerContainer div #full div {
+  height: 29px;
+  margin-left: 0.6px;
+  margin-top: 0.5px;
+  border-radius: 20px;
+
+}
+
+.visualizerContainer #available {
+  grid-area: d;
+};
+
+.visualizerContainer #staked {
+  grid-area: e;
+}
+
+.visualizerContainer #redeeming {
+  grid-area: f;
+}
+
+.visualizerContainer #ram {
+  grid-area: g;
+}
+
+.visualizerContainer #cpu {
+  grid-area: h;
+}
+
+.visualizerContainer #net {
+  grid-area: i;
+}
+
+.visualizerContainer .generalBal{
+  padding: 15px 20px;
+  float: right;
+  grid-area: c;
+  text-align: right;
+}
+
+.visualizerContainer .generalBal button {
+  height: 50px;
+  width: 180px;
+  border-radius: 10px;
+  background-color: transparent;
+  padding: 5px;
+  border: solid;
+  font-size: 14px;
+
+}
+
+.visualizerContainer h2 {
+  width: 280px;
+
+}
+
+.visualizerContainer .generalBal button:focus {
+  outline: none;
+
+}
+
+.walletContainer {
+  background-color: white;
+  margin-top: 50px;
+  margin-bottom: 30px;
+  box-shadow: 0 0 8px #ddd;
+  font-size: 16px;
+}
+
+.darkVersion .walletContainer {
+  background-color: #646769;
+  color: white;
+  box-shadow: none;
 
 
 }
+
+.walletContainer a {
+  color: #3796f4;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.walletContainer div {
+  background-color: #ecececb0;
+  padding: 10px 10px;
+  height:30px;
+}
+
+.darkVersion .walletContainer div {
+  background-color:#52565a;
+  bottom: 0px;
+
+}
+
+.walletContainer form input {
+  border-radius: 5px;
+  width: 150px;
+  padding: 7px 10px 7px 30px;
+  font-family: 'Calibri', sans-serif;
+  font-size: 14px;
+  border: 2px solid;
+  color: #a9a4a4;
+  outline: 0px !important;
+  background: #7979793a;
+  color: #fff;
+  border-color: #64676948;
+}
+
+.walletContainer form i {
+  position: relative;
+  top:1px;
+  left: 25px;
+}
+
+.walletContainer .zeroBalance {
+  float: right;
+  margin-top: -20px;
+  margin-right: 50px;
+  color: rgba(255, 255, 255, 0.527);
+  
+}
+
+.walletContainer .zeroBalance input[type='checkbox'] {
+  background: white;
+  border-radius: 2px;
+}
+
+
+.walletContainer table {
+  width: 100%;
+  top: -20px;
+}
+
+.walletContainer table thead {
+  width: 100%;
+  font-weight: bold;
+  background: #ecececb0;
+  
+}
+
+.darkVersion .walletContainer table thead {
+    background: #52565a;
+} 
+
+.walletContainer table tr {
+  height: 45px;
+  border-bottom: 1px solid;
+  border-bottom-color: rgba(128, 128, 128, 0.466);
+;
+}
+
+.walletContainer table tr td {
+  padding: 20px 10px;
+  width: 90px;
+}
+
+.ToolContainer {
+  padding: 100px 50px;
+  border-color: rgb(150, 150, 150);
+  padding: 20px;
+  margin-top: 20px;
+  background-color: white;
+  box-shadow: 0 0 8px #ddd;
+}
+
+.darkVersion .ToolContainer {
+  background-color: #646769;
+  box-shadow: none;
+  color: white;
+}
+
+.Tool {
+  margin: 0 auto;
+  width: 450px;
+  margin-bottom: 60px;
+}
+
+.Tool button {
+  width: 190px;
+  height: 40px;
+  border: solid;
+  border-width: 1px;
+  border-radius: 5px;
+  padding: 10px 15px;
+  font-size: 17px;
+  margin: 10px;
+  background-color: white;
+}
+
+.Tool #confirm {
+  margin-left: 10px;
+  width: 100px;
+  cursor: pointer;
+}
+
+.Tool #confirm:focus {
+  outline: none;
+}
+
+.Tool #confirm:hover{
+  background-color: #3795f427;
+  border-color: #3795f4;
+  color: #3795f4;
+}
+
+.Tool input {
+  height: 30px;
+  width: 250px;
+  border-radius: 5px; 
+  margin: 10px;
+  border: solid;
+  border-width: 1px;
+  padding : 0px 5px;
+}
+
+.Tool input:focus{
+  outline: none;
+}
+
+.Tool #mortgageCPU, #redeemCPU {
+  background-color: rgba(107, 118, 180, 0.308);
+  cursor: pointer;
+  border-color: #6B76B4;
+  color:#777
+
+}
+
+.Tool #mortgageCPU:focus, #redeemCPU:focus {
+  outline: none;
+}
+
+.Tool #mortgageNET, #redeemNET {
+  background-color: rgba(33, 145, 160, 0.308);
+  cursor: pointer;
+  border-color: #2191A0;
+  color:#777
+}
+
+.darkVersion .Tool #mortgageNET, #redeemNET, #redeemCPU, #mortgageCPU {
+  color: white;
+}
+
+.Tool #mortgageNET:focus, #redeemNET:focus {
+  outline: none;
+}
+
+.Tool #buyRAM, #sellRAM {
+  cursor: pointer;
+  color:#777
+}
+
+.Tool #buyRAM, #sellRAM:focus {
+  outline: none;
+}
+
+.Tool #buyRAM {
+  background-color: rgba(79, 180, 48, 0.308);
+  border-color: #4EB430;
+}
+
+.Tool #sellRAM {
+  background-color: #fd3f3f5d;
+  border-color: #fd3f3f;
+
+}
+
+.darkVersion .Tool #buyRAM, #sellRAM {
+  color: white;
+}
+
+
+.Tool #mortgageRAM:focus, #redeemRAM:focus {
+  outline: none;
+}
+
+.ToolContainer {
+  padding: 100px 50px;
+  border-color: rgb(150, 150, 150);
+  padding: 20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  background-color: white;
+  box-shadow: 0 0 8px #ddd;
+}
+
+
+.ToolContainer #bal {
+  text-align: right;
+  color: rgb(79, 180, 48)
+}
+
+.ToolContainer .returnButton {
+  background-color: transparent;
+  border: solid;
+  border-radius: 5px;
+  height: 35px;
+  width: 100px;
+  border-width: 0.7px;
+  cursor: pointer;
+  border-color: rgba(119, 119, 119, 0.644);
+  color: rgba(119, 119, 119, 0.603);
+}
+
+
+
+.darkVersion .ToolContainer .returnButton {
+  border-color: white;
+  color: white;
+}
+
+.ToolContainer .returnButton:focus {
+  outline: none;
+}
+
+.ToolContainer .returnButton:hover {
+  background-color: #3795f427;
+  border-color: #3795f4;
+  color: #3795f4;
+}
+
+.successMessage {
+  position: absolute;
+  border-radius: 5px;
+  background-color: rgb(35, 122, 0);
+  color: white;
+  padding: 3px 3px;
+  width: auto;
+  
+}
+
+.successMessage a {
+  color: white; 
+}
+
+.errorMessage {
+  border-radius: 5px;
+  background-color: rgb(255, 8, 0);
+  color: white;
+  padding: 3px 3px;
+  width: auto;
+  
+}
+
+#confirmT {
+  position: relative;
+  width: 120px;
+  margin-left: 150px;
+}
+
+
+
+
+
+
 

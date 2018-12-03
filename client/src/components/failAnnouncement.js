@@ -36,9 +36,6 @@ render(){
     const { colors } = this.state;
         return(
             <div className="aboutPage">
-                <div className="wellcomBanner background"  style={{'background': this.state.colors}}>
-                    <Header />
-                </div>
                 <div className="aboutWrap">
                     <div className="container">
                         <h3>uberDex Failed Transfer Announcement</h3>
@@ -46,7 +43,6 @@ render(){
                     </div>
                 </div>
                 <Callaction />
-                <Footer />
             </div>
         )
     }

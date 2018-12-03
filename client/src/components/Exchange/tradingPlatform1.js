@@ -747,32 +747,7 @@ $('#sellPricetwo').val('');
         return(
             <div>
                 <div className="wellcomBanner background" style={color}>
-                    <div className="header ">
-                        <div className="container clearfix">
-                            <div className="logo">
-                                <a href="/"><img src={logoss} className="App-logo" id="logoImg" alt="" /></a>
-                            </div>
-                            <div className="menuSections">
-                                <nav>
-                                    <ul>
-                                        <li><Link to="/exchange/?opt=IQ" className="link">Exchange</Link></li>
-                                        <li><Link to="/market" className="link">Markets</Link></li>
-                                        <li><Link to="/contact" className="link">Supports</Link></li>
-                                        <li id="signin"><a href="/"  onClick={handlesign}>Sign In</a></li>
-                                        <li id="signout"><a href="/"  onClick={handleSignout}>Sign out</a></li>
-                                        <li><a href="/" className="bgs"  onClick={handlePublic}>Get Started</a></li>
-                                    </ul>
-                                </nav>
-                                <div className="othersOptions">
-                                    <a href="/" className="fullscreen"><i className="fa fa-expand-arrows-alt"> </i></a>
-                                    <a href="/" className="smallscreen"><i className="fa fa-expand-arrows-alt"> </i></a>
-                                    <a href="#" className="lightT" onClick={handlelight}><i className="fa fa-lightbulb"> </i></a>
-                                    <a href="#" className="darkt" onClick={handledark}><i className="fa fa-lightbulb"> </i></a>
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
 
                 <Trading />

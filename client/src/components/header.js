@@ -12,6 +12,28 @@ import dp from '../app.json';
 var adminURL = dp['url'];
 var apiId = dp['apiId'];
 
+ScatterJS.plugins(new ScatterEOS());
+
+// const network = {
+//     blockchain: 'eos',
+//     protocol: 'https',
+//     host: 'proxy.eosnode.tools',
+//     port: 443,
+//     chainId: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906'
+// }
+
+const network = {
+    blockchain:'eos',
+    protocol:'http',
+    host:'13.52.54.111',
+    eosVersion: 'bf28f8bb',
+    port:8888,
+    chainId:'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f',
+    debug: false,
+    verbose: false,
+    latency: 200
+}
+
 
 function handlelight(e)
   {
@@ -35,22 +57,11 @@ function handlelight(e)
 
 function handlePublic(e){
     e.preventDefault();
-     var scatter =ScatterJS.scatter;
-     if(scatter.identity){   alert(scatter.identity.publicKey);}
-//console.log(scatter.identity.publicKey);
+    var scatter = ScatterJS.scatter;
+    //alert(scatter.identity.publicKey);
+    console.log(scatter.identity);
 }
 
-function handleClick(e) {
-    e.preventDefault();
-    $('.signInPopup ').fadeIn();
-  }
-  
-function handleSignout(e){
-    e.preventDefault();
-     ScatterJS.scatter.forgetIdentity();
- window.location.reload();
-}
-  
 
 
 const tryRequire = (path) => {
@@ -61,35 +72,74 @@ const tryRequire = (path) => {
     }
   };
 
-class Header extends Component{
-    constructor(props) {
-    super(props);
 
+class Header extends Component {
+
+    constructor(props) {
+        super(props);
+
+        
     this.state = {
         colors: [],
         logo: [],
     };
-  }
 
-componentDidMount() {
-    //handledefualt();
-    fetch(adminURL+'/getColors/'+apiId)
-    .then(response => response.json())
-    .then(data => {if(data.logo=='')
-    {
-          this.setState({colors:'#0e9caf'});this.setState({logo:logoss});
+        this.handleSignout = this.handleSignout.bind(this);
+        this.handleClick = this.handleClick.bind(this)
     }
-    else
-    {
-        this.setState({colors:data.theme_color});
-        $('#logoImg').attr('src',adminURL+'/images/byzantine/'+data.logo);
+    handleSignout(e) {
+        e.preventDefault();
+        ScatterJS.scatter.forgetIdentity();
+        this.props.updateScatterID(false);
+        // $('#signin').css('display', 'inline-block');
+        // $('#signout').hide();
+        // $('.bgs').html("Get started");
     }
-    }).catch(data => {
-         this.setState({colors:'#0e9caf'});this.setState({logo:logoss});
-    });
+
+
+
+
+    async componentDidMount() {
+
+        fetch(adminURL+'/getColors/'+apiId)
+        .then(response => response.json())
+        .then(data => {if(data.logo=='')
+        {
+              this.setState({colors:'#0e9caf'});this.setState({logo:logoss});
+        }
+        else
+        {
+            this.setState({colors:data.theme_color});
+            $('#logoImg').attr('src',adminURL+'/images/byzantine/'+data.logo);
+        }
+        }).catch(data => {
+             this.setState({colors:'#0e9caf'});this.setState({logo:logoss});
+        });
+       
     
+            if (this.props.scatterID) {
+                const scatter = ScatterJS.scatter;;
+                const requiredFields = { accounts: [network] };
+                let id = await scatter.getIdentity(requiredFields);
+                console.log("id: ", id);
+                console.log(scatter.identity.accounts[0].name)
+                const account = id.accounts.find(x => x.blockchain === 'eos');
+                console.log(scatter.identity)
+                $('#signin').hide();
+                $('#signout').css('display', 'inline-block');
+                $('.bgs').html(scatter.identity.accounts[0].name);
+            } else {
+                $('#signin').css('display', 'inline-block');
+                $('#signout').hide();
+            }
+    }
 
-}
+    handleClick(e) {
+        e.preventDefault();
+        $('.signInPopup ').fadeIn();
+    }
+
+
 render(){
     const { logo } = this.state;   
     
@@ -105,16 +155,23 @@ render(){
                                 <li><Link to="/exchange/?opt=IQ" className="link">Exchange</Link></li>
                                 <li><Link to="/market" className="link">Markets</Link></li>
                                 <li><Link to="/contact" className="link">Supports</Link></li>
-                                <li id="signin"><a href="/"  onClick={handleClick}>Sign In</a></li>
-                                <li id="signout"><a href="/"  onClick={handleSignout}>Sign out</a></li>
-                                <li><a href="/" className="bgs"  onClick={handlePublic}>Get Started</a></li>
+                                {this.props.scatterID ?
+                                <span>
+                                    <li id="signout"><a href="/"  onClick={this.handleSignout}>Sign out</a></li>
+                                    <li><Link to="/account" className="bgs" >{this.props.scatterID.identity.accounts[0].name}</Link></li>
+                                </span> :
+                                <span>
+                                    <li id="signin"><a onClick={this.handleClick}>Sign In</a></li>
+                                    <li><a href="/" className="bgs"  onClick={handlePublic}>Get Started</a></li>
+                                </span>
+                                }
                             </ul>
                         </nav>
                         <div className="othersOptions">
                             <a href="/" className="fullscreen"><i className="fa fa-expand-arrows-alt"> </i></a>
                             <a href="/" className="smallscreen"><i className="fa fa-expand-arrows-alt"> </i></a>
-                            <a href="#" className="lightT" onClick={handlelight}><i className="fa fa-lightbulb"> </i></a>
-                            <a href="#" className="darkt" onClick={handledark}><i className="fa fa-lightbulb"> </i></a>
+                            <a className="lightT" onClick={handlelight}><i className="fa fa-lightbulb"> </i></a>
+                            <a className="darkt" onClick={handledark}><i className="fa fa-lightbulb"> </i></a>
                             
                         </div>
                     </div>

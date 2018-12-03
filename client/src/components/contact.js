@@ -7,7 +7,8 @@ import dp from '../app.json';
 var adminURL = dp['url'];
 var apiId = dp['apiId'];
 
-class Home extends Component{
+class Contact extends Component{
+
      postSignup = (e) => {
     e.preventDefault();
      let data = {
@@ -45,7 +46,8 @@ class Home extends Component{
     }));
   }
   constructor(props) {
-  super(props);
+    super(props);
+
 
   this.state = {
       colors: [],
@@ -86,9 +88,6 @@ render(){
   const { colors } = this.state;
         return(
             <div className="about_page">
-                <div className="wellcomBanner background"  style={{'background': this.state.colors}}>
-                    <Header />
-                </div>
                 <div className="about_wrap contactPage">
                     <div className="container clearfix">
                         <div className="leftDetails">
@@ -120,10 +119,9 @@ render(){
                     </div>
                 </div>
                 <Callaction />
-                <Footer />
             </div>
         )
     }
 }
 
-export default Home;
+export default Contact;

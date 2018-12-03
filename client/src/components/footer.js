@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import scatter from './imgs/scatter.PNG';
 import logoBlue from './imgs/logoBlue.png';
@@ -9,155 +9,163 @@ import ScatterJS from 'scatterjs-core';
 import ScatterEOS from 'scatterjs-plugin-eosjs';
 import Eos from 'eosjs';
 import dp from '../app.json';
+import axios from 'axios';
 var adminURL = dp['url'];
 var apiId = dp['apiId'];
 
-ScatterJS.plugins( new ScatterEOS() );
+ScatterJS.plugins(new ScatterEOS());
+
+// const network = { blockchain:'eos',
+//                 protocol:'https',
+//                 host:'proxy.eosnode.tools',
+//                 port:443,
+//                 chainId:'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906' }
 
 const network = {
-    blockchain:'eos',
-    protocol:'http',
-    host:'13.57.210.230',
-      eosVersion: 'bf28f8bb',
-    port:8888,
-    chainId:'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f',
-     debug: false,
-  verbose: false,
-  latency: 200
+    blockchain: 'eos',
+    protocol: 'https://cors-anywhere.herokuapp.com/http',
+    host: '13.52.54.111',
+    eosVersion: 'bf28f8bb',
+    port: 8888,
+    chainId: 'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f',
+    debug: false,
+    verbose: false,
+    latency: 200
 }
 
- ScatterJS.scatter.connect('My-Apps').then(connected => {
 
-        // If the user does not have Scatter or it is Locked or Closed this will return false;
-        if(!connected) return false;
-    
-        var scatter = ScatterJS.scatter;
-       
-        if(scatter.identity){
-              const eosOptions = { expireInSeconds:60 };
-    
-               const eos = scatter.eos(network, Eos, eosOptions);
-          
-    $('#signin').hide();
-    $('#signout').css('display','inline-block');
-    $('.bgs').html(scatter.identity.accounts[0].name);
-    
- }
-else
-{
-       $('#signin').css('display','inline-block');
-    $('#signout').hide();
-}
-    });
-function handleClickss(e){
-    e.preventDefault();
-    ScatterJS.scatter.connect('My-Apps').then(connected => {
 
-        // If the user does not have Scatter or it is Locked or Closed this will return false;
-        if(!connected) return false;
-    
-        const scatter = ScatterJS.scatter;
-     
-   
-        // Now we need to get an identity from the user.
-        // We're also going to require an account that is connected to the network we're using.
-        const requiredFields = { accounts:[network] };
-        scatter.getIdentity(requiredFields).then(() => {
-            // Always use the accounts you got back from Scatter. Never hardcode them even if you are prompting
-            // the user for their account name beforehand. They could still give you a different account.
-           
-            const account = scatter.identity.accounts.find(x => x.blockchain === 'eos');
-    
-            // You can pass in any additional options you want into the eosjs reference.
-            const eosOptions = { expireInSeconds:60 };
-    
-            // Get a proxy reference to eosjs which you can use to sign transactions with a user's Scatter.
-            const eos = scatter.eos(network, Eos, eosOptions);
-           
-    window.location.reload();
-            // ----------------------------
-            // Now that we have an identity,
-            // an EOSIO account, and a reference
-            // to an eosjs object we can send a transaction.
-            // ----------------------------
-    
-    
-            // Never assume the account's permission/authority. Always take it from the returned account.
-       /*     const transactionOptions = { authorization:[`${account.name}@${account.authority}`] };
-    
-            eos.transfer(account.name, 'helloworld', '1.0000 EOS', 'memo', transactionOptions).then(trx => {
-                // That's it!
-                console.log(`Transaction ID: ${trx.transaction_id}`);
-            }).catch(error => {
-                console.error(error);
-            });*/
-    
-        }).catch(error => {
-            
-            // The user rejected this request, or doesn't have the appropriate requirements.
-            console.error(error);
-        });
-    });
-}
+
 function handleClicks(e) {
     e.preventDefault();
     $('.signInPopup ').fadeOut();
-  }
-  
+}
 
-class Footer extends Component{
+
+async function handleClickss(e) {
+    e.preventDefault();
+    let scatter = ScatterJS.scatter;
+    scatter = scatter.isExtension ? window.ScatterJS.scatter : scatter;
+    console.log(scatter);
+    let connected = await scatter.connect("UberDEX");
+    console.log(connected)
+
+
+    // If the user does not have Scatter or it is Locked or Closed this will return false;
+    if (!connected) return false;
+
+    // Check the scatter identity of the user
+    const requiredFields = { accounts: [network] };
+    let id = await scatter.getIdentity(requiredFields);
+
+    const account = id.accounts.find(x => x.blockchain === 'eos');
+
+    const eosOptions = { expireInSeconds: 60 }
+
+    this.props.updateScatterID(scatter)
+    const eos = scatter.eos(network, Eos, eosOptions)
+    console.log("Scatter eos: ", eos);
+    $('.signInPopup ').fadeOut();
+
+    
+
+
+}
+
+
+class Footer extends Component {
     constructor(props) {
         super(props);
-    
+
         this.state = {
             colors: [],
             logo: [],
             companyName: [],
+            scatterConnect: true
         };
-      }
 
-componentDidMount() {
-
-    fetch(adminURL+'/getColors/'+apiId)
-    .then(response => response.json())
-    .then(data => {if(data.logo=='')
-    {
-          this.setState({colors:'#0e9caf'});this.setState({logo:logoBlue});
+        this.handleClickss = this.handleClickss.bind(this);
     }
-    else
-    {
-        this.setState({colors:data.theme_color});
-         this.setState({logo:adminURL+'/images/byzantine/'+data.logo});
-         this.setState({lightLogo:adminURL+'/images/byzantine/'+data.lightLogo});
-    }
-    }).catch(data => {
-         this.setState({colors:'#0e9caf'});this.setState({logo:logoBlue});
-    });
 
-    fetch(adminURL+'/getColors/'+apiId)
-    .then(response => response.json())
-    .then(data => {if(data.companyName=='')
-    {
-        this.setState({companyName:'UberDex'});
-    }
-    else
-    {
-        this.setState({companyName:data.companyName});
-    }
-    }).catch(data => {
-        this.setState({companyName:'UberDex'});
-    });
+    componentDidMount() {
 
-}
+        fetch(adminURL + '/getColors/' + apiId)
+            .then(response => response.json())
+            .then(data => {
+                if (data.logo == '') {
+                    this.setState({ colors: '#0e9caf' }); this.setState({ logo: logoBlue });
+                }
+                else {
+                    this.setState({ colors: data.theme_color });
+                    this.setState({ logo: adminURL + '/images/byzantine/' + data.logo });
+                    this.setState({ lightLogo: adminURL + '/images/byzantine/' + data.lightLogo });
+                }
+            }).catch(data => {
+                this.setState({ colors: '#0e9caf' }); this.setState({ logo: logoBlue });
+            });
 
-    render(){
-       
-        return(
+        fetch(adminURL + '/getColors/' + apiId)
+            .then(response => response.json())
+            .then(data => {
+                if (data.companyName == '') {
+                    this.setState({ companyName: 'UberDex' });
+                }
+                else {
+                    this.setState({ companyName: data.companyName });
+                }
+            }).catch(data => {
+                this.setState({ companyName: 'UberDex' });
+            });
+
+    }
+
+    async handleClickss(e) {
+        e.preventDefault();
+        let scatter = ScatterJS.scatter;
+        scatter = scatter.isExtension ? window.ScatterJS.scatter : scatter;
+        console.log(scatter);
+        let connected = false
+        scatter.connect("UberDEX").then(connect => {
+            connected = connect;
+            console.log(connected)
+        });
+        setTimeout(async () => {
+            connected = connected
+            console.log(scatter);
+            console.log(connected)
+
+
+            // If the user does not have Scatter or it is Locked or Closed this will return false;
+            if (!connected) {
+                return this.setState({scatterConnect: false});
+            }
+
+            // Check the scatter identity of the user
+            const requiredFields = { accounts: [network] };
+            let id = await scatter.getIdentity(requiredFields);
+
+            const account = id.accounts.find(x => x.blockchain === 'eos');
+
+            const eosOptions = { expireInSeconds: 60 }
+
+            this.props.updateScatterID(scatter)
+            const eos = scatter.eos(network, Eos, eosOptions)
+            console.log("Scatter eos: ", eos);
+            $('.signInPopup ').fadeOut();
+            let resp = await axios(`https://api.byzanti.ne/exbalance?account=${scatter.identity.accounts[0].name}&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`);
+            console.log(resp.data)
+            this.props.updateBalance(resp.data);
+        }, 1000);
+    }
+
+    render() {
+
+        return (
             <div>
                 <div className="footer">
                     <div className="container clearfix">
                         <img src={this.state.logo} className="darkF" />
-                        <img src={this.state.lightLogo} className="lightF"/>
+                        <img src={this.state.lightLogo} className="lightF" />
                         <p>Cryptocurrency investment is subject to high market risk, please make your investments cautiously.</p>
                         <span>© {this.state.companyName} 2018. All Right Reserved.</span>
                         <ul>
@@ -173,10 +181,11 @@ componentDidMount() {
 
                 <div className="signInPopup">
                     <div className="inners">
-                        <a href="#" className="cls"  onClick={handleClicks}><i className="fa fa-times"></i></a>
+                        <a href="#" className="cls" onClick={handleClicks}><i className="fa fa-times"></i></a>
                         <img src={scatter} />
-                        <a href="#" className="sgn" onClick={handleClickss}>Sign in via Scatter</a>
+                        <a href="#" className="sgn" onClick={this.handleClickss}>Sign in via Scatter</a>
                         <p>Scatter allows convenient transactions without password</p>
+                        {this.state.scatterConnect ? null : <p style={{color: 'red'}}>Please make sure that your Scatter app is opened first.</p>}
                     </div>
                 </div>
 

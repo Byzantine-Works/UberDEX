@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Header from './header';
 import EOS from './Home/eosMarket';
 import Callaction from './callAction';
@@ -7,7 +7,7 @@ import dp from '../app.json';
 var adminURL = dp['url'];
 var apiId = dp['apiId'];
 
-class Home extends Component{
+class Market extends Component{
     constructor(props) {
     super(props);
 
@@ -39,15 +39,11 @@ render(){
     const { colors } = this.state;
         return(
             <div className="marketPage">
-                <div className="wellcomBanner background" style={{'background': this.state.colors}}>
-                    <Header />
-                </div>
                 <EOS />
                 <Callaction />
-                <Footer />
             </div>
         )
     }
 }
 
-export default Home;
+export default Market;

@@ -75,6 +75,8 @@ class Features extends Component{
     this.state = {
         colors: [],
         logo: [],
+        hitss: [],
+        hitsss: [],
     };
   }
 
@@ -97,9 +99,22 @@ componentDidMount() {
         this.setState({companyName:'UberDex'});
         this.setState({colors:'#0e9caf'});
     });
+    
+    var API = adminURL+'/getfeatures/'+apiId;
+    fetch(API)
+    .then(response => response.json())
+    .then(data => {this.setState({ hitss: data.hits }); });
+
+    var APIs = adminURL+'/getservices/'+apiId;
+    fetch(APIs)
+    .then(response => response.json())
+    .then(data => {this.setState({ hitsss: data.hits }); });
+
 }
 render(){
     const { colors } = this.state;
+    const { hitss } = this.state;
+    const { hitsss } = this.state;
         return(
             <div className="features" rel={this.state.colors}>
                 <div className="container">
@@ -107,54 +122,14 @@ render(){
                         <div className="left">
                             <h3 className="colors"   style={{'color': this.state.colors}}>Everything you need to buy and <br /> sell EOS today</h3>
                             <ul>
-                                <li>
-                                    <span className="drk"><img src={icon1} /></span>
-                                    <span className="lit"><img src={iconh1} /></span>
-                                    <span className="litb"><img src={iconb1} /></span>
-                                    <span className="litg"><img src={icong1} /></span>
-                                    <span className="litl"><img src={iconl1} /></span>
-                                    <span className="litp"><img src={iconp1} /></span>
-                                    <span className="litr"><img src={iconr1} /></span>
-                                    <span className="lity"><img src={icony1} /></span>
-                                    <h5 className="colors"  style={{'color': this.state.colors}}>Buy & sell major cryptocurrencies</h5>
-                                    <p>You can buy bitcoin, ethereum, & more instantly with a bank account or debit card.</p>
-                                </li>
-                                <li>
-                                    <span className="drk"><img src={icon2} /></span>
-                                    <span className="lit"><img src={iconh2} /></span>
-                                    <span className="litb"><img src={iconb2} /></span>
-                                    <span className="litg"><img src={icong2} /></span>
-                                    <span className="litl"><img src={iconl2} /></span>
-                                    <span className="litp"><img src={iconp2} /></span>
-                                    <span className="litr"><img src={iconr2} /></span>
-                                    <span className="lity"><img src={icony2} /></span>
-                                    <h5 className="colors"  style={{'color': this.state.colors}}>Access prices & price charts</h5>
-                                    <p>Wondering how your crypto is doing? Check prices on the web or with our Android or IOS app.</p>
-                                </li>
-                                <li>
-                                    <span className="drk"><img src={icon3} /></span>
-                                    <span className="lit"><img src={iconh3} /></span>
-                                    <span className="litb"><img src={iconb3} /></span>
-                                    <span className="litg"><img src={icong3} /></span>
-                                    <span className="litl"><img src={iconl3} /></span>
-                                    <span className="litp"><img src={iconp3} /></span>
-                                    <span className="litr"><img src={iconr3} /></span>
-                                    <span className="lity"><img src={icony3} /></span>
-                                    <h5 className="colors"  style={{'color': this.state.colors}}>Store your crypto safely</h5>
-                                    <p>Over 98% of cryptocurrency is stored offline & the rest is protected by industry-leading online security</p>
-                                </li>
-                                <li>
-                                    <span className="drk"><img src={icon4} /></span>
-                                    <span className="lit"><img src={iconh4} /></span>
-                                    <span className="litb"><img src={iconb4} /></span>
-                                    <span className="litg"><img src={icong4} /></span>
-                                    <span className="litl"><img src={iconl4} /></span>
-                                    <span className="litp"><img src={iconp4} /></span>
-                                    <span className="litr"><img src={iconr4} /></span>
-                                    <span className="lity"><img src={icony4} /></span>
-                                    <h5 className="colors"  style={{'color': this.state.colors}}>Set automatic buys</h5>
-                                    <p>If you'd to buy a little crypto week or every month, we make it simple</p>
-                                </li>
+                                {hitss.sort((a, b) => a.featureId + b.featureId).map(hit =>
+                                    <li>
+                                        <span className="drk"><img src={'https://uberdex-admin.herokuapp.com/images/features/'+hit._source.featureDark} /></span>
+                                        <span className="lit"><img src={'https://uberdex-admin.herokuapp.com/images/features/'+hit._source.featureLight} /></span>
+                                        <h5 className="colors"  style={{'color': this.state.colors}}>{hit._source.featureTitle}</h5>
+                                        <p>{hit._source.featureDesc}</p>
+                                    </li>
+                                )}
                             </ul>
                         </div>
                         <div className="right">
@@ -164,42 +139,14 @@ render(){
 
                     <div className="featureBottom">
                         <ul className="clearfix">
-                            <li>
-                                <img className="drk" src={icon5}  />
-                                <img className="lit" src={iconh5}  />
-                                <img className="litb" src={iconb5}  />
-                                <img className="litg" src={icong5}  />
-                                <img className="litl" src={iconl5}  />
-                                <img className="litp" src={iconp5}  />
-                                <img className="litr" src={iconr5}  />
-                                <img className="lity" src={icony5}  />
-                                <h4 className="colors"  style={{'color': this.state.colors}}>Friendly user Experience</h4>
-                                <p>{this.state.companyName} aims to be the best performing and easiest-to-use decentralized Exchange.</p>
-                            </li>
-                            <li>
-                                <img className="drk" src={icon6}  />
-                                <img className="lit" src={iconh6}  />
-                                <img className="litb" src={iconb6}  />
-                                <img className="litg" src={icong6}  />
-                                <img className="litl" src={iconl6}  />
-                                <img className="litp" src={iconp6}  />
-                                <img className="litr" src={iconr6}  />
-                                <img className="lity" src={icony6}  />
-                                <h4 className="colors"  style={{'color': this.state.colors}}>No need to trust, high security</h4>
-                                <p>We relay orders between peers. {this.state.companyName} moves tokens between wallets. Together, we’re a new category where the platform itself is distributed.</p>
-                            </li>
-                            <li>
-                                <img className="drk" src={icon7}  />
-                                <img className="lit" src={iconh7}  />
-                                <img className="litb" src={iconb7}  />
-                                <img className="litg" src={icong7}  />
-                                <img className="litl" src={iconl7}  />
-                                <img className="litp" src={iconp7}  />
-                                <img className="litr" src={iconr7}  />
-                                <img className="lity" src={icony7}  />
-                                <h4 className="colors"  style={{'color': this.state.colors}}>Open, high transparency</h4>
-                                <p>Leverage blockchain technology to trade EOS tokens directly from your wallet. No middleman.</p>
-                            </li>
+                        {hitsss.map(hit =>
+                                <li>
+                                    <img className="drk" src={'https://uberdex-admin.herokuapp.com/images/services/'+hit._source.serviceDark}  />
+                                    <img className="lit" src={'https://uberdex-admin.herokuapp.com/images/services/'+hit._source.serviceLight}  />
+                                    <h4 className="colors"  style={{'color': this.state.colors}}>{hit._source.serviceTitle}</h4>
+                                    <p>{hit._source.serviceContent}</p>
+                                </li>
+                            )}
                         </ul>
                     </div>
                 </div>

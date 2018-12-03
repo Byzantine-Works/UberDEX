@@ -8,7 +8,7 @@ import dp from '../app.json';
 var adminURL = dp['url'];
 var apiId = dp['apiId'];
 
-class Home extends Component{
+class Support extends Component{
     constructor(props) {
     super(props);
 
@@ -39,16 +39,12 @@ render(){
     const { colors } = this.state;
         return(
             <div className="supportPage">
-                <div className="wellcomBanner background" style={{'background': this.state.colors}}>
-                    <Header />
-                </div>
-                <TVChartContainer />
-                
-                <Callaction />
-                <Footer />
+                    <TVChartContainer />
+                    <Callaction />
+    
             </div>
         )
     }
 }
 
-export default Home;
+export default Support;

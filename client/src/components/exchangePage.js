@@ -3,17 +3,34 @@ import Datafeed from './TVChartContainer/api/index';
 import TradingCenter from './Exchange/tradingPlatform';
 import Callaction from './callAction';
 import Footer from './footer';
+import Header from './header';
+import Order from './Exchange/order.js';
+import Trading from './Exchange/trading.js';
 import data from '../app.json';
+
 var color = {background: data['theme_color']};
 
 class Home extends Component{
+    constructor(props) {
+        super(props);
+        this.state = {
+            openOrders : false,
+        }
+
+        this.updateOpenOrders = this.updateOpenOrders.bind(this);
+
+    }
+
+    updateOpenOrders(newOrders){
+        this.setState({openOrders: newOrders})
+
+    }
     render(){
-       
+     
         return(
             <div className="marketPage">
-                <TradingCenter />
+                <TradingCenter updateOpenOrders={this.updateOpenOrders} scatterID={this.props.scatterID} updateScatterID={this.props.updateScatterID} balance={this.props.balance}/>
                 <Callaction />
-                <Footer />
             </div>
         )
     }

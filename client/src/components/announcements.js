@@ -6,76 +6,14 @@ import $ from "jquery";
 import dp from '../app.json';
 var adminURL = dp['url'];
 var apiId = dp['apiId'];
-
 function announcOnes(e)
 {
     e.preventDefault();
-    $('#anounce1').removeClass('active');
-    $('#anounce2').addClass('active');
-    $('#anounce3').addClass('active');
-    $('#anounce4').addClass('active');
-    $('#anounce5').addClass('active');
-    $('#detail1').css('display', 'block');
-    $('#detail2').css('display', 'none');
-    $('#detail3').css('display', 'none');
-    $('#detail4').css('display', 'none');
-    $('#detail5').css('display', 'none');
-}
-function tabannounctwo(e)
-{
-    e.preventDefault();
-    $('#anounce1').addClass('active');
-    $('#anounce2').removeClass('active');
-    $('#anounce3').addClass('active');
-    $('#anounce4').addClass('active');
-    $('#anounce5').addClass('active');
-    $('#detail1').css('display', 'none');
-    $('#detail2').css('display', 'block');
-    $('#detail3').css('display', 'none');
-    $('#detail4').css('display', 'none');
-    $('#detail5').css('display', 'none');
-}
-function announcthree(e)
-{
-    e.preventDefault();
-    $('#anounce1').addClass('active');
-    $('#anounce2').addClass('active');
-    $('#anounce3').removeClass('active');
-    $('#anounce4').addClass('active');
-    $('.anounce5').addClass('active');
-    $('#detail1').css('display', 'none');
-    $('#detail2').css('display', 'none');
-    $('#detail3').css('display', 'block');
-    $('#detail4').css('display', 'none');
-    $('#detail5').css('display', 'none');
-}
-function announcfour(e)
-{
-    e.preventDefault();
-    $('#anounce1').addClass('active');
-    $('#anounce2').addClass('active');
-    $('#anounce3').addClass('active');
-    $('#anounce4').removeClass('active');
-    $('#anounce5').addClass('active');
-    $('#detail1').css('display', 'none');
-    $('#detail2').css('display', 'none');
-    $('#detail3').css('display', 'none');
-    $('#detail4').css('display', 'block');
-    $('#detail5').css('display', 'none');
-}
-function announcfive(e)
-{
-    e.preventDefault();
-    $('#anounce1').addClass('active');
-    $('#anounce2').addClass('active');
-    $('#anounce3').addClass('active');
-    $('#anounce4').addClass('active');
-    $('#anounce5').removeClass('active');
-    $('#detail1').css('display', 'none');
-    $('#detail2').css('display', 'none');
-    $('#detail3').css('display', 'none');
-    $('#detail4').css('display', 'none');
-    $('#detail5').css('display', 'block');
+    var views = e.target.id;
+    $('.defltC').addClass('active');
+    $('#'+views).removeClass('active');
+    $('.defultClass').css('display','none');
+    $('#detail1'+views).css('display','block');
 }
 
 class Home extends Component{
@@ -85,6 +23,7 @@ class Home extends Component{
     this.state = {
         colors: [],
         logo: [],
+        hitss: [],
     };
   }
 
@@ -108,86 +47,40 @@ componentDidMount() {
         this.setState({colors:'#0e9caf'});
         this.setState({companyName:'UberDex'});
     });
+    var API = adminURL+'/getNews/'+apiId;
+    fetch(API)
+    .then(response => response.json())
+    .then(data => {console.log(data.hits);this.setState({ hitss: data.hits }); });
+
+
+
 }
 render(){
     const { colors } = this.state;
+    const { hitss } = this.state;
         return(
             <div className="aboutPage">
-                <div className="wellcomBanner background" style={{'background': this.state.colors}}>
-                    <Header />
-                </div>
-                
                 <div className="announcementWrap">
                     <div className="container">
                         <div className="announcementInner clearfix">
-                            <div className="announceLeft">
-                                <a style={{'background': this.state.colors}} href="#" className="" id="anounce1"  onClick={announcOnes}>{this.state.companyName} Lists EOSYX/EOS, INF/EOS Exchange Pairs Announcement</a>
-                                <a style={{'background': this.state.colors}} href="#" className="active" id="anounce2" onClick={tabannounctwo}>{this.state.companyName} Joints with PTI to Hold the First PTI Airdrop</a>
-                                <a style={{'background': this.state.colors}} href="#" className="active" id="anounce3" onClick={announcthree}>{this.state.companyName} Lists FAST/EOS, SHARE/EOS, ECTT/EOS Exchange Fairs Announcement</a>
-                                <a style={{'background': this.state.colors}} href="#" className="active" id="anounce4" onClick={announcfour}>{this.state.companyName} Lists ARN/EOS New Exchange Pair Announcement</a>
-                                <a style={{'background': this.state.colors}} href="#" className="active" id="anounce5" onClick={announcfive}>{this.state.companyName} Lists YDAPP/EOS, CRASH/EOS Exchange Pairs Announcement</a>
+                        <div className="announceLeft">
+                                {hitss.map(hit =>
+                                    <a style={{'background': this.state.colors}} href="#" className="defltC active" id={hit._id} onClick={announcOnes}>{hit._source.tickerTitle}</a>
+                                )}
                             </div>
                             <div className="announceRight">
-                                <div className="annouceDetail" id="detail1">
-                                    <h3>{this.state.companyName} Lists EOSYX/EOS, INF/EOS Exchange Pairs Announcement</h3>
-                                    <p>Dear users:</p>
-
-                                   <p>{this.state.companyName} will list the following two new exchange pairs EOSYX/EOS and INF/EOS at 09:00 (UTC) on November 27, 2018.</p>
-
-                                    <p>{this.state.companyName} Team</p>
-                                    <p>November 27, 2018</p>
-                                    <p>Twitter: https://twitter.com/{this.state.companyName}</p>
-                                </div>
-                                <div className="annouceDetail" id="detail2">
-                                    <h3>{this.state.companyName} Joints with PTI to Hold the First PTI Airdrop</h3>
-                                    <p>Dear users:</p>
-
-                                   <p>{this.state.companyName} will list the following two new exchange pairs EOSYX/EOS and INF/EOS at 09:00 (UTC) on November 27, 2018.</p>
-
-                                    <p>{this.state.companyName} Team</p>
-                                    <p>November 27, 2018</p>
-                                    <p>Twitter: https://twitter.com/{this.state.companyName}</p>
-
-                                </div>
-                                
-                                <div className="annouceDetail" id="detail3">
-                                    <h3>{this.state.companyName} Lists FAST/EOS, SHARE/EOS, ECTT/EOS Exchange Fairs Announcement</h3>
-                                    <p>Dear users:</p>
-
-                                   <p>{this.state.companyName} will list the following two new exchange pairs EOSYX/EOS and INF/EOS at 09:00 (UTC) on November 27, 2018.</p>
-
-                                    <p>{this.state.companyName} Team</p>
-                                    <p>November 27, 2018</p>
-                                    <p>Twitter: https://twitter.com/{this.state.companyName}</p>
-                                </div>
-                                
-                                <div className="annouceDetail" id="detail4">
-                                    <h3>{this.state.companyName} Lists ARN/EOS New Exchange Pair Announcement</h3>
-                                    <p>Dear users:</p>
-
-                                   <p>{this.state.companyName} will list the following two new exchange pairs EOSYX/EOS and INF/EOS at 09:00 (UTC) on November 27, 2018.</p>
-
-                                    <p>{this.state.companyName} Team</p>
-                                    <p>November 27, 2018</p>
-                                    <p>Twitter: https://twitter.com/{this.state.companyName}</p>
-                                </div>
-                                
-                                <div className="annouceDetail" id="detail5">
-                                    <h3>{this.state.companyName} Lists YDAPP/EOS, CRASH/EOS Exchange Pairs Announcement</h3>
-                                    <p>Dear users:</p>
-
-                                   <p>{this.state.companyName} will list the following two new exchange pairs EOSYX/EOS and INF/EOS at 09:00 (UTC) on November 27, 2018.</p>
-
-                                    <p>{this.state.companyName} Team</p>
-                                    <p>November 27, 2018</p>
-                                    <p>Twitter: https://twitter.com/{this.state.companyName}</p>
-                                </div>
+                                {hitss.map(hit =>
+                                    <div className="annouceDetail defultClass" id={'detail1'+hit._id}>
+                                        <h3>{hit._source.tickerTitle}</h3>
+                                        <p>{hit._source.tickerContent}</p>
+                                        <p>{hit._source.dateTimes}</p>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
                 </div>
                 <Callaction />
-                <Footer />
             </div>
         )
     }
