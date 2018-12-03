@@ -55,13 +55,15 @@ class App extends Component {
 
   }
 
-  updateScatterID(id) {
+  updateScatterID(id, account) {
     if(!id) {
       this.setState({scatterID: false});
-      this.setState({scatterEOS: false})
+      this.setState({scatterEOS: false});
+      this.setState({account: false});
     } else {
       this.setState({scatterID: id});
       this.setState({scatterEOS: id.eos(network, Eos)});
+      this.setState({account});
     }
   }
 
@@ -96,7 +98,7 @@ class App extends Component {
                     <div className="wellcomBanner background PreviousHeader" style={{'background': this.state.colors}}>
                       <Header updateScatterID={this.updateScatterID} scatterID={this.state.scatterID} />
                     </div>
-                  <Main scatterID={this.state.scatterID} scatterEOS={this.state.scatterEOS} balance={this.state.balance}/>
+                  <Main scatterID={this.state.scatterID} scatterEOS={this.state.scatterEOS} balance={this.state.balance} account={this.state.account}/>
                   <Footer updateScatterID={this.updateScatterID} scatterID={this.state.scatterID} updateBalance={this.updateBalance}/>
               </Content>
           </Layout>

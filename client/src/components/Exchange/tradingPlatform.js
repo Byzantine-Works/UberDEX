@@ -823,6 +823,7 @@ bColor='#52565a';
     }
 
     async handleBuy(e) {
+        console.log(this.props)
 
        var amBuy= parseFloat($('#buyPrice').val());
        var amSell= parseFloat($('#sellPrice').val());
@@ -860,7 +861,6 @@ bColor='#52565a';
               useraccount: scatter.identity.accounts[0].name
             };
         let pubKey = this.props.account.publicKey;
-        console.log(pubKey);
         
         let signature = await scatter.getArbitrarySignature(pubKey, orderBuffer, "test ordermake sig", false);  
         datas.hash = orderHash;
