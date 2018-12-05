@@ -860,12 +860,17 @@ bColor='#52565a';
 
         let scatter = this.props.scatterID;
 
-        let precisionS = symbSell === 'EOS' ? 10000 : Math.pow(10, this.state.tokens[c].currency_precision);
-        let precisionB = symbBuy === 'EOS' ? 10000 : Math.pow(10, this.state.tokens[c].currency_precision);
+        let precisionS = symbSell === 'EOS' ? 4 : this.state.tokens[c].currency_precision;
+        let precisionB = symbBuy === 'EOS' ? 4 : this.state.tokens[c].currency_precision;
         console.log(precisionS, precisionB);
+
+        let amS = amSell.toFixed(precisionS);
+        let amB = amBuy.toFixed(precisionB);
     
-        var amountS = BN(parseInt(amSell)).multipliedBy(precisionS);
-        var amountB = BN(parseInt(amBuy)).multipliedBy(precisionB);
+        var amountS = BN(amS).multipliedBy(precisionS);
+        var amountB = BN(amB).multipliedBy(precisionB);
+
+        console.log(amountS, amountB)
     
      
         let amountBuy = new BN(amountB);
@@ -881,10 +886,10 @@ bColor='#52565a';
     
            let datas = {
               side: side,
-              assetBuy: symbBuy,
-              assetSell: symbSell,
-              amountBuy: parseFloat(amBuy.toFixed(4)),
-              amountSell: parseFloat(amSell.toFixed(4)),
+              assetBuy: symbSell,
+              assetSell: symbBuy,
+              amountBuy: parseFloat(amSell.toFixed(4)),
+              amountSell: parseFloat(amBuy.toFixed(4)), 
               price: price,
               type: 2,
               hash: orderHash,
