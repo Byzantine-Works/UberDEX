@@ -569,8 +569,9 @@ function serializeOrder(exchangeAccount, tokenBuy, tokenSell, amountBuyBN, amoun
     const tokenSellBuffer = serializeExtendedSymbol(tokenSell);
     assert(tokenSellBuffer.length == serializedTokenSymbolSize);
     orderBuffer.set(tokenSellBuffer, offset);
-    log('tokenSellBuffer: ', tokenSellBuffer);
+    console.log('tokenSellBuffer: ', tokenSellBuffer);
     offset += serializedTokenSymbolSize;
+    console.log("BINS for amountSell:nonce=> " + amountSellBN,nonceBN);
     orderBuffer.set(serializeUInt64BN(amountSellBN), offset);
     offset += uint64_size;
     orderBuffer.set(serializeUInt64BN(nonceBN), offset);
@@ -589,16 +590,16 @@ function serializeAccountName(accountName) {
 
 // Serializes a UInt64 BN into a binary buffer (little endian).
 function serializeUInt64BN(bn) {
-    assert(bn.isInteger());
-    assert(bn.gte(0));
-    assert(bn.lt(BN(2).pow(64)));
+    assert(new BN(bn).isInteger());
+    assert(new BN(bn).gte(0));
+    assert(new BN(bn).lt(BN(2).pow(64)));
 
     var buf = Buffer.alloc(8);
     var byte;
     for (byte = 0; byte < 8; byte++) {
-        const m = bn.mod(256).toNumber();
+        const m = new BN(bn).mod(256).toNumber();
         buf.writeUInt8(m, byte);
-        bn = bn.dividedToIntegerBy(256);
+        bn = new BN(bn).dividedToIntegerBy(256);
     }
     return buf;
 }
@@ -623,7 +624,7 @@ function serializeExtendedSymbol(tokenSymbol) {
             uint64_size * 1
         );
     }
-
+    console.log("serializeExtendedSymbol=>" + extendedSymbolBuffer);
     return extendedSymbolBuffer;
 }
 
@@ -1115,6 +1116,37 @@ async function getAllBalances(user, symbol) {
     return balances;
 }
 
+//Validate Order Buffer
+async function validateOrder(order, registeredKey) {
+    //Get BN's
+    var amountbuyBN = new BN(order.amountBuy);
+    var amountsellBN = new BN(order.amountSell);
+    var nonceBN = new BN(order.nonce);
+
+    console.log("Serializing:=>" + amountbuyBN + ":" + amountsellBN + ":" + nonceBN + ":" + order.assetBuy + ":" + order.assetSell + ": for=>" + order.useraccount);
+
+    //construct order buffer
+    var orderBuffer = serializeOrder(
+        EXCHANGE_ACCOUNT,
+        order.assetBuy,
+        order.assetSell,
+        amountbuyBN,
+        amountsellBN,
+        nonceBN,
+        order.useraccount
+    );
+    var orderHash = ecc.sha256(orderBuffer);
+    console.log(' validateOrder -> sig:' + order.signature + ":orderBuffer:" + orderBuffer);
+
+    if (orderHash != order.hash)
+        throw new Error("Computed orderHash and POST orderHash do not match => " + orderHash + ":" + order.hash + " => please check your data/signatures")
+
+    var recoveredKey = ecc.recover(order.signature, orderBuffer);
+
+    if (recoveredKey != registeredKey)
+        throw new Error("Registered Key and Recovered key do not match => " + registeredKey + ":" + recoveredKey);
+}
+
 //Trade function
 async function extrade(admin, amountbuy, amountsell, nonce, amount, tradenonce, tokenbuy, tokensell, makerfee, takerfee, maker, taker, feeaccount, passedOrderHash, passedTradeHash, makerSignature, takerSignature) {
     
@@ -1138,7 +1170,7 @@ async function extrade(admin, amountbuy, amountsell, nonce, amount, tradenonce, 
     trade.takerSignature = takerSignature;
 
     //TODO remove this check when scatter integration works E2E
-    if (taker != 'taker1'){
+    if (taker != 'taker1') {
         TAKER_ACCOUNT = taker;
         MAKER_ACCOUNT = maker;
     }
@@ -1458,3 +1490,4 @@ module.exports.extrade = extrade;
 module.exports.exregisteruser = exregisteruser;
 module.exports.exregisteruseraccount = exregisteruseraccount;
 module.exports.exOfflineWithdrawal = exOfflineWithdrawal;
+module.exports.validateOrder = validateOrder;
