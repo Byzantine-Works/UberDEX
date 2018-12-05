@@ -1115,6 +1115,35 @@ async function getAllBalances(user, symbol) {
     return balances;
 }
 
+//Validate Order Buffer
+async function validateOrder(order, registeredKey) {
+    //Get BN's
+    var amountbuyBN = new BN(order.amountBuy);
+    var amountsellBN = new BN(order.amountSell);
+    var nonceBN = new BN(order.nonce);
+
+    //construct order buffer
+    var orderBuffer = serializeOrder(
+        EXCHANGE_ACCOUNT,
+        order.assetBuy,
+        order.assetSell,
+        amountbuyBN,
+        amountsellBN,
+        nonceBN,
+        order.useraccount
+    );
+    var orderHash = ecc.sha256(orderBuffer);
+    console.log(' validateOrder -> sig:' + order.signature + ":orderBuffer:" + orderBuffer);
+
+    if (orderHash != order.hash)
+        throw new Error("Computed orderHash and POST orderHash do not match => " + orderHash + ":" + order.hash + " => please check your data/signatures")
+
+    var recoveredKey = ecc.recover(order.signature, orderBuffer);
+
+    if (recoveredKey != registeredKey)
+        throw new Error("Registered Key and Recovered key do not match => " + registeredKey + ":" + recoveredKey);
+}
+
 //Trade function
 async function extrade(admin, amountbuy, amountsell, nonce, amount, tradenonce, tokenbuy, tokensell, makerfee, takerfee, maker, taker, feeaccount, passedOrderHash, passedTradeHash, makerSignature, takerSignature) {
     var trade = {};
@@ -1137,7 +1166,7 @@ async function extrade(admin, amountbuy, amountsell, nonce, amount, tradenonce, 
     trade.takerSignature = takerSignature;
 
     //TODO remove this check when scatter integration works E2E
-    if (taker != 'taker1'){
+    if (taker != 'taker1') {
         TAKER_ACCOUNT = taker;
         MAKER_ACCOUNT = maker;
     }
@@ -1441,3 +1470,4 @@ module.exports.extrade = extrade;
 module.exports.exregisteruser = exregisteruser;
 module.exports.exregisteruseraccount = exregisteruseraccount;
 module.exports.exOfflineWithdrawal = exOfflineWithdrawal;
+module.exports.validateOrder = validateOrder;
