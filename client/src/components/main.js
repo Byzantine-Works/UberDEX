@@ -41,7 +41,7 @@ class Main extends Component{
             <Route path='/announcements' component={ announcements } />
             <Route path='/failannouncement' component={ failannouncement } />
             <Route path='/transaction' component={ TransactionPage } />
-            <Route path='/account' component={(props) => {return <Account scatterEOS={this.props.scatterEOS} updateScatterID={this.props.updateScatterID} scatterID={this.props.scatterID}/>}} />
+            <Route path='/account' component={(props) => {return <Account scatterEOS={this.props.scatterEOS} updateScatterID={this.props.updateScatterID} scatterID={this.props.scatterID} account={this.props.account}/>}} />
             <Route path='/ldar' component={ LDAR } />
         </Switch>
 

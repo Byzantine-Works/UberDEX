@@ -38,7 +38,8 @@ class App extends Component {
       colors: [],
       logo: [],
       scatterID: false,
-      balance: false
+      balance: false,
+      account: false
     }
     this.updateScatterID = this.updateScatterID.bind(this);
     this.updateBalance = this.updateBalance.bind(this);

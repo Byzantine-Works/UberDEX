@@ -419,38 +419,7 @@ function closeView(e){
     );
         
 }
-function changeSellPrice1(e)
-{
-     e.preventDefault();
-    var price= parseFloat(e.target.value);
-    var sellPrice= parseFloat($('#price').val());
-    $('#apiType').val('make');
-    $('#sellPrice').val(price*sellPrice);
-}
-function changeSellPrice(e)
-{
-    e.preventDefault();
-    var price= parseFloat(e.target.value);
-    var sellPrice= parseFloat($('#price').val());
-    $('#buyPrice').val(price/sellPrice);
-    $('#apiType').val('make');
-}
-function changeBuyPrice1(e)
-{
-    e.preventDefault();
-     var price= parseFloat(e.target.value);
-    var sellPrice= parseFloat($('#priceTwo').val());
-    $('#sellPricetwo').val(price*sellPrice);
-    $('#apiType').val('make');
-}
-function changeBuyPrice(e)
-{
-    e.preventDefault();
-     var price= parseFloat(e.target.value);
-    var sellPrice= parseFloat($('#priceTwo').val());
-    $('#BuyPricetwo').val(price/sellPrice);
-    $('#apiType').val('make');
-}
+
 
  var url = new URL(window.location.href);
      var     c = url.searchParams.get("opt");
@@ -537,14 +506,20 @@ class tradingHead extends Component{
             useraccount:'',
             colors: [],
             logo: [],
-            tradeHistory:[]
+            tradeHistory:[],
             
         };
         this.refresh_data = this.refresh_data.bind(this);
         this.handleClicks = this.handleClicks.bind(this);         
         this.handleClick = this.handleClick.bind(this);
-        this.handleBuy = this.handleBuy.bind(this);
-        this.handleTakerSell = this.handleTakerSell.bind(this);         
+
+        this.changeSellPrice = this.changeSellPrice.bind(this);
+        this.changeSellPrice1 = this.changeSellPrice1.bind(this);
+        this.changeBuyPrice = this.changeBuyPrice.bind(this);
+        this.changeBuyPrice1 = this.changeBuyPrice1.bind(this);
+        this.takeOrder = this.takeOrder.bind(this);
+        this.makeOrder = this.makeOrder.bind(this);
+        this.order = this.order.bind(this);
     
       }
       handleClick=(orderId)=> {
@@ -589,7 +564,8 @@ class tradingHead extends Component{
    
     
   }
-handleClicks=(orderId,e)=> {
+handleClicks=(orderId, e)=> {
+    this.setState({orderType: "take"})
   let API1="https://api.byzanti.ne/orderById?orderId="+orderId+"&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N";
    fetch(API1)
         .then(response => response.json())
@@ -675,8 +651,8 @@ refresh_data()
         .then(data => {this.setState({blc:data}); });
         
         var tradebook = 'https://api.byzanti.ne/tradebook?symbol='+c+'&size=10&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
-        var NAPI = 'https://api.byzanti.ne/ordersByUser?user=taker1&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
-        var OrderSell = 'https://api.byzanti.ne/orders?symbol=IQ&side=SELL&size=100&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+        var NAPI = `https://api.byzanti.ne/ordersByUser?user=${this.props.account.name}&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`;
+        var OrderSell = `https://api.byzanti.ne/orders?symbol=${c}&side=SELL&size=100&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`;
         fetch(NAPI)
         .then(response => response.json())
         .then(data => {this.setState({ Orders: data }); });
@@ -687,13 +663,13 @@ refresh_data()
         fetch(tradebook)
         .then(response => response.json())
         .then(data => {this.setState({ tradebook: data }); });
-$('.sellAlart').hide();
-$('#price').val('');
-$('#buyPrice').val('');
-$('#sellPrice').val('');
-$('#priceTwo').val('');
-$('#BuyPricetwo').val('');
-$('#sellPricetwo').val('');
+        $('.sellAlart').hide();
+        $('#price').val('');
+        $('#buyPrice').val('');
+        $('#sellPrice').val('');
+        $('#priceTwo').val('');
+        $('#BuyPricetwo').val('');
+        $('#sellPricetwo').val('');
 }
     
     componentDidMount() {
@@ -702,8 +678,8 @@ $('#sellPricetwo').val('');
         console.log(url.href.substr(url.href.lastIndexOf('/') + 1));*/
      
         var url = new URL(window.location.href);
-         var c = url.searchParams.get("opt");
-         var bColor='dark';
+        var c = url.searchParams.get("opt");
+        var bColor='dark';
       if($('body').hasClass('lightVersion'))
       {
             $('.darkt').css('display', 'none');
@@ -721,7 +697,19 @@ bColor='#52565a';
         var APIS = 'https://api.byzanti.ne/orderBook?symbol='+c+'&side=BUY&size=10&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
         var APISS = 'https://api.byzanti.ne/orders?symbol='+c+'&side=BUY&size=22&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
         var orderTaker = 'https://api.byzanti.ne/tradebook?symbol='+c+'&size=100&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
-          var orderHistory= 'https://api.byzanti.ne/tradesByUser?user=taker1&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+        var orderHistory= 'https://api.byzanti.ne/tradesByUser?user=taker1&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+        var symbols = 'https://api.byzanti.ne/symbols?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+
+
+        fetch(symbols)
+        .then(response => response.json())
+        .then(data => {
+            let objS = {EOS : {currency_precision : 4, contract: 'eosio.token'}};
+            data.forEach(el => {
+                objS[el.symbol] = el;
+            })
+            this.setState({ tokens: objS });});
+
           fetch(orderHistory)
         .then(response => response.json())
         .then(data => {this.setState({ tradeHistory: data });});
@@ -753,11 +741,12 @@ bColor='#52565a';
         .then(data => {this.setState({blc:data}); });
         
         var tradebook = 'https://api.byzanti.ne/tradebook?symbol='+c+'&size=10&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
-        var NAPI = 'https://api.byzanti.ne/ordersByUser?user=taker1&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
         var OrderSell = 'https://api.byzanti.ne/orders?symbol=IQ&side=SELL&size=100&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
-        fetch(NAPI)
-        .then(response => response.json())
-        .then(data => {this.setState({ Orders: data }); });
+        if(this.props.account) {
+            fetch(`https://api.byzanti.ne/ordersByUser?user=${this.props.account.name}&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`)
+                .then(response => response.json())
+                .then(data => {this.setState({ Orders: data }); });
+        }
         fetch(OrderSell)
         .then(response => response.json())
         .then(data => {this.setState({ OrderSells: data }); });
@@ -823,47 +812,89 @@ bColor='#52565a';
         },3000);
     }
 
-    async handleBuy(e) {
-        console.log(this.props)
+    changeSellPrice1(e) {
+        this.setState({orderType: "make"})
+        e.preventDefault();
+        var price= parseFloat(e.target.value);
+        var sellPrice= parseFloat($('#price').val());
+        $('#apiType').val('make');
+        $('#sellPrice').val(price*sellPrice);
+}
+    changeSellPrice(e) {
+        this.setState({orderType: "make"})
+    e.preventDefault();
+    var price= parseFloat(e.target.value);
+    var sellPrice= parseFloat($('#price').val());
+    $('#buyPrice').val(price/sellPrice);
+    $('#apiType').val('make');
+}
+    changeBuyPrice1(e) {
+        this.setState({orderType: "make"})
+    e.preventDefault();
+     var price= parseFloat(e.target.value);
+    var sellPrice= parseFloat($('#priceTwo').val());
+    $('#sellPricetwo').val(price*sellPrice);
+    $('#apiType').val('make');
+}
+    changeBuyPrice(e) {
+        this.setState({orderType: "make"})
+    e.preventDefault();
+     var price= parseFloat(e.target.value);
+    var sellPrice= parseFloat($('#priceTwo').val());
+    $('#BuyPricetwo').val(price/sellPrice);
+    $('#apiType').val('make');
+}
 
-       var amBuy= parseFloat($('#buyPrice').val());
-       var amSell= parseFloat($('#sellPrice').val());
-       var price= parseFloat($('#price').val());
+    async makeOrder(side) {
+
+        var url = new URL(window.location.href);
+        var c = url.searchParams.get("opt");
+        var price = parseFloat($('#priceTwo').val());
+        var amSell = parseFloat($('#BuyPricetwo').val());
+        var amBuy = parseFloat($('#sellPricetwo').val());
+
+        let symbSell = side === "SELL" ? c : "EOS";
+        let symbBuy = side === "BUY" ? c : "EOS";
+
+        console.log(amBuy, amSell, price, c);
 
         let scatter = this.props.scatterID;
+
+        let precisionS = symbSell === 'EOS' ? 10000 : Math.pow(10, this.state.tokens[c].currency_precision);
+        let precisionB = symbBuy === 'EOS' ? 10000 : Math.pow(10, this.state.tokens[c].currency_precision);
+        console.log(precisionS, precisionB);
     
-        var amountB = BN(359.4218).multipliedBy(10000);
-        var amountS = BN(0.4144).multipliedBy(10000);
+        var amountS = BN(parseInt(amSell)).multipliedBy(precisionS);
+        var amountB = BN(parseInt(amBuy)).multipliedBy(precisionB);
     
-        amountB = Math.floor(amountB / 10);
-    
-        console.log(amountB, amountS);
      
         let amountBuy = new BN(amountB);
         let amountSell = new BN(amountS);
         let nonceBN = new BN(1);
+
+        console.log(symbSell, symbBuy, amountSell, amountBuy, nonceBN, this.props.account.name);
     
-        let orderBuffer = serialize.serializeOrder('exchange', 'IQ', 'EOS',  amountBuy, amountSell, nonceBN, 'ubermaker');
+        let orderBuffer = serialize.serializeOrder('exchange', symbSell, symbBuy, amountSell, amountBuy, nonceBN, this.props.account.name);
       
         let orderHash = ecc.sha256(orderBuffer);
     
     
            let datas = {
-              side: "SELL",
-              assetBuy: "EOS",
-              assetSell: "IQ",
-              amountBuy: 0.4144,
-              amountSell: 359.4218,
-              price: 0.001153,
+              side: side,
+              assetBuy: symbBuy,
+              assetSell: symbSell,
+              amountBuy: parseFloat(amBuy.toFixed(4)),
+              amountSell: parseFloat(amSell.toFixed(4)),
+              price: price,
               type: 2,
               hash: orderHash,
-            //   expires: new Date(new Date(info.head_block_time + 'Z').getTime() + 60 * 1000).toISOString().split('.')[0],
+              expires: "7d",
               nonce: 1,
               useraccount: scatter.identity.accounts[0].name
             };
         let pubKey = this.props.account.publicKey;
         
-        let signature = await scatter.getArbitrarySignature(pubKey, orderBuffer, "test ordermake sig", false);  
+        let signature = await scatter.getArbitrarySignature(pubKey, orderBuffer);  
         datas.hash = orderHash;
         datas.signature = signature;
     
@@ -886,44 +917,32 @@ bColor='#52565a';
                     $('#msg').html('Error');$('.sellAlart').show();}//window.location.reload()
             }
     
-        fetch(`https://api.byzanti.ne/ordersByUser?user=${this.props.scatterID.identity.accounts[0].name}&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`)
+        fetch(`https://api.byzanti.ne/ordersByUser?user=${this.props.account.name}&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`)
                 .then(response => response.json())
                 .then(data => {
-                    this.props.updateOpenOrders({ openOrders: data });
+                    this.setState({ Orders: data });
                     console.log("orders: ", data);
                 });
          
     }
     
-    async handleTakerSell() {
-    
-        const network = {
-            blockchain: 'eos',
-            protocol: 'https://cors-anywhere.herokuapp.com/http',
-            host: '13.52.54.111',
-            eosVersion: 'bf28f8bb',
-            port: 8888,
-            chainId: 'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f',
-            debug: false,
-            verbose: false,
-            latency: 200,
-            sign: true
-        }
+    async takeOrder(side) {
+
         
         var url = new URL(window.location.href);
         var c = url.searchParams.get("opt");
     
         const account = this.props.scatterID.identity.accounts[0].name;
-        console.log("account: ", account);
-    
-        var bprice= parseFloat($('#buyPrice').val());
-        var eosAm= parseFloat($('#sellPrice').val());
-        var price = parseFloat($('#price').val());
+        
+
+        var price = parseFloat($('#priceTwo').val());
+        var amSell = parseFloat($('#BuyPricetwo').val());
+        var amBuy = parseFloat($('#sellPricetwo').val());
+
+
     
         const scatter = this.props.scatterID;
     
-        const eos = scatter.eos(network, Eos)
-        
     
     
         var amountB = BN(359.422).multipliedBy(1000);
@@ -968,7 +987,7 @@ bColor='#52565a';
         
          
           data.signature = await scatter.getArbitrarySignature(pubKey, tradeBuffer, "test ordertake", false);
-          data.orderId = 'cYbwdWcBKKlqgDKXSmcW'
+          data.orderId = '2Z61e2cBKKlqgDKXMy_8'
           data.maker = 'ubermaker'
     
     
@@ -982,6 +1001,11 @@ bColor='#52565a';
             })
     
     
+      }
+
+      order(side) {
+          return this.state.orderType === 'take' ? this.takeOrder(side) : this.makeOrder(side);
+
       }
     
     render(){
@@ -1028,7 +1052,7 @@ bColor='#52565a';
                                     <tbody>
                                         {orderBooks.map(bids => {
                                           
-                                            return  <tr onClick={this.handleClicks.bind(this,bids.orderId)}>
+                                            return  <tr onClick={this.handleClicks.bind(this, bids.orderId)}>
                                                 <td className='minus' id={bids.orderId} data-id={bids.orderId} data-assetbuy={bids.assetSell} data-assetsell={bids.assetBuy} data-amountsell={bids.amountBuy} data-amountbuy={bids.amountSell} data-price={bids.price} data-maker={bids.useraccount} data-makerexchange={bids.source} data-side={bids.side}   >{bids.price}</td>
                                                 <td id={bids.amountBuy}>{bids.amountBuy}</td>
                                                 <td id={bids.amountSell}>{bids.amountSell}</td>
@@ -1125,13 +1149,13 @@ bColor='#52565a';
                                     )}</label>
                                      <input type="hidden" id="buyPrices"  />
                                    
-                                    <input type="number" id="buyPrice" onChange={changeSellPrice1} />
+                                    <input type="number" id="buyPrice" onChange={this.changeSellPrice1} />
                                     <label>Total <span>EOS </span> </label>
-                                    <input type="number"  id="sellPrice" onChange={changeSellPrice} />
-                              {tricker.map(hit => {
+                                    <input type="number"  id="sellPrice" onChange={this.changeSellPrice} />
+                                        {tricker.map(hit => {
                                         return <span>
                                                     <input type="submit" value={'Buy '+hit.symbol} onClick={handleBuy} className="background" />
-                                                    {this.props.scatterID ? <input type="submit" value={'Buy '+hit.symbol+ ' with Scatter'} onClick={this.handleTakerSell} className="background" /> :
+                                                    {this.props.scatterID ? <input type="submit" value={'Buy '+hit.symbol+ ' with Scatter'} onClick={() => this.order("BUY")} className="background" /> :
                                                     <input type="submit" value={'Signin'} onClick={() => { $('.signInPopup ').fadeIn();}} className="background" />}
                                                 </span>
                                     })}
@@ -1150,7 +1174,7 @@ bColor='#52565a';
                                     <input type="number"  id="priceTwo" />
 
                                     <label>Amounts <span>EOS</span> </label>
-                                   <input type="number" id="sellPricetwo" onChange={changeBuyPrice} />
+                                   <input type="number" id="sellPricetwo" onChange={this.changeBuyPrice} />
                                   
                                     <input type="hidden" id="BuyPricetwos"/>
 
@@ -1169,11 +1193,11 @@ bColor='#52565a';
                                         <span>{hit.symbol} </span>
                                     )}
                                     </label>
-                                       <input type="number" id="BuyPricetwo"  onChange={changeBuyPrice1} />  
+                                       <input type="number" id="BuyPricetwo"  onChange={this.changeBuyPrice1} />  
                                        {tricker.map(hit => {
                                         return <span>
                                                  <input type="submit" value={'Sell '+hit.symbol} onClick={handleSell} className="background" />
-                                                {this.props.scatterID ? <input type="submit" value={'Sell '+hit.symbol+ ' with Scatter'} onClick={this.handleBuy} className="background" /> :
+                                                {this.props.scatterID ? <input type="submit" value={'Sell '+hit.symbol+ ' with Scatter'} onClick={() => this.order("SELL")} className="background" /> :
                                                 <input type="submit" value={'Signin'} onClick={() => { $('.signInPopup ').fadeIn();}} className="background" />}
                                             </span>
                                     })}

@@ -18,7 +18,7 @@ import data from '../app.json';
 import ecc from 'eosjs-ecc';
 var color = { background: data['theme_color'] };
 
-const socket = openSocket('https://api.byzanti.ne:9090/');
+const socket = openSocket('http://api.byzanti.ne:9090/');
 
 const network = {
     blockchain: 'eos',
@@ -49,7 +49,8 @@ class Account extends Component {
             view: 'wallet',
             balance: false,
             success: false,
-            error: false
+            error: false,
+            newUser: false
         }
 
         this.deposit = this.deposit.bind(this);
@@ -60,7 +61,18 @@ class Account extends Component {
         this.manageRam = this.manageRam.bind(this);
         this.transfer = this.transfer.bind(this);
         this.ispkpaired = this.ispkpaired.bind(this);
+        this.registerUser = this.registerUser.bind(this);
     }
+
+    async componentDidMount() {
+        if(!this.props.scatterID) window.location.href = "/";
+        await this.getResources()
+        await this.checkBalance();
+        // await this.getTokens();
+        await this.getSymbols();
+    }
+
+    
     async getResources() {
 
         let response = await axios(`https://api.byzanti.ne/getAccount/vernisnotvic?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`)
@@ -83,11 +95,24 @@ class Account extends Component {
         this.setState({ resources: resources })
     }
 
+
+
+
     async checkBalance() {
-        console.log("resources: ", this.state.resources)
 
         /*Get balance on exchange*/
-        let response = await axios(`https://api.byzanti.ne/exbalance?account=${this.props.scatterID.identity.accounts[0].name}&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`);
+        let response;
+        try {
+            response = await axios(`https://api.byzanti.ne/exbalance?account=${this.props.scatterID.identity.accounts[0].name}&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`);
+        } catch(e) {
+            if(JSON.parse(JSON.stringify(e)).response.data.message === this.props.scatterID.identity.accounts[0].name + ' user does not have an exchange account!') {
+                await this.setState({newUser: true});
+                await this.registerUser();
+                return await this.changeView('deposit', 'EOS');
+                
+                
+            }
+        }
         console.log("exchange balance: ", response);
         let balSym = [];
         let balance = response.data.map(el => {
@@ -141,13 +166,6 @@ class Account extends Component {
         this.setState({ symbols: symbols, view: 'wallet' , tokens: tokens});
     }
 
-    async componentDidMount() {
-        if(!this.props.scatterID) window.location.href = "/";
-        await this.getResources()
-        await this.checkBalance();
-        // await this.getTokens();
-        await this.getSymbols();
-    }
 
     async manageRam(buy, value) {
         if(value.toString().includes('.')) {
@@ -295,8 +313,9 @@ async registerUser() {
 
     const scatter = this.props.scatterID;
 
-    let pubKey = await scatter.getPublicKey('eos');
-    console.log("publickey: ", pubKey);
+    const pubKey = this.props.account.publicKey;
+    const account = this.props.account.name
+    console.log("publickey: ", pubKey, account);
 
     const pk = ecc.PublicKey(pubKey).toBuffer();
     var pkPacked = new pk.constructor(pk.length + 1);
@@ -313,17 +332,56 @@ async registerUser() {
         account: 'exchange',
         name: 'registeruser',
         authorization: [{
-            actor: this.props.scatterID.identity.accounts[0].name,
+            actor: account,
             permission: 'active'
         }], data :
         {
-            user: this.props.scatterID.identity.accounts[0].name,
+            user: account,
             publickey: pkHex
         }
     }]
     let dep = await eos.transaction({ actions: action})
     console.log(dep);
   }
+
+  async transfer(to, quantity, memo, contract) {
+    console.log(to, quantity, memo)
+    const eosOptions = { expireInSeconds: 60 }
+    const eos = this.props.scatterID.eos(network, Eos, eosOptions);
+    let tokenContract = await eos.contract(contract);
+    try {
+    let resp = await tokenContract.transfer(this.props.scatterID.identity.accounts[0].name, to, quantity, memo);
+    if(resp.broadcast){
+        this.setState({
+            success: {
+                message: 'Transfer succeeded!',
+                trx: resp.transaction_id
+        },
+        error: false
+    })
+}
+    } catch(e) {
+        if(typeof e === 'string') {
+            e = JSON.parse(e);
+            this.setState({
+                error: {
+                    message: 'Error: ' + e.error.details[0].message
+                },
+                success: false
+            })
+        } else {
+            this.setState({
+                error: {
+                    message: 'Error: ' + e
+                },
+                success: false
+            })
+        }
+
+    }
+
+
+}
 
 
 
@@ -424,8 +482,7 @@ async registerUser() {
             {
                 actor: 'admin',
                 permission: 'active'
-            }
-            ],
+            }],
         };
 
 
@@ -433,9 +490,6 @@ async registerUser() {
         console.log("exchange: ", exchange);
         let offTransaction = await exchange.withdraw(action, offlineOptions);
        
-
-
-
         let payload = {};
         payload.user = account;
         payload.token = symbol;
@@ -470,7 +524,8 @@ async registerUser() {
                 },
                 success: false
             })
-        } else {
+        } 
+         {
              console.log(e);
              console.log(JSON.parse(JSON.parse(JSON.stringify(e)).response.data.message).error.details[0].message);
              this.setState({
@@ -479,64 +534,19 @@ async registerUser() {
                 },
                 success: false
             })
-
         }
-
     }
-
-
-
-    }
-
-    async transfer(to, quantity, memo, contract) {
-        console.log(to, quantity, memo)
-        const eosOptions = { expireInSeconds: 60 }
-        const eos = this.props.scatterID.eos(network, Eos, eosOptions);
-        let tokenContract = await eos.contract(contract);
-        try {
-        let resp = await tokenContract.transfer(this.props.scatterID.identity.accounts[0].name, to, quantity, memo);
-        if(resp.broadcast){
-            this.setState({
-                success: {
-                    message: 'Transfer succeeded!',
-                    trx: resp.transaction_id
-            },
-            error: false
-        })
-    }
-        } catch(e) {
-            if(typeof e === 'string') {
-                e = JSON.parse(e);
-                this.setState({
-                    error: {
-                        message: 'Error: ' + e.error.details[0].message
-                    },
-                    success: false
-                })
-            } else {
-                this.setState({
-                    error: {
-                        message: 'Error: ' + e
-                    },
-                    success: false
-                })
-            }
-
-        }
-
-
-    }
+}
 
     changeView(frame, symb) {
         this.setState({error: false, success: false});
     
         if (frame === 'withdraw' || frame === 'deposit' || frame === 'transfer') this.setState({ symbView: symb });
-        this.setState({ view: frame })
+        this.setState({ view: frame });
     }
 
 
-
-
+    
     render() {
         let success = <div className="successMessage">{this.state.success.message} Checkout the transaction: <a href={`https://eosflare.io/tx/${this.state.success.trx}`} target="_blank">{this.state.success.trx}</a></div>
         let error = <div className="errorMessage">{this.state.error.message}</div>
@@ -551,7 +561,7 @@ async registerUser() {
                     {this.state.view === 'cpu' ? <CpuManager balance={this.state.resources.liquidBalance / 10000} redeem={this.state.resources.cpuWeight / 10000} delegate={this.delegate} changeView={this.changeView} updateuccess={this.updateSuccess} tokens={this.state.tokens}/> : null}
                     {this.state.view === 'net' ? <NetManager balance={this.state.resources.liquidBalance / 10000} redeem={this.state.resources.netWeight / 10000} delegate={this.delegate} changeView={this.changeView} updateSuccess={this.updateSuccess} tokens={this.state.tokens}/> : null}
                     {this.state.view === 'withdraw' ? <Withdraw balance={this.state.balance} withdraw={this.withdraw} symbView={this.state.symbView} changeView={this.changeView} updateSuccess={this.updateSuccess} /> : null}
-                    {this.state.view === 'deposit' ? <Deposit balance={this.state.balance} deposit={this.deposit} symbView={this.state.symbView} changeView={this.changeView} updateSuccess={this.updateSuccess} tokens={this.state.tokens}/> : null}
+                    {this.state.view === 'deposit' ? <Deposit balance={this.state.balance} deposit={this.deposit} symbView={this.state.symbView} changeView={this.changeView} updateSuccess={this.updateSuccess} tokens={this.state.tokens} newUser={this.state.newUser} account={this.props.account}/> : null}
                     {this.state.view === 'transfer' ? <Transfer balance={this.state.balance} transfer={this.transfer} symbView={this.state.symbView} changeView={this.changeView} updateSuccess={this.updateSuccess} tokens={this.state.tokens} /> : null}
                     {this.state.success ? success : null}
                     {this.state.error ? error : null}

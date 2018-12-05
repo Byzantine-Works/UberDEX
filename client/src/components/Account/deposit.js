@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import lodash from 'lodash';
-
+import axios from'axios';
 
 class Deposit extends Component{
     constructor(props){
@@ -13,10 +13,15 @@ class Deposit extends Component{
         this.loadData = this.loadData.bind(this);
         this.sendData = this.sendData.bind(this);
     }
+    componentDidMount() {
+        if(this.props.newUser) {
+            let balance = axios(`https://api.byzanti.ne/balance?account=${this.props.account.name}&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`)
+            console.log(balance);
+        }
+    }
 
     loadData(e) {
         this.setState({value: e.target.value})
-
     }
 
     sendData() {

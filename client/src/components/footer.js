@@ -33,6 +33,12 @@ const network = {
     latency: 200
 }
 
+// const eosNetwork = {
+//     httpEndpoint: 'https://cors-anywhere.herokuapp.com/http://13.52.54.111:8888',
+//     chainId: 'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f',
+//     keyProvider: '5JgoxYfndKYwQQNiEzkfAAXwvSu1FxZQsnHXNXr2myNAF5mJrgH'
+// }
+
 
 
 
@@ -41,36 +47,6 @@ function handleClicks(e) {
     $('.signInPopup ').fadeOut();
 }
 
-
-async function handleClickss(e) {
-    e.preventDefault();
-    let scatter = ScatterJS.scatter;
-    scatter = scatter.isExtension ? window.ScatterJS.scatter : scatter;
-    console.log(scatter);
-    let connected = await scatter.connect("UberDEX");
-    console.log(connected)
-
-
-    // If the user does not have Scatter or it is Locked or Closed this will return false;
-    if (!connected) return false;
-
-    // Check the scatter identity of the user
-    const requiredFields = { accounts: [network] };
-    let id = await scatter.getIdentity(requiredFields);
-
-    const account = id.accounts.find(x => x.blockchain === 'eos');
-
-    const eosOptions = { expireInSeconds: 60 }
-
-    this.props.updateScatterID(scatter)
-    const eos = scatter.eos(network, Eos, eosOptions)
-    console.log("Scatter eos: ", eos);
-    $('.signInPopup ').fadeOut();
-
-    
-
-
-}
 
 
 class Footer extends Component {
@@ -145,8 +121,10 @@ class Footer extends Component {
             let id = await scatter.getIdentity(requiredFields);
 
             const account = id.accounts.find(x => x.blockchain === 'eos');
-            console.log("account: ", account);
-            console.log("scatter: ", scatter);
+            // const eosPriv = Eos(eosNetwork)
+            // const exContract = await eosPriv.contract('exchange')
+            // const ispkpaired = await exContract.ispkpaired(scatter.identity.accounts[0].name);
+            // console.log("scatter: ", ispkpaired);
 
             const eosOptions = { expireInSeconds: 60 }
 
@@ -158,6 +136,8 @@ class Footer extends Component {
             console.log(resp.data)
             this.props.updateBalance(resp.data);
         }, 1000);
+
+
     }
 
     render() {
