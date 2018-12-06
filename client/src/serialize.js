@@ -7,6 +7,7 @@ var {
 } = Eos.modules;
 
 const uint64_size = 8;
+var eosTokenContract = "eosio.token";
 
 function serializeAccountName(accountName) {
     return serializeUInt64BN(BN(format.encodeName(accountName, /*littleEndian=*/ false)));
@@ -28,16 +29,16 @@ function serializeTokenSymbolName(tokenSymbol, precision) {
 }
 
 function serializeUInt64BN(bn) {
-    assert(bn.isInteger());
-    assert(bn.gte(0));
-    assert(bn.lt(BN(2).pow(64)));
+    // assert(new BN(bn).isInteger());
+    // assert(new BN(bn).gte(0));
+    // assert(new BN(bn).lt(BN(2).pow(64)));
 
     var buf = Buffer.alloc(8);
     var byte;
     for (byte = 0; byte < 8; byte++) {
-        const m = bn.mod(256).toNumber();
+        const m = new BN(bn).mod(256).toNumber();
         buf.writeUInt8(m, byte);
-        bn = bn.dividedToIntegerBy(256);
+        bn = new BN(bn).dividedToIntegerBy(256);
     }
     return buf;
 }
@@ -46,7 +47,7 @@ function serializeExtendedSymbol(tokenSymbol) {
     var extendedSymbolBuffer = Buffer.alloc(uint64_size * 2);
     console.log('tokenSymbol: ', tokenSymbol);
     var precision;
-    //console.log('tokenSymbol: ', eosTokenContract);""
+    //console.log('tokenSymbol: ', eosTokenContract);
     if (tokenSymbol.indexOf("IQ") > -1) {
         precision = 3;
         extendedSymbolBuffer.set(serializeTokenSymbolName(tokenSymbol, precision));
@@ -58,11 +59,11 @@ function serializeExtendedSymbol(tokenSymbol) {
         precision = 4;
         extendedSymbolBuffer.set(serializeTokenSymbolName(tokenSymbol, precision));
         extendedSymbolBuffer.set(
-            serializeUInt64BN(BN(format.encodeName("eosio.token", /*littleEndian=*/ false))),
+            serializeUInt64BN(BN(format.encodeName(eosTokenContract, /*littleEndian=*/ false))),
             uint64_size * 1
         );
     }
-
+    console.log("serializeExtendedSymbol=>" + extendedSymbolBuffer);
     return extendedSymbolBuffer;
 }
 
@@ -87,6 +88,7 @@ export function serializeOrder(exchangeAccount, tokenBuy, tokenSell, amountBuyBN
     orderBuffer.set(tokenSellBuffer, offset);
     console.log('tokenSellBuffer: ', tokenSellBuffer);
     offset += serializedTokenSymbolSize;
+    console.log("BINS for amountSell:nonce=> " + amountSellBN,nonceBN);
     orderBuffer.set(serializeUInt64BN(amountSellBN), offset);
     offset += uint64_size;
     orderBuffer.set(serializeUInt64BN(nonceBN), offset);
@@ -94,7 +96,8 @@ export function serializeOrder(exchangeAccount, tokenBuy, tokenSell, amountBuyBN
     orderBuffer.set(serializeAccountName(makerAccount), offset);
     offset += uint64_size;
     assert(offset == serializedSize);
-   
+    //log('orderBuffer.length: ', orderBuffer.length);
+    //log('orderBuffer: ', orderBuffer);
     return orderBuffer;
 }
 

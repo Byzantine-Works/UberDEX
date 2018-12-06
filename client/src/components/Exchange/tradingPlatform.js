@@ -867,8 +867,8 @@ bColor='#52565a';
         let amS = amSell.toFixed(precisionS);
         let amB = amBuy.toFixed(precisionB);
     
-        var amountS = BN(amS).multipliedBy(precisionS);
-        var amountB = BN(amB).multipliedBy(precisionB);
+        var amountS = BN(amS).multipliedBy(Math.pow(10, precisionS));
+        var amountB = BN(amB).multipliedBy(Math.pow(10, precisionB));
 
         console.log(amountS, amountB)
     
@@ -903,7 +903,7 @@ bColor='#52565a';
         datas.hash = orderHash;
         datas.signature = signature;
     
-        let ordMakeResp = await axios.post('https://api.byzanti.ne/orderMake/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', datas);
+        let ordMakeResp = await axios.post('http://local.byzanti.ne:8901/orderMake/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', datas);
         console.log(ordMakeResp);
     
         let json = ordMakeResp.data;
