@@ -1,4 +1,4 @@
-<h1>Byzantine Website</h1>
+<h1>UberDex Clientside</h1>
 
 Available Scripts
 In the project directory, you can run:
