@@ -867,8 +867,8 @@ bColor='#52565a';
         let amS = amSell.toFixed(precisionS);
         let amB = amBuy.toFixed(precisionB);
     
-        var amountS = BN(amS).multipliedBy(Math.pow(10, precisionS));
-        var amountB = BN(amB).multipliedBy(Math.pow(10, precisionB));
+        var amountS = BN(parseFloat(amS)).multipliedBy(Math.pow(10, precisionS));
+        var amountB = BN(parseFloat(amB)).multipliedBy(Math.pow(10, precisionB));
 
         console.log(amountS, amountB)
     
