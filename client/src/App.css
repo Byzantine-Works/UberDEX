@@ -1578,7 +1578,7 @@ body {
 }
 
 .tradingCenter .lefts {
-  min-height: 991px;
+  min-height: 988px;
 }
 
 .tradingCenter .lefts {
@@ -2067,7 +2067,7 @@ body {
 }
 
 .orderTacker table {
-  height: 382px;
+  height: 355px;
   overflow-x: hidden;
 }
 
@@ -2285,7 +2285,7 @@ div#tv_chart_container iframe {
   font-weight: bold;
 }
 .tradingCenter .lefts table {
-    height: 971px;
+    height: 916px;
     display: block;
     overflow: auto;
 }
@@ -3428,8 +3428,76 @@ body.darkVersion {
   display: block;
 }
 
+.EOStable table tr th input {
+    background: none;
+    border: 0px;
+    width: 120px;
+    font-size: 16px;
+    color: #fff;
+    font-weight: bold;
+    text-align: left;
+}
+.EOStable table tr th input::placeholder{ color:#fff; }
+
+.EOStable table tr th input:focus {
+    outline: 0px;
+}
+
+.lightVersion .EOStable table tr th input {
+    background: none;
+    border: 0px;
+    width: 120px;
+    font-size: 16px;
+    color: #000;
+    font-weight: bold;
+    text-align: left;
+}
+.lightVersion .EOStable table tr th input::placeholder{ color:#000; }
+
+.lightVersion .EOStable table tr th input:focus {
+    outline: 0px;
+}
+
+.tableTop {
+    padding-bottom: 10px;
+}
+.EOStable table tr th span i {
+  cursor: pointer;
+}
+.EOStable table tr th span i {
+  cursor: pointer;
+}
+
+.tradingCenter .center .calculator h6 span {
+  font-size: 11px;
+}
+
+.tradingCenter .center .calculator input[type="submit"] {
+  width: auto;
+  padding: 0px 23px;
+  height: 30px;
+  font-size: 14px;margin-bottom:15px
+}
+
+.tradingCenter .center .calculator input[type="submit"]:last-child {
+  float: right;
+}
+
+
+.tradingCenter .center .calculator .red {
+  min-height: 355px;
+}
+.darkVersion .tradingCenter .center .calculator .red {
+  border-color: #52565a;
+}
+.tableTop {
+  padding-bottom: 10px !important;
+}
 @media only screen and (max-width: 600px)
 {
+  .exchangeHeader {
+    margin-top: -283px;
+}
   .callAction .callInner form input[type="text"] {
     width: 51%;
 }

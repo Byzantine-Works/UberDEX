@@ -168,8 +168,8 @@ class Footer extends Component {
                     <div className="container clearfix">
                         <img src={this.state.logo} className="darkF" alt=""  />
                         <img src={this.state.lightLogo} className="lightF" alt="" />
-                        <p id="bottomss">please make your investments cautiously.</p>
-                        <span id="copyrite">© Uberdex 2018.</span>
+                        <p id="bottomss"></p>
+                        <span id="copyrite"></span>
                         <ul>
                             <li><Link to="/about" className="link">About</Link></li>
                             <li><Link to="/user_agreement" className="link">User Agreement</Link></li>

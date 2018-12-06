@@ -127,12 +127,11 @@ class EOS extends Component{
                                  <input type="text" placeholder="Search" id="searchMarket" onChange={searchMarket} />
                        
                         </form>
-                        <p style={{'color': this.state.colors, 'borderColor':this.state.colors}}><i className="fa fa-star"></i> Favorites</p>
                     </div>
                     <table>
                         <thead>
                             <tr>
-                                <th>Pair</th>
+                                <th><input type="text" placeholder="Pair" id="searchMarket" onChange={searchMarket} /></th>
                                 <th>Last Price</th>
                                 <th>24h Change <span><i className="fa fa-angle-up" onClick={this.changeUp}></i><i className="fa fa-angle-down" onClick={this.changeDown}></i></span></th>
                                 <th>24h High</th>
@@ -144,8 +143,6 @@ class EOS extends Component{
                         </thead>
                         <tbody>
                         {tricker.map((hit, i) =>{
-                           if(this.state.allSymbols[hit.symbol] || this.state.allSymbols2[hit.symbol])
-                            {
                                return  <tr id={hit.symbol} className="allSymbol" key={hit.symbol}>
                                     <td><Link to={'/exchange/?opt='+hit.symbol+'&contract='+hit.contract} className="link">{hit.symbol} / EOS</Link></td>
                                     <td className={hit.change < 0?'minus':'plus'}>{hit.last}</td>
@@ -157,12 +154,6 @@ class EOS extends Component{
                                     <td><Link to={'/ldar/?opt='+hit.symbol} className="link tadeLink trade colors" style={{'color': this.state.colors}}>LDAR</Link> </td>
                                 </tr>
                                   
-                            }
-                            else
-                            {
-                                    return <tr key={i} className="rhide" style={{'display':'none'}}><td></td><td></td></tr>
-                            
-                            }
                                 })}
                                 
                         </tbody>
