@@ -1,14 +1,7 @@
 import React, {Component} from 'react';
-import Datafeed from './TVChartContainer/api/index';
 import TradingCenter from './Exchange/tradingPlatform';
 import Callaction from './callAction';
-import Footer from './footer';
-import Header from './header';
-import Order from './Exchange/order.js';
-import Trading from './Exchange/trading.js';
-import data from '../app.json';
 
-var color = {background: data['theme_color']};
 
 class Home extends Component{
     constructor(props) {

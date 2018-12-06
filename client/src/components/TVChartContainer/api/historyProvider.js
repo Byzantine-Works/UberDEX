@@ -10,7 +10,7 @@ export default {
 		var split_symbol = symbolInfo.name.split(/[:/]/)
         
 			const url = resolution === 'D' ? '/data/histoday' : resolution >= 60 ? '/data/histohour' : '/data/histominute'
-		console.log(`${api_root}${url}`);
+		//console.log(`${api_root}${url}`);
         	const qs = {
 					fsym: split_symbol[0],
 					tsym: split_symbol[1],
@@ -25,13 +25,13 @@ export default {
                 qs,
             })
             .then(data => {
-                console.log({data})
+                //console.log({data})
 				if (data.Response && data.Response === 'Error') {
-					console.log('CryptoCompare API error:',data.Message)
+					//console.log('CryptoCompare API error:',data.Message)
 					return []
 				}
 				if (data.Data.length) {
-					console.log(`Actually returned: ${new Date(data.TimeFrom * 1000).toISOString()} - ${new Date(data.TimeTo * 1000).toISOString()}`)
+					//console.log(`Actually returned: ${new Date(data.TimeFrom * 1000).toISOString()} - ${new Date(data.TimeTo * 1000).toISOString()}`)
 					var bars = data.Data.map(el => {
 						return {
 							time: el.time * 1000, //TradingView requires bar time in ms

@@ -1,6 +1,4 @@
 import React, {Component} from 'react';
-import Header from './header';
-import Footer from './footer';
 import loader from './imgs/loader.gif';
 import $ from "jquery";
 
@@ -23,6 +21,9 @@ class Home extends Component{
       }
 
     componentDidMount() {
+        $('.PreviousHeader').css('display','none');
+        $('.footer').css('display','none');
+        
         var url = new URL(window.location.href);
          var trxID = url.searchParams.get("trxID");
          var blocknum = url.searchParams.get("blocknumber");
@@ -46,7 +47,7 @@ class Home extends Component{
 
   fetch(adminURL+'/getColors/'+apiId)
     .then(response => response.json())
-    .then(data => {if(data.theme_color=='')
+    .then(data => {if(data.theme_color==='')
     {
         this.setState({colors:'#0e9caf'});
     }
@@ -61,16 +62,12 @@ class Home extends Component{
 
 }
     render(){
-        const { transaction } = this.state;
-        const { transactionTrx } = this.state;
-        const { transactionReceipt } = this.state;
-        const { colors } = this.state;
        // console.log(this.state.transactionTrx.actions[0]);
         return(
             <div className="HomePage" >
                 <div class="transactionPage">
                 <div className="loader">
-                    <img src={loader} />
+                    <img src={loader} alt="" />
                 </div>
                     <div className="container">
                         <div className="transTop">

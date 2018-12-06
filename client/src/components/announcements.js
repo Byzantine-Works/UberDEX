@@ -1,7 +1,5 @@
 import React, {Component} from 'react';
-import Header from './header';
 import Callaction from './callAction';
-import Footer from './footer';
 import $ from "jquery";
 import dp from '../app.json';
 var adminURL = dp['url'];
@@ -32,7 +30,7 @@ componentDidMount() {
     
     fetch(adminURL+'/getColors/'+apiId)
     .then(response => response.json())
-    .then(data => {if(data.theme_color=='')
+    .then(data => {if(data.theme_color==='')
     {
         this.setState({colors:'#0e9caf'});
         this.setState({companyName:'UberDex'});
@@ -56,7 +54,6 @@ componentDidMount() {
 
 }
 render(){
-    const { colors } = this.state;
     const { hitss } = this.state;
         return(
             <div className="aboutPage">
@@ -65,7 +62,7 @@ render(){
                         <div className="announcementInner clearfix">
                         <div className="announceLeft">
                                 {hitss.map(hit =>
-                                    <a style={{'background': this.state.colors}} href="#" className="defltC active" id={hit._id} onClick={announcOnes}>{hit._source.tickerTitle}</a>
+                                    <a style={{'background': this.state.colors}} href="/" className="defltC active" id={hit._id} onClick={announcOnes}>{hit._source.tickerTitle}</a>
                                 )}
                             </div>
                             <div className="announceRight">

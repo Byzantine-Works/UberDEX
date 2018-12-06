@@ -14,14 +14,14 @@ const API = 'https://api.byzanti.ne/ticker?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J879
        search= search.toLowerCase();
        if(search.length<2)
        {
-          $('table tbody tr td:nth-child(2)').each(function(i,v){
+          $('table tbody tr td:nth-child(1)').each(function(i,v){
       $('table tbody tr').eq(i).show();
     });
-     
+     $('.rhide').css('display','none');
        }
        else
        {
-           $('table tbody tr td:nth-child(2)').each(function(i,v){
+           $('table tbody tr td:nth-child(1)').each(function(i,v){
        if($(this).html().toLowerCase().indexOf(search)>0)
        {
         $('table tbody tr').eq(i).show();
@@ -44,16 +44,66 @@ class EOS extends Component{
           tricker: [],
           colors: [],
           logo: [],
+           allSymbols:[],
+          allSymbols2:[]
         };
+        this.changeUp= this.changeUp.bind(this);
+        this.changeDown= this.changeDown.bind(this);
+         this.volumeUp= this.volumeUp.bind(this);
+        this.volumeDown= this.volumeDown.bind(this);
       }
-      componentDidMount() {
-        fetch(API)
+       changeDown=(e)=>{
+         this.setState({tricker:this.state.tricker.sort((a, b) => b.change - a.change)});
+      
+      }
+       changeUp=(e)=>{
+       this.setState({tricker:this.state.tricker.sort((a, b) => a.change - b.change)});
+       // this.state.tricker.sort((a, b) => a.change + b.change);
+      }
+       volumeDown=(e)=>{
+         this.setState({tricker:this.state.tricker.sort((a, b) => b.volume - a.volume)});
+      
+      }
+       volumeUp=(e)=>{
+        this.setState({tricker:this.state.tricker.sort((a, b) => a.volume - b.volume)});
+       // this.state.tricker.sort((a, b) => a.change + b.change);
+      }
+     async componentDidMount() {
+        await fetch(API)
           .then(response => response.json())
           .then(data => this.setState({ tricker: data }));
-
+ let allSymbol="";
+          let allSymbol2="";
+       this.state.tricker.forEach(function(hit){
+                 if(allSymbol.length>=200)
+                {
+                     allSymbol2 +=hit.symbol+",";
+                }
+                else
+                {
+                    allSymbol +=hit.symbol+",";
+               
+                }
+                });
+              
+        var apiCall='https://min-api.cryptocompare.com/data/pricemulti?fsyms='+allSymbol+'&tsyms=USD';
+              
+               await        fetch(apiCall)
+                            .then(response => response.json())
+                            .then(data => {
+                                this.setState({allSymbols:data});
+                            });
+               var apiCall2='https://min-api.cryptocompare.com/data/pricemulti?fsyms='+allSymbol2+'&tsyms=USD';
+              
+                    await    fetch(apiCall2)
+                            .then(response => response.json())
+                            .then(data => {
+                               this.setState({allSymbols2:data});
+                            });
+                            
           fetch(adminURL+'/getColors/'+apiId)
             .then(response => response.json())
-            .then(data => {if(data.theme_color=='')
+            .then(data => {if(data.theme_color==='')
             {
                 this.setState({colors:'#0e9caf'});
             }
@@ -77,57 +127,49 @@ class EOS extends Component{
                                  <input type="text" placeholder="Search" id="searchMarket" onChange={searchMarket} />
                        
                         </form>
-                        <p style={{'color': this.state.colors, 'border-color':this.state.colors}}><i className="fa fa-star"></i> Favorites</p>
+                        <p style={{'color': this.state.colors, 'borderColor':this.state.colors}}><i className="fa fa-star"></i> Favorites</p>
                     </div>
                     <table>
                         <thead>
                             <tr>
-                                <th></th>
-                                <th>Pairs</th>
+                                <th>Pair</th>
                                 <th>Last Price</th>
-                                <th>24h Change <span><i className="fa fa-angle-up"></i><i className="fa fa-angle-down"></i></span></th>
+                                <th>24h Change <span><i className="fa fa-angle-up" onClick={this.changeUp}></i><i className="fa fa-angle-down" onClick={this.changeDown}></i></span></th>
                                 <th>24h High</th>
                                 <th>24h Low</th>
-                                <th>24h Volume <span><i className="fa fa-angle-up"></i><i className="fa fa-angle-down"></i></span></th>
+                                <th>24h Volume <span><i className="fa fa-angle-up" onClick={this.volumeUp}></i><i className="fa fa-angle-down" onClick={this.volumeDown}></i></span></th>
                                 <th></th> 
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
-                            
-                            
-                            
-                        {tricker.map(hit =>{
-                              var apiCall='https://min-api.cryptocompare.com/data/price?fsym='+hit.symbol+'&tsyms=USD';
-                         
-                        fetch(apiCall)
-                            .then(response => response.json())
-                            .then(data => {if(data.USD){
-                               
-                            }else
+                        {tricker.map((hit, i) =>{
+                           if(this.state.allSymbols[hit.symbol] || this.state.allSymbols2[hit.symbol])
                             {
-                                $('#'+hit.symbol).hide();
-                            }});
-                            
-                        
-                              return  <tr id={hit.symbol}>
-                                    <td><i className="fa fa-star"></i></td>
-                                    <td><Link to={'/exchange/?opt='+hit.symbol} className="link">{hit.symbol} / EOS</Link></td>
+                               return  <tr id={hit.symbol} className="allSymbol" key={hit.symbol}>
+                                    <td><Link to={'/exchange/?opt='+hit.symbol+'&contract='+hit.contract} className="link">{hit.symbol} / EOS</Link></td>
                                     <td className={hit.change < 0?'minus':'plus'}>{hit.last}</td>
                                     <td className={hit.change < 0?'minus':'plus'}>{hit.change}</td>
                                     <td>{hit.high}</td>
                                     <td>{hit.low}</td>
                                     <td>{hit.volume}</td>
-                                    <td><Link to={'/exchange/?opt='+hit.symbol} className="link tadeLink trade colors" style={{'color': this.state.colors}}>Trade</Link> </td>
+                                    <td><Link to={'/exchange/?opt='+hit.symbol+'&contract='+hit.contract} className="link tadeLink trade colors" style={{'color': this.state.colors}}>Trade</Link> </td>
                                     <td><Link to={'/ldar/?opt='+hit.symbol} className="link tadeLink trade colors" style={{'color': this.state.colors}}>LDAR</Link> </td>
                                 </tr>
+                                  
+                            }
+                            else
+                            {
+                                    return <tr key={i} className="rhide" style={{'display':'none'}}><td></td><td></td></tr>
+                            
+                            }
                                 })}
                                 
                         </tbody>
                     </table>
 
                     <div className="clearfix">
-                        <a href="#" className="background"  style={{'background': this.state.colors}}>View More</a>
+                        <a href="/" className="background"  style={{'background': this.state.colors}}>View More</a>
                     </div>
 
                 </div>

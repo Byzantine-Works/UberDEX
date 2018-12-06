@@ -99,6 +99,7 @@ class Account extends Component {
 
 
     async checkBalance() {
+        console.log("resources: ", this.state.resources)
 
         /*Get balance on exchange*/
         let response;

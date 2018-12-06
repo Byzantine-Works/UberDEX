@@ -62,7 +62,6 @@ const chainId = config.byzantinetestnet.chainId;
 const httpEndpoint = config.byzantinetestnet.httpEndpoint;
 const exchangeAccount = "exchange";
 const exchangeAdminAccount = "admin";
-console.log("network: ", eosNetwork);
 eos = Eos(eosNetwork);
 const uint64_size = 8;
 

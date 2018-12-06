@@ -35,13 +35,13 @@ _subs.push(newSub)
 }
 
 socket.on('connect', () => {
- console.log('===Socket connected')
+ //console.log('===Socket connected')
 })
 socket.on('disconnect', (e) => {
- console.log('===Socket disconnected:', e)
+ //console.log('===Socket disconnected:', e)
 })
 socket.on('error', err => {
- console.log('====socket error', err)
+ //console.log('====socket error', err)
 })
 socket.on('m', (e) => {
  // here we get all events the CryptoCompare connection has subscribed to

@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
 import Datafeed from '../TVChartContainer/api/index';
 import $ from "jquery";
-import logoss from '../logoMain.png';
+import logoss from '../logo_main.png';
 import ScatterJS from 'scatterjs-core';
 import ScatterEOS from 'scatterjs-plugin-eosjs';
 import Eos from 'eosjs';
@@ -10,28 +10,13 @@ import Trading from './trading';
 import BN from 'bignumber.js';
 import ecc from 'eosjs-ecc'
 
-import data from '../../app.json';
-var color = {background: data['theme_color']};
-var colors = {color: data['theme_color']};
-var logoUrl = '/img/'+data['logo'];
-
-var backgroundss = data['theme_color'];
-var colorsss = data['theme_color'];
+import dp from '../../app.json';
+var adminURL = dp['url'];
+var apiId = dp['apiId'];
 
 const serialize = require('../../serialize');
 
-const network = {
-    blockchain:'eos',
-    protocol:'https://cors-anywhere.herokuapp.com/http',
-    host:'13.52.54.111',
-    eosVersion: 'bf28f8bb',
-    port:8888,
-    chainId:'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f',
-    debug: false,
-    verbose: false,
-    latency: 200,
-    sign: true
-}
+
 
 function tabsOnes(e)
 {
@@ -49,6 +34,7 @@ function tabsTwos(e)
     $('#tabss-2').css('display', 'block');
     $('#tabss-1').css('display', 'none');
 }
+
 function tabsOne(e)
 {
     e.preventDefault();
@@ -90,6 +76,9 @@ function handlelight(e)
     $('body').addClass('lightVersion');
     $('.demo-big-content').removeClass('darkVersion');
     e.preventDefault();
+    var url = new URL(window.location.href);
+var c = url.searchParams.get("opt");
+
     const widgetOptions = {
         debug: false,
         symbol: c+':EOS',
@@ -125,6 +114,9 @@ function handlelight(e)
   function handledark(e)
   {
     e.preventDefault();
+    var url = new URL(window.location.href);
+var c = url.searchParams.get("opt");
+
     const widgetOptions = {
         debug: false,
         symbol: c+':EOS',
@@ -163,7 +155,23 @@ function handlelight(e)
   
   function handledefualt(e)
   {
-      
+    var bColor='#52565a';
+     if($('body').hasClass('lightVersion'))
+      {
+        $('.darkt').css('display', 'inline-block');
+$('.lightT').css('display', 'none');
+bColor='#fff';
+      }
+      else
+      {
+        $('.darkt').css('display', 'none');
+$('.lightT').css('display', 'inline-block');
+bColor='#52565a';
+      }
+//    $('.darkt').css('display', 'none');
+//    $('.lightT').css('display', 'inline-block');
+//    $('body').removeClass('lightVersion');
+//    $('body').addClass('darkVersion');   
 var url = new URL(window.location.href);
 var c = url.searchParams.get("opt");
     //e.preventDefault();
@@ -186,7 +194,7 @@ var c = url.searchParams.get("opt");
         studies_overrides: {},
         overrides: {
             "mainSeriesProperties.showCountdown": true,
-            "paneProperties.background": "#52565a",
+            "paneProperties.background": bColor,
             "paneProperties.vertGridProperties.color": "#363c4e",
             "paneProperties.horzGridProperties.color": "#363c4e",
             "symbolWatermarkProperties.transparency": 90,
@@ -238,45 +246,7 @@ function closeView(e){
 }
 
 
-function handleClick(e) {
-    e.preventDefault();
-    var amount_two = e.target.nextSibling.id;
-    var amount_twos = e.target.nextSibling.nextSibling.id;
-    var amount = e.target.id;
-    $(this).attr("data-id")
-     var ID = $(e.target).data('id');
-     var IDs = $(this).attr("data-id");
-     console.log(IDs);
-    var assetbuy = $(e.target).data('assetbuy');
-    var assetsell = $(e.target).data('assetsell');
-    var amountsell = $(e.target).data('amountsell');
-    var amountbuy = $(e.target).data('amountbuy');
-    var prices = $(e.target).data('price');
-    var maker = $(e.target).data('maker');
-    var makerexchange = $(e.target).data('makerexchange');
-    var side = $(e.target).data('side');
-    
-    document.getElementById('ID').value = ID;
-    document.getElementById('assetbuy').value = assetbuy;
-    document.getElementById('assetsell').value = assetsell;
-    document.getElementById('amountsell').value = amountsell;
-    document.getElementById('amountbuy').value = amountbuy;
-    document.getElementById('maker').value = maker;
-    document.getElementById('prices').value = prices;
-    document.getElementById('makerexchange').value = makerexchange;
-    document.getElementById('side').value = side;
-    document.getElementById('priceTwo').value = '';
-    document.getElementById('BuyPricetwos').value = '';
-    document.getElementById('BuyPricetwo').value = '';
-    document.getElementById('sellPricetwo').value = '';
-  //  console.log(amount_twos);
-   $('#apiType').val('take');
-    document.getElementById('price').value = amount;
-    document.getElementById('buyPrices').value = amount_two;
-    document.getElementById('buyPrice').value = amount_two;
-    document.getElementById('sellPrice').value = amount_twos;
-    
-  }
+
   function handleBuy(e)
 {
     e.preventDefault();
@@ -356,7 +326,7 @@ function handleClick(e) {
         .then(response => response.json())
         .then(data => {if($('#apiType').val()=='make'){ if(data.orderId){
             
-            $('#contentToShow').html('Order Id : '+data.orderId);$('#msg').html('Success');$('.sellAlart').show();}else if(data.code){$('#contentToShow').html('Error Code : '+data.code);$('#msg').html('Error');$('.sellAlart').show();}}else{ if(data.tradeId){$('#contentToShow').html('Trade Id : '+data.tradeId+'<br />result : Created <br />BlockNumber : '+data.blockNumber+'<br />TransactionId : <a href="/transaction/?trxID='+data.transactionId+'&blocknumber='+data.blockNumber+'">'+data.transactionId+'</a>');console.log(data);$('#msg').html('Success');$('.sellAlart').show();}else{$('#contentToShow').html('Status Code : '+data.statusCode+"<br /> Message : "+data.message+"<br /> Code : "+data.code+"<br /> Order Id : "+ids);$('#msg').html('Error');$('.sellAlart').show();}}//window.location.reload()
+            $('#contentToShow').html('Order Id : '+data.orderId);$('#msg').html('Success');$('.sellAlart').show();}else if(data.code){$('#contentToShow').html('Error Code : '+data.code);$('#msg').html('Error');$('.sellAlart').show();}}else{ if(data.tradeId){$('#contentToShow').html('Trade Id : '+data.tradeId+'<br />result : Created <br />BlockNumber : '+data.blockNumber+'<br />TransactionId : <a target="_blank" href="/transaction/?trxID='+data.transactionId+'&blocknumber='+data.blockNumber+'">'+data.transactionId+'</a>');console.log(data);$('#msg').html('Success');$('.sellAlart').show();}else{$('#contentToShow').html('Status Code : '+data.statusCode+"<br /> Message : "+data.message+"<br /> Code : "+data.code+"<br /> Order Id : "+ids);$('#msg').html('Error');$('.sellAlart').show();}}//window.location.reload()
       }
         );
         
@@ -405,8 +375,8 @@ function handleClick(e) {
         "orderId": ids,
         "assetBuy": 'EOS',
         "assetSell":c,
-        "amountBuy": sellPrice,
-        "amountSell": bprice,
+        "amountBuy": bprice,
+        "amountSell": sellPrice,
         "price": pricess,
         "taker": "taker1",
         "maker": maker,
@@ -419,10 +389,10 @@ function handleClick(e) {
           var datas = 
     {
         "orderId": ids,
-        "assetBuy": c,
-        "assetSell":'EOS',
-        "amountBuy": sellPrice,
-        "amountSell": bprice,
+        "assetBuy": 'EOS',
+        "assetSell":c,
+        "amountBuy": bprice,
+        "amountSell": sellPrice,
         "price": pricess,
         "taker": "taker1",
         "maker": maker,
@@ -442,7 +412,7 @@ function handleClick(e) {
   },  body: JSON.stringify(datas)})
         .then(response => response.json())
         .then(data => {if($('#apiType').val()=='make'){ if(data.orderId){
-            $('#contentToShow').html('Order Id : '+data.orderId);$('#msg').html('Success');$('.sellAlart').show();}else if(data.code){$('#contentToShow').html('Error Code : '+data.code);$('#msg').html('Error');$('.sellAlart').show();}}else{ if(data.tradeId){$('#contentToShow').html('Trade Id : '+data.tradeId+'<br />result : Created <br />BlockNumber : '+data.blockNumber+'<br />TransactionId : <a href="/transaction/?trxID='+data.transactionId+'&blocknumber='+data.blockNumber+'">'+data.transactionId+'</a>');console.log(data);$('#msg').html('Success');$('.sellAlart').show();}else{$('#contentToShow').html('Status Code : '+data.statusCode+"<br /> Message : "+data.message+"<br /> Code : "+data.code+"<br /> Order Id : "+ids);$('#msg').html('Error');$('.sellAlart').show();}}//window.location.reload()
+            $('#contentToShow').html('Order Id : '+data.orderId);$('#msg').html('Success');$('.sellAlart').show();}else if(data.code){$('#contentToShow').html('Error Code : '+data.code);$('#msg').html('Error');$('.sellAlart').show();}}else{ if(data.tradeId){$('#contentToShow').html('Trade Id : '+data.tradeId+'<br />result : Created <br />BlockNumber : '+data.blockNumber+'<br />TransactionId : <a target="_blank" href="/transaction/?trxID='+data.transactionId+'&blocknumber='+data.blockNumber+'">'+data.transactionId+'</a>');console.log(data);$('#msg').html('Success');$('.sellAlart').show();}else{$('#contentToShow').html('Status Code : '+data.statusCode+"<br /> Message : "+data.message+"<br /> Code : "+data.code+"<br /> Order Id : "+ids);$('#msg').html('Error');$('.sellAlart').show();}}//window.location.reload()
       
        }
     );
@@ -480,41 +450,7 @@ function changeBuyPrice(e)
     $('#BuyPricetwo').val(price/sellPrice);
     $('#apiType').val('make');
 }
-function handleClicks(e) {
-    e.preventDefault();
-    var amount_four = e.target.nextSibling.id;
-    var amount_fours = e.target.nextSibling.nextSibling.id;
-    var amounts = e.target.id;
 
-    var ID = $(e.target).data('id');
-    var assetbuy = $(e.target).data('assetbuy');
-    var assetsell = $(e.target).data('assetsell');
-    var amountsell = $(e.target).data('amountsell');
-    var amountbuy = $(e.target).data('amountbuy');
-    var prices = $(e.target).data('price');
-    var maker = $(e.target).data('maker');
-    var makerexchange = $(e.target).data('makerexchange');
-    var side = $(e.target).data('side');
-    
-    document.getElementById('ID').value = ID;
-    document.getElementById('assetbuy').value = assetbuy;
-    document.getElementById('assetsell').value = assetsell;
-    document.getElementById('amountsell').value = amountsell;
-    document.getElementById('amountbuy').value = amountbuy;
-    document.getElementById('maker').value = maker;
-    document.getElementById('prices').value = prices;
-    document.getElementById('makerexchange').value = makerexchange;
-    document.getElementById('side').value = side;
-    document.getElementById('priceTwo').value = amounts;
-    document.getElementById('BuyPricetwos').value = amount_four;
-    document.getElementById('BuyPricetwo').value = amount_four;
-    document.getElementById('sellPricetwo').value = amount_fours;
-    $('#apiType').val('take');
-     document.getElementById('price').value = '';
-    document.getElementById('buyPrices').value = '';
-    document.getElementById('buyPrice').value = '';
-    document.getElementById('sellPrice').value = '';
-  }
  var url = new URL(window.location.href);
      var     c = url.searchParams.get("opt");
 
@@ -593,176 +529,108 @@ class tradingHead extends Component{
           apil:'SEED',
           amounttype:'plus',
           myamount:"",
-          
+          mysign:"",
             Orders: [],
             OrderSells: [],
             tradebook: [],
             useraccount:'',
             colors: [],
             logo: [],
+            tradeHistory:[]
+            
         };
         this.refresh_data = this.refresh_data.bind(this);
-        this.refresh_r = this.refresh_r.bind(this);
-        this.handleTakerSell = this.handleTakerSell.bind(this);
+        this.handleClicks = this.handleClicks.bind(this);         
+        this.handleClick = this.handleClick.bind(this);
         this.handleBuy = this.handleBuy.bind(this);
-        this.registerUser = this.registerUser.bind(this);
-        this.ispkpaired = this.ispkpaired.bind(this);
-
-     
-      }
-refresh_r()
-{
-    console.log('hi');
-}
-
-async handleBuy(e) {
-
-    let scatter = this.props.scatterID;
-
-    var amountB = BN(359.4218).multipliedBy(10000);
-    var amountS = BN(0.4144).multipliedBy(10000);
-
-    amountB = Math.floor(amountB / 10);
-
-    console.log(amountB, amountS);
- 
-    let amountBuy = new BN(amountB);
-    let amountSell = new BN(amountS);
-    let nonceBN = new BN(1);
-
-    let orderBuffer = serialize.serializeOrder('exchange', 'IQ', 'EOS',  amountBuy, amountSell, nonceBN, 'ubermaker');
-  
-    let orderHash = ecc.sha256(orderBuffer);
-
-
-       let datas = {
-          side: "SELL",
-          assetBuy: "EOS",
-          assetSell: "IQ",
-          amountBuy: 0.4144,
-          amountSell: 359.4218,
-          price: 0.001153,
-          type: 2,
-          hash: orderHash,
-        //   expires: new Date(new Date(info.head_block_time + 'Z').getTime() + 60 * 1000).toISOString().split('.')[0],
-          nonce: 1,
-          useraccount: scatter.identity.accounts[0].name
-        };
-
-    let signature = ecc.sign(orderBuffer, '5Kbhuw48LRBY25KMDD2KH59EAgvHnhh66S863Nvz1PZBY9X2uph');   
+        this.handleTakerSell = this.handleTakerSell.bind(this);         
     
-    //let signature = await scatter.getArbitrarySignature('EOS6P7wP3HsdmGPsrrabPrweWQnTgxqdY8RTaUmVMVeXJec6hyNVm', orderBuffer, "test ordermake sig", false);    
-    datas.hash = orderHash; 
-    datas.signature = signature;
-    console.log("datas: ", datas);
-
-     fetch('https://api.byzanti.ne/orderMake/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', {
-     method: 'POST',headers: {
-  //  'Accept': 'application/json',
-    'Content-Type': 'application/json',
-  },  body: JSON.stringify(datas)})
-        .then(response => {
-            response.json()
-            console.log("response: ", response);
-        })
-        .then(() => {
-            fetch(`https://api.byzanti.ne/ordersByUser?user=${this.props.scatterID.identity.accounts[0].name}&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`)
-            .then(response => response.json())
-            .then(data => {
-                this.props.updateOpenOrders({ openOrders: data });
-                console.log("orders: ", data);
+      }
+      handleClick=(orderId)=> {
+    let API="https://api.byzanti.ne/orderById?orderId="+orderId+"&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N";
+   fetch(API)
+        .then(response => response.json())
+        .then(data => {
+             var amount_two = data.amountSell;
+    var amount_twos = data.amountBuy;
+    var amount = data.price;
+    
+     var ID = orderId;
+    var assetbuy = data.assetSell;
+    var assetsell = data.assetBuy;
+    var amountsell = data.amountBuy;
+    var amountbuy = data.amountSell;
+    var prices = data.price;
+    var maker = data.useraccount;
+    var makerexchange = data.source;
+    var side = data.side;
+    
+    document.getElementById('ID').value = ID;
+    document.getElementById('assetbuy').value = assetbuy;
+    document.getElementById('assetsell').value = assetsell;
+    document.getElementById('amountsell').value = amountsell;
+    document.getElementById('amountbuy').value = amountbuy;
+    document.getElementById('maker').value = maker;
+    document.getElementById('prices').value = prices;
+    document.getElementById('makerexchange').value = makerexchange;
+    document.getElementById('side').value = side;
+    document.getElementById('priceTwo').value = '';
+    document.getElementById('BuyPricetwos').value = '';
+    document.getElementById('BuyPricetwo').value = '';
+    document.getElementById('sellPricetwo').value = '';
+  //  console.log(amount_twos);
+   $('#apiType').val('take');
+    document.getElementById('price').value = amount;
+    document.getElementById('buyPrices').value = amount_two;
+    document.getElementById('buyPrice').value = amount_two;
+    document.getElementById('sellPrice').value = amount_twos;
             });
-
-        });
-     
-}
-
-async handleTakerSell() {
-
-    const network = {
-        blockchain: 'eos',
-        protocol: 'https://cors-anywhere.herokuapp.com/http',
-        host: '13.52.54.111',
-        eosVersion: 'bf28f8bb',
-        port: 8888,
-        chainId: 'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f',
-        debug: false,
-        verbose: false,
-        latency: 200,
-        sign: true
-    }
+   
     
-    var url = new URL(window.location.href);
-    var c = url.searchParams.get("opt");
-
-    const account = this.props.scatterID.identity.accounts[0].name;
-    console.log("account: ", account);
-
-    var bprice= parseFloat($('#buyPrice').val());
-    var eosAm= parseFloat($('#sellPrice').val());
-    var price = parseFloat($('#price').val());
-
-    const scatter = this.props.scatterID;
-
-    const eos = scatter.eos(network, Eos)
-    
-
-
-    var amountB = BN(359.4218).multipliedBy(10000);
-    var amountS = BN(0.4144).multipliedBy(10000);
-
-    amountB = Math.floor(amountB / 10);
-
-    console.log(amountB, amountS);
- 
-    let amountBuy = new BN(amountB);
-    let amountSell = new BN(amountS);
-    let nonceBN = new BN(1);
-    
-    let orderBuffer = serialize.serializeOrder('exchange', 'IQ', 'EOS', amountBuy, amountSell, nonceBN, 'ubermaker');
-  
-    let orderHash = ecc.sha256(orderBuffer);
-
-    var orderHashBuffer = Buffer.from(orderHash, 'hex');
-    
-
-    let tradeBuffer = serialize.serializeTrade(orderHashBuffer, amountBuy, account, nonceBN)
-    let data = {
-            assetBuy: 'IQ',
-            assetSell: 'EOS',
-            amountBuy: 359.4218,
-            amountSell: 0.4144,
-            price: 0.001153,
-            taker: account,
-            takerExchange: 'uberdex',
-            makerExchange: 'uberdex'
-      }
-
-      let pubKey = await scatter.getPublicKey('eos');
-      console.log("pub key: ", pubKey)
-  
-    //   data.signature = await ecc.sign(tradeBuffer, '5J4xG1aygXGJCNgkG4JVVQirgpxJ9M1s1Auh24ebVtYJ21QLfdv');
-      data.hash = ecc.sha256(tradeBuffer);
-    
-     
-      data.signature = await scatter.getArbitrarySignature(pubKey, tradeBuffer, "test ordertake", false);
-      data.orderId = 'zBZ-YmcBKKlqgDKX-aHw'
-      data.maker = 'ubermaker'
-
-
-      fetch('https://api.byzanti.ne/orderTake/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', {
-            method: 'POST', headers: {
-    'Content-Type': 'application/json',
-  },  body: JSON.stringify(data)})
-        .then(response => {
-            response.json()
-            console.log("response: ", response);
-        })
-
-
   }
+handleClicks=(orderId,e)=> {
+  let API1="https://api.byzanti.ne/orderById?orderId="+orderId+"&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N";
+   fetch(API1)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
+             var amount_four = data.amountBuy;
+    var amount_fours = data.amountSell;
+    var amounts = data.price;
 
-
+    var ID = orderId;
+    
+    var assetbuy = data.assetSell;
+    var assetsell = data.assetBuy;
+    var amountsell = data.amountBuy;
+    var amountbuy = data.amountSell;
+    var prices = data.price;
+    var maker = data.useraccount;
+    var makerexchange = data.source;
+    var side = data.side;
+    
+    document.getElementById('ID').value = ID;
+    document.getElementById('assetbuy').value = assetbuy;
+    document.getElementById('assetsell').value = assetsell;
+    document.getElementById('amountsell').value = amountsell;
+    document.getElementById('amountbuy').value = amountbuy;
+    document.getElementById('maker').value = maker;
+    document.getElementById('prices').value = prices;
+    document.getElementById('makerexchange').value = makerexchange;
+    document.getElementById('side').value = side;
+    document.getElementById('priceTwo').value = amounts;
+    document.getElementById('BuyPricetwos').value = amount_four;
+    document.getElementById('BuyPricetwo').value = amount_four;
+    document.getElementById('sellPricetwo').value = amount_fours;
+    $('#apiType').val('take');
+     document.getElementById('price').value = '';
+    document.getElementById('buyPrices').value = '';
+    document.getElementById('buyPrice').value = '';
+    document.getElementById('sellPrice').value = '';
+        });
+        
+  
+  }
 refresh_data()
 {
      
@@ -770,10 +638,15 @@ refresh_data()
          var c = url.searchParams.get("opt");
       
         var API = 'https://api.byzanti.ne/ticker?symbol='+c+'&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
-        var APISs = 'https://api.byzanti.ne/orderBook?symbol='+c+'&side=BUY&size=150&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
-        var APIS = 'https://api.byzanti.ne/orderBook?symbol='+c+'&side=BUY&size=11&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+        var APISr = 'https://api.byzanti.ne/orderBook?symbol='+c+'&side=BUY&size=150&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+        var APIS = 'https://api.byzanti.ne/orderBook?symbol='+c+'&side=BUY&size=10&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
         var APISS = 'https://api.byzanti.ne/orders?symbol='+c+'&side=BUY&size=22&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
         var orderTaker = 'https://api.byzanti.ne/tradebook?symbol='+c+'&size=100&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+         var orderHistory= 'https://api.byzanti.ne/tradesByUser?user=taker1&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+          fetch(orderHistory)
+        .then(response => response.json())
+        .then(data => {this.setState({ tradeHistory: data });});
+    
         fetch(API)
         .then(response => response.json())
         .then(data => {this.setState({ tricker: data }); });
@@ -786,17 +659,17 @@ refresh_data()
         .then(response => response.json())
         .then(data => {this.setState({ orderBook: data['asks'], orderBooks: data['bids'] }); });
         
-        fetch(APISs)
+        fetch(APISr)
         .then(response => response.json())
         .then(data => {this.setState({ orderBookss: data['asks'], orderBookss: data['bids'] }); });
         
          fetch(orderTaker)
         .then(response => response.json())
         .then(data => {this.setState({ tacker: data }); var i=0; data.map(bids => {
-                                   if(i==0){this.setState({myamount:bids.price});i++;}    });});
-       
+                                                      if(i==0){if(bids.assetBuy==c){this.setState({mysign:"plus"})}else{this.setState({mysign:"minus"})}this.setState({myamount:bids.price});i++;}    });});
+        
     
-        fetch('https://api.byzanti.ne/balance?account=taker1&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N')
+        fetch('https://api.byzanti.ne/exbalance?account=taker1&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N')
         .then(response => response.json())
         .then(data => {this.setState({blc:data}); });
         
@@ -820,27 +693,41 @@ $('#sellPrice').val('');
 $('#priceTwo').val('');
 $('#BuyPricetwo').val('');
 $('#sellPricetwo').val('');
-setTimeout(
-    function() {
-        {this.refresh_r()}
-    }
-    .bind(this),
-    3000
-);
 }
     
     componentDidMount() {
+        
       /*   var url = new URL(window.location.href);
         console.log(url.href.substr(url.href.lastIndexOf('/') + 1));*/
      
         var url = new URL(window.location.href);
          var c = url.searchParams.get("opt");
-      
+         var bColor='dark';
+      if($('body').hasClass('lightVersion'))
+      {
+            $('.darkt').css('display', 'none');
+    $('.lightT').css('display', 'inline-block');
+bColor='#fff';
+      }
+      else
+      {
+           $('.darkt').css('display', 'inline-block');
+   $('.lightT').css('display', 'none');
+bColor='#52565a';
+      }
+
+          handledefualt();
+
         var API = 'https://api.byzanti.ne/ticker?symbol='+c+'&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
-        var APISs = 'https://api.byzanti.ne/orderBook?symbol='+c+'&side=BUY&size=150&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+        var APISr = 'https://api.byzanti.ne/orderBook?symbol='+c+'&side=BUY&size=150&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
         var APIS = 'https://api.byzanti.ne/orderBook?symbol='+c+'&side=BUY&size=10&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
         var APISS = 'https://api.byzanti.ne/orders?symbol='+c+'&side=BUY&size=22&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
         var orderTaker = 'https://api.byzanti.ne/tradebook?symbol='+c+'&size=100&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+          var orderHistory= 'https://api.byzanti.ne/tradesByUser?user=taker1&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+          fetch(orderHistory)
+        .then(response => response.json())
+        .then(data => {this.setState({ tradeHistory: data });});
+    
         fetch(API)
         .then(response => response.json())
         .then(data => {this.setState({ tricker: data }); });
@@ -853,17 +740,17 @@ setTimeout(
         .then(response => response.json())
         .then(data => {this.setState({ orderBook: data['asks'], orderBooks: data['bids'] }); });
         
-        fetch(APISs)
+        fetch(APISr)
         .then(response => response.json())
         .then(data => {this.setState({ orderBookss: data['asks'], orderBookss: data['bids'] }); });
         
         fetch(orderTaker)
         .then(response => response.json())
         .then(data => {this.setState({ tacker: data }); var i=0; data.map(bids => {
-                                   if(i==0){this.setState({myamount:bids.price});i++;}    });});
+                                   if(i==0){if(bids.assetBuy==c){this.setState({mysign:"plus"})}else{this.setState({mysign:"minus"})}this.setState({myamount:bids.price});i++;}    });});
         
     
-        fetch('https://api.byzanti.ne/balance?account=taker1&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N')
+        fetch('https://api.byzanti.ne/exbalance?account=taker1&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N')
         .then(response => response.json())
         .then(data => {this.setState({blc:data}); });
         
@@ -881,16 +768,16 @@ setTimeout(
         .then(response => response.json())
         .then(data => {this.setState({ tradebook: data }); });
 
-        fetch('https://uberdex-admin.herokuapp.com/getColors')
+        fetch(adminURL+'/getColors/'+apiId)
         .then(response => response.json())
-        .then(data => {if(data.logo=='')
+        .then(data => {if(data.logo==='')
         {
             this.setState({colors:'#0e9caf'});this.setState({logo:logoss});
         }
         else
         {
             this.setState({colors:data.theme_color}); 
-            $('#logoImg').attr('src','https://uberdex-admin.herokuapp.com/images/byzantine/'+data.logo);
+            $('#logoImg').attr('src',adminURL+'/images/byzantine/'+data.logo);
         }
         }).catch(data => {
             this.setState({colors:'#0e9caf'});this.setState({logo:logoss});
@@ -914,7 +801,7 @@ setTimeout(
 			studies_overrides: this.props.studiesOverrides,
 			overrides: {
 				"mainSeriesProperties.showCountdown": true,
-				"paneProperties.background": "#52565a",
+				"paneProperties.background": bColor,
 				"paneProperties.vertGridProperties.color": "#363c4e",
 				"paneProperties.horzGridProperties.color": "#363c4e",
 				"symbolWatermarkProperties.transparency": 90,
@@ -932,11 +819,162 @@ setTimeout(
 			});
         });
         
-        setTimeout(function(){
-            handledefualt();
-               
-        },3000);
     }
+
+    async handleBuy(e) {
+
+       var amBuy= parseFloat($('#buyPrice').val());
+       var amSell= parseFloat($('#sellPrice').val());
+       var price= parseFloat($('#price').val());
+
+        let scatter = this.props.scatterID;
+    
+        var amountB = BN(359.4218).multipliedBy(10000);
+        var amountS = BN(0.4144).multipliedBy(10000);
+    
+        amountB = Math.floor(amountB / 10);
+    
+        console.log(amountB, amountS);
+     
+        let amountBuy = new BN(amountB);
+        let amountSell = new BN(amountS);
+        let nonceBN = new BN(1);
+    
+        let orderBuffer = serialize.serializeOrder('exchange', 'IQ', 'EOS',  amountBuy, amountSell, nonceBN, 'ubermaker');
+      
+        let orderHash = ecc.sha256(orderBuffer);
+    
+    
+           let datas = {
+              side: "SELL",
+              assetBuy: "EOS",
+              assetSell: "IQ",
+              amountBuy: 0.4144,
+              amountSell: 359.4218,
+              price: 0.001153,
+              type: 2,
+              hash: orderHash,
+            //   expires: new Date(new Date(info.head_block_time + 'Z').getTime() + 60 * 1000).toISOString().split('.')[0],
+              nonce: 1,
+              useraccount: scatter.identity.accounts[0].name
+            };
+    
+        let signature = ecc.sign(orderBuffer, '5Kbhuw48LRBY25KMDD2KH59EAgvHnhh66S863Nvz1PZBY9X2uph');   
+        
+        //let signature = await scatter.getArbitrarySignature('EOS6P7wP3HsdmGPsrrabPrweWQnTgxqdY8RTaUmVMVeXJec6hyNVm', orderBuffer, "test ordermake sig", false);    
+        datas.hash = orderHash; 
+        datas.signature = signature;
+        console.log("datas: ", datas);
+    
+         fetch('https://api.byzanti.ne/orderMake/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', {
+         method: 'POST',headers: {
+      //  'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },  body: JSON.stringify(datas)})
+            .then(response => {
+                response.json()
+                console.log("response: ", response);
+            })
+            .then(() => {
+                fetch(`https://api.byzanti.ne/ordersByUser?user=${this.props.scatterID.identity.accounts[0].name}&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`)
+                .then(response => response.json())
+                .then(data => {
+                    this.props.updateOpenOrders({ openOrders: data });
+                    console.log("orders: ", data);
+                });
+    
+            });
+         
+    }
+    
+    async handleTakerSell() {
+    
+        const network = {
+            blockchain: 'eos',
+            protocol: 'https://cors-anywhere.herokuapp.com/http',
+            host: '13.52.54.111',
+            eosVersion: 'bf28f8bb',
+            port: 8888,
+            chainId: 'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f',
+            debug: false,
+            verbose: false,
+            latency: 200,
+            sign: true
+        }
+        
+        var url = new URL(window.location.href);
+        var c = url.searchParams.get("opt");
+    
+        const account = this.props.scatterID.identity.accounts[0].name;
+        console.log("account: ", account);
+    
+        var bprice= parseFloat($('#buyPrice').val());
+        var eosAm= parseFloat($('#sellPrice').val());
+        var price = parseFloat($('#price').val());
+    
+        const scatter = this.props.scatterID;
+    
+        const eos = scatter.eos(network, Eos)
+        
+    
+    
+        var amountB = BN(359.422).multipliedBy(1000);
+        var amountS = BN(0.4144).multipliedBy(10000);
+    
+        // amountB = Math.floor(amountB / 10);
+    
+        console.log(amountB, amountS);
+     
+        let amountBuy = new BN(amountB);
+        let amountSell = new BN(amountS);
+        let nonceBN = new BN(1);
+
+        console.log(
+            'exchange', 'IQ', 'EOS', amountBuy, amountSell, nonceBN, 'ubermaker'
+        )
+        
+        let orderBuffer = serialize.serializeOrder('exchange', 'IQ', 'EOS', amountBuy, amountSell, nonceBN, 'ubermaker');
+      
+        let orderHash = ecc.sha256(orderBuffer);
+    
+        var orderHashBuffer = Buffer.from(orderHash, 'hex');
+        
+    
+        let tradeBuffer = serialize.serializeTrade(orderHashBuffer, amountBuy, account, nonceBN)
+        let data = {
+                assetBuy: 'IQ',
+                assetSell: 'EOS',
+                amountBuy: 359.4218,
+                amountSell: 0.4144,
+                price: 0.001153,
+                taker: account,
+                takerExchange: 'uberdex',
+                makerExchange: 'uberdex'
+          }
+    
+          let pubKey = await scatter.getPublicKey('eos');
+          console.log("pub key: ", pubKey)
+      
+        //   data.signature = await ecc.sign(tradeBuffer, '5J4xG1aygXGJCNgkG4JVVQirgpxJ9M1s1Auh24ebVtYJ21QLfdv');
+          data.hash = ecc.sha256(tradeBuffer);
+        
+         
+          data.signature = await scatter.getArbitrarySignature(pubKey, tradeBuffer, "test ordertake", false);
+          data.orderId = 'IEVgZ2cBKKlqgDKXtYdW'
+          data.maker = 'ubermaker'
+    
+    
+          fetch('https://api.byzanti.ne/orderTake/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', {
+                method: 'POST', headers: {
+        'Content-Type': 'application/json',
+      },  body: JSON.stringify(data)})
+            .then(response => {
+                response.json()
+                console.log("response: ", response);
+            })
+    
+    
+      }
     
     render(){
        var {myamount}=0;
@@ -952,9 +990,47 @@ setTimeout(
         const { Orders } = this.state;
         const { OrderSells } = this.state;
         const { tradebook } = this.state;
+        const {tradeHistory} =this.state;
       // console.log(strlen(orderBooks));
         return(
             <div>
+                
+                <div className="wellcomBanner background exchangeHeader" style={{'background': this.state.colors}}>
+                    <div className="header" updateScatterID={this.updateScatterID} scatterID={this.state.scatterID}>
+                        <div className="container clearfix">
+                            <div className="logo">
+                            <Link to="/" className="link"><img src={logoss} className="App-logo" id="logoImg" alt="" /></Link>
+                            </div>
+                            <div className="menuSections">
+                                <nav>
+                                    <ul>
+                                        <li><Link to="/exchange/?opt=IQ" className="link">Exchange</Link></li>
+                                        <li><Link to="/market" className="link">Markets</Link></li>
+                                        <li><Link to="/contact" className="link">Supports</Link></li>
+                                        {this.props.scatterID ?
+                                        <span>
+                                            <li id="signout"><a href="/"  onClick={handleSignout}>Sign out</a></li>
+                                            <li><Link to="/account" className="bgs" >{this.props.scatterID.identity.accounts[0].name}</Link></li>
+                                        </span> :
+                                        <span>
+                                            <li id="signin"><a onClick={handlesign}>Sign In</a></li>
+                                            <li><a href="/" className="bgs"  onClick={handlePublic}>Get Started</a></li>
+                                        </span>
+                                        }
+                                    </ul>
+                                </nav>
+                                <div className="othersOptions">
+                                    <a href="/" className="fullscreen"><i className="fa fa-expand-arrows-alt"> </i></a>
+                                    <a href="/" className="smallscreen"><i className="fa fa-expand-arrows-alt"> </i></a>
+                                    <a href="#" className="lightT" onClick={handlelight}><i className="fa fa-lightbulb"> </i></a>
+                                    <a href="#" className="darkt" onClick={handledark}><i className="fa fa-lightbulb"> </i></a>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <Trading />
 
             <div className="tradingCenter">
@@ -967,42 +1043,37 @@ setTimeout(
                                 <li className="tabsThree"><a href="#tabs-3" onClick={tabsThree}>Sell</a></li>
                             </ul>
                             <div id="tabs-1">
-                               <table>
+                               <table className="mainTable">
                                     <thead>
                                         <tr>
                                             <th>Price(EOS)</th>
                                             {tricker.map(hit => <th>{hit.symbol} </th>  )}
                                             <th>Total(EOS)</th>
+                                            <th>Exchange</th>
                                     </tr>
                                     </thead>
                                     
                                     <tbody>
                                         {orderBooks.map(bids => {
-                                           myamount=bids.price;
-                                           if(bids.change>0)
-                                           {
-                                            mysign="plus";
-                                           }
-                                           else
-                                           {
-                                            mysign="minus";
-                                           }
-                                            return  <tr>
-                                                <td className='minus' id={bids.price} data-id={bids.orderId} data-assetbuy={bids.assetSell} data-assetsell={bids.assetBuy} data-amountsell={bids.amountBuy} data-amountbuy={bids.amountSell} data-price={bids.price} data-maker={bids.useraccount} data-makerexchange={bids.source} data-side={bids.side}   onClick={handleClicks}>{bids.price}</td>
+                                          
+                                            return  <tr onClick={this.handleClicks.bind(this,bids.orderId)}>
+                                                <td className='minus' id={bids.orderId} data-id={bids.orderId} data-assetbuy={bids.assetSell} data-assetsell={bids.assetBuy} data-amountsell={bids.amountBuy} data-amountbuy={bids.amountSell} data-price={bids.price} data-maker={bids.useraccount} data-makerexchange={bids.source} data-side={bids.side}   >{bids.price}</td>
                                                 <td id={bids.amountBuy}>{bids.amountBuy}</td>
                                                 <td id={bids.amountSell}>{bids.amountSell}</td>
+                                                <td id={bids.source}>{bids.source}</td>
                                             </tr>
                                         }
                                         )}
                                
                                         <tr>
-                                            <td colspan="3" className={"lastTrans "+mysign}><span id="lastValue">{this.state.myamount}</span><i className="fa fa-arrow-up"></i><i className="fa fa-arrow-down"></i></td>
+                                            <td colspan="4" className={"lastTrans "+this.state.mysign}><span id="lastValue">{this.state.myamount}</span><i className="fa fa-arrow-up"></i><i className="fa fa-arrow-down"></i></td>
                                         </tr>
                                         {orderBook.map(ask => 
                                             <tr>
-                                                <td className='plus' id={ask.price} data-id={ask.orderId} data-assetbuy={ask.assetSell} data-assetsell={ask.assetBuy} data-amountsell={ask.amountBuy} data-amountbuy={ask.amountSell} data-price={ask.price} data-maker={ask.useraccount} data-makerexchange={ask.source} data-side={ask.side} onClick={handleClick}>{ask.price}</td>
+                                                <td className='plus' id={ask.price} data-id={ask.orderId} data-assetbuy={ask.assetSell} data-assetsell={ask.assetBuy} data-amountsell={ask.amountBuy} data-amountbuy={ask.amountSell} data-price={ask.price} data-maker={ask.useraccount} data-makerexchange={ask.source} data-side={ask.side} onClick={this.handleClick.bind(this,ask.orderId)}>{ask.price}</td>
                                                 <td id={ask.amountSell}>{ask.amountSell}</td>
                                                 <td id={ask.amountBuy}>{ask.amountBuy}</td>
+                                                <td id={ask.source}>{ask.source}</td>
                                             </tr>
                                         )}
                                         
@@ -1016,6 +1087,7 @@ setTimeout(
                                             <th>Price(EOS)</th>
                                             {tricker.map(hit => <th>{hit.symbol} </th>  )}
                                             <th>Total(EOS)</th>
+                                            <th>Exchange</th>
                                     </tr>
                                     </thead>
                                     
@@ -1023,9 +1095,10 @@ setTimeout(
                                         
                                         {orderBookss.map(ask => 
                                             <tr>
-                                                <td className='plus' id={ask.price} data-id={ask.orderId} data-assetbuy={ask.assetSell} data-assetsell={ask.assetBuy} data-amountsell={ask.amountBuy} data-amountbuy={ask.amountSell} data-price={ask.price} data-maker={ask.useraccount} data-makerexchange={ask.source} data-side={ask.side} onClick={handleClick}>{ask.price}</td>
-                                                <td id={ask.amountSell}>{ask.amountSell}</td>
+                                                <td className='plus' id={ask.price} data-id={ask.orderId} data-assetbuy={ask.assetSell} data-assetsell={ask.assetBuy} data-amountsell={ask.amountBuy} data-amountbuy={ask.amountSell} data-price={ask.price} data-maker={ask.useraccount} data-makerexchange={ask.source} data-side={ask.side} onClick={this.handleClick.bind(this,ask.orderId)}>{ask.price}</td>
                                                 <td id={ask.amountBuy}>{ask.amountBuy}</td>
+                                                <td id={ask.amountSell}>{ask.amountSell}</td>
+                                                <td id={ask.source}>{ask.source}</td>
                                             </tr>
                                         )}
 
@@ -1039,6 +1112,7 @@ setTimeout(
                                             <th>Price(EOS)</th>
                                             {tricker.map(hit => <th>{hit.symbol} </th>  )}
                                             <th>Total(EOS)</th>
+                                            <th>Exchange</th>
                                     </tr>
                                     </thead>
                                     
@@ -1046,9 +1120,10 @@ setTimeout(
                                     <tbody>
                                         {orderBookss.map(bids => 
                                             <tr>
-                                                <td className='minus' id={bids.price} data-id={bids.orderId} data-assetbuy={bids.assetSell} data-assetsell={bids.assetBuy} data-amountsell={bids.amountBuy} data-amountbuy={bids.amountSell} data-price={bids.price} data-maker={bids.useraccount} data-makerexchange={bids.source} data-side={bids.side}   onClick={handleClicks}>{bids.price}</td>
+                                                <td className='minus' id={bids.price} data-id={bids.orderId} data-assetbuy={bids.assetSell} data-assetsell={bids.assetBuy} data-amountsell={bids.amountBuy} data-amountbuy={bids.amountSell} data-price={bids.price} data-maker={bids.useraccount} data-makerexchange={bids.source} data-side={bids.side}   onClick={this.handleClicks.bind(this,bids.orderId)}>{bids.price}</td>
                                                 <td id={bids.amountBuy}>{bids.amountBuy}</td>
                                                 <td id={bids.amountSell}>{bids.amountSell}</td>
+                                                <td id={bids.source}>{bids.source}</td>
                                             </tr>
                                         )}
 
@@ -1057,7 +1132,7 @@ setTimeout(
                             </div>
                         </div>
                     </div>
-                    <div className="center">
+                     <div className="center">
                     <div id={ this.props.containerId } className={ 'TVChartContainer' }></div>
 
                         <div className="clearfix"></div>
@@ -1066,9 +1141,12 @@ setTimeout(
                             <div className="clearfix">
                                 <div>
                                     {tricker.map(hit =>
-                                        <h6>Buy {hit.symbol} <span>Balance:{this.state.blc[0]}</span></h6>
+                                        <h6>Buy {hit.symbol} <span>Balance:
+                                        {(this.props.scatterID ? 
+                                            (this.props.balance.EOS ? this.props.balance.EOS : 0.0000 ) : 
+                                            this.state.blc[0].amount) +" EOS"}</span></h6>
                                     )}
-                                    <label>Price <span></span> </label>
+                                    <label>Price <span>EOS</span> </label>
                                     <input type="number" id="price" />
                                     <label>Amount {tricker.map(hit =>
                                         <span>{hit.symbol} </span>
@@ -1076,22 +1154,32 @@ setTimeout(
                                      <input type="hidden" id="buyPrices"  />
                                    
                                     <input type="number" id="buyPrice" onChange={changeSellPrice1} />
-                                    <label>Total  <span>EOS</span>
-                                    </label>
+                                    <label>Total <span>EOS </span> </label>
                                     <input type="number"  id="sellPrice" onChange={changeSellPrice} />
-                                    {tricker.map(hit =>
-                                        <input type="submit" value={'Buy '+hit.symbol} onClick={this.handleBuy} className="background" style={color} />
-                                    )}
-                                </div>
+                              {tricker.map(hit => {
+                                        return <span>
+                                                    <input type="submit" value={'Buy '+hit.symbol} onClick={handleBuy} className="background" />
+                                                    {this.props.scatterID ? <input type="submit" value={'Buy '+hit.symbol+ ' with Scatter'} onClick={this.handleTakerSell} className="background" /> :
+                                                    <input type="submit" value={'Signin'} onClick={() => { $('.signInPopup ').fadeIn();}} className="background" />}
+                                                </span>
+                                    })}
+                                    </div>
+
+
                                 <div className="red">
                                     {tricker.map(hit =>
-                                        <h6>Sell {hit.symbol} <span>Balance:{this.state.blc[1]}</span></h6>
+                                        <h6>Sell {hit.symbol} <span>Balance: 
+                                        {(this.props.scatterID ? 
+                                            (this.props.balance[hit.symbol] ? this.props.balance[hit.symbol] : 0.0000 ) : 
+                                            this.state.blc[1].amount) +" "+hit.symbol}
+                                            </span></h6>
                                     )}
-                                    <label>Price <span></span> </label>
+                                    <label>Price <span>EOS</span></label>
                                     <input type="number"  id="priceTwo" />
-                                    <label>Amount {tricker.map(hit =>
-                                        <span>{hit.symbol} </span>
-                                    )}</label>
+
+                                    <label>Amounts <span>EOS</span> </label>
+                                   <input type="number" id="sellPricetwo" onChange={changeBuyPrice} />
+                                  
                                     <input type="hidden" id="BuyPricetwos"/>
 
                                     <input type="hidden" id="ID"/>
@@ -1104,12 +1192,19 @@ setTimeout(
                                     <input type="hidden" id="makerexchange"/>
                                     <input type="hidden" id="side"/>
                                     <input type="hidden" id="apiType" />
-                                    <input type="number" id="BuyPricetwo"  onChange={changeBuyPrice1} />
-                                    <label>Total <span>EOS</span></label>
-                                    <input type="number" id="sellPricetwo" onChange={changeBuyPrice} />
-                                    {tricker.map(hit =>
-                                        <input type="submit"  onClick={this.handleTakerSell} value={'Sell '+hit.symbol} />
+                                    
+                                   <label>Total  {tricker.map(hit =>
+                                        <span>{hit.symbol} </span>
                                     )}
+                                    </label>
+                                       <input type="number" id="BuyPricetwo"  onChange={changeBuyPrice1} />  
+                                       {tricker.map(hit => {
+                                        return <span>
+                                                 <input type="submit" value={'Sell '+hit.symbol} onClick={handleSell} className="background" />
+                                                {this.props.scatterID ? <input type="submit" value={'Sell '+hit.symbol+ ' with Scatter'} onClick={this.handleBuy} className="background" /> :
+                                                <input type="submit" value={'Signin'} onClick={() => { $('.signInPopup ').fadeIn();}} className="background" />}
+                                            </span>
+                                    })}
                                 </div>
                             </div>
                         </div>
@@ -1143,32 +1238,32 @@ setTimeout(
                                 <div className="viewTop">
                                     <ul>
                                         <li><span>Price</span>{tackers.price} EOS</li>
-                                        <li><span>Volume</span>{tackers.amountBuy} {tackers.assetBuy}</li>
-                                        <li><span>Total</span>{tackers.amountSell} EOS</li>
+                                        <li><span>Amount</span>{tackers.amountBuy} {tackers.assetBuy}</li>
+                                        <li><span>Total</span>{tackers.amountSell} {tackers.assetBuy}</li>
                                         <li><span>Date</span> {tackers.created}</li>
                                     </ul>
                                 </div>
                                 <div className="viewBottom clearfix">
                                     <ul>
-                                        <li><h3>Maker</h3></li>
+                                        <li><h3  style={{'background': this.state.colors}}>Maker</h3></li>
                                         <li><span>EOS Account Name</span> <cite>{tackers.maker}</cite> </li>
                                         <li><span>Total</span> <cite>{tackers.amountBuy} {tackers.assetBuy}</cite> </li>
                                         <li><span>Fee</span> <cite>{tackers.makerFee} {tackers.assetBuy}</cite> </li>
                                         <li><span>Maker Exchange</span> {tackers.makerExchange} <cite></cite> </li>
                                         <li><span>Time stamp</span> <cite>{tackers.timestamp}</cite> </li>
-                                        <li><span>Trade Id</span> <cite className="tradeId">{tackers.tradeId}</cite> </li>
-                                        <li><span>Transaction Id</span> <a href={'/transaction/?trxID='+tackers.transactionId+'&blocknumber='+tackers.blockNumber}>{tackers.transactionId}</a></li>
+                                        <li><span>Trade Id</span> <cite  style={{'color': this.state.colors}} className="tradeId">{tackers.tradeId}</cite> </li>
+                                        <li><span>Transaction Id</span> <a  style={{'color': this.state.colors}} target="_blank" href={'/transaction/?trxID='+tackers.transactionId+'&blocknumber='+tackers.blockNumber}>{tackers.transactionId}</a></li>
                                     </ul>
                                     
                                     <ul>
-                                        <li><h3>Taker</h3></li>
+                                        <li><h3 style={{'background': this.state.colors}}>Taker</h3></li>
                                         <li><span>EOS Account Name</span> <cite>{tackers.taker}</cite> </li>
-                                        <li><span>Total</span> <cite>{tackers.amountSell} EOS</cite> </li>
-                                        <li><span>Fee</span> <cite>{tackers.takerFee} EOS</cite> </li>
+                                        <li><span>Total</span> <cite>{tackers.amountSell} {tackers.assetBuy}</cite> </li>
+                                        <li><span>Fee</span> <cite>{tackers.takerFee} {tackers.assetBuy}</cite> </li>
                                         <li><span>Taker Exchange</span> <cite>{tackers.takerExchange}</cite> </li>
                                         <li><span>Time stamp</span> <cite>{tackers.timestamp}</cite> </li>
-                                        <li><span>Trade Id</span> <cite className="tradeId">{tackers.tradeId}</cite> </li>
-                                        <li><span>Transaction Id</span> <a href={'/transaction/?trxID='+tackers.transactionId+'&blocknumber='+tackers.blockNumber}>{tackers.transactionId}</a></li>
+                                        <li><span>Trade Id</span> <cite style={{'color': this.state.colors}} className="tradeId">{tackers.tradeId}</cite> </li>
+                                        <li><span>Transaction Id</span> <a  style={{'color': this.state.colors}} target="_blank" href={'/transaction/?trxID='+tackers.transactionId+'&blocknumber='+tackers.blockNumber}>{tackers.transactionId}</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -1191,7 +1286,7 @@ setTimeout(
                     <div className="orderWrap" id={'view'+order.orderId}>
                         <div className="orderView">
                             <a href="/" className="closeView"  onClick={closeOrder}><i className="fa fa-times"></i></a>
-                            <h3>Order Detail</h3>
+                            <h3  style={{'color': this.state.colors}}>Order Detail</h3>
                             <div className="viewBottom clearfix">
                                 <ul>
                                     <li><span>Account Name</span> <cite>{order.useraccount}</cite> </li>
@@ -1203,13 +1298,15 @@ setTimeout(
                                     <li><span>Type</span> <cite>{order.type}</cite> </li>
                                     <li><span>Time stamp</span> <cite>{order.timestamp}</cite> </li>
                                     <li><span>Date</span> <cite>{order.created}</cite> </li>
-                                    <li><span>Order Id</span> <cite className="tradeId">{order.orderId}</cite> </li>
+                                    <li><span>Order Id</span> <cite style={{'color': this.state.colors}} className="tradeId">{order.orderId}</cite> </li>
                                 </ul>
                             </div>
                         </div>
                     </div> 
                 )}
-            <div className="orderTab">
+                
+            
+                <div className="orderTab">
                 <div className="orderD">
                     <div className="container clearfix">
                         <ul>
@@ -1289,7 +1386,7 @@ setTimeout(
                                 </tr>
                             </thead>
                             <tbody>
-                            {tradebook.map(tradebooks =>{
+                            {tradeHistory.map(tradebooks =>{
                                 if(tradebooks.taker=='taker1')
                                 {
                                     if(tradebooks.assetBuy=='EOS')
@@ -1323,37 +1420,40 @@ setTimeout(
 
             {tradebook.map(tradebooks =>
                     
-                    <div className="tradeWrap" id={'views'+tradebooks.tradeId}>
+                    <div className="tradeWrap as" id={'views'+tradebooks.tradeId}>
                         <div className="tradeView">
                             <a href="/" className="closeView"  onClick={closeViews}><i className="fa fa-times"></i></a>
                             <div className="viewTop">
                                 <ul>
-                                    <li><span>Price</span>{tradebooks.price} EOS</li>
-                                    <li><span>Volume</span>{tradebooks.amountBuy} {tradebooks.assetBuy}</li>
-                                    <li><span>Total</span>{tradebooks.amountSell} EOS</li>
+                                    <li><span>Price</span>{tradebooks.price} {tradebooks.assetBuy}</li>
+                                    <li><span>Amount</span>{tradebooks.amountBuy} {tradebooks.assetBuy}</li>
+                                    <li><span>Total</span>{tradebooks.amountSell} {tradebooks.assetBuy}</li>
                                     <li><span>Date</span> {tradebooks.created}</li>
                                 </ul>
                             </div>
                             <div className="viewBottom clearfix">
                                 <ul>
-                                    <li><h3>Maker</h3></li>
+                                    <li><h3 style={{'background': this.state.colors}}>Maker</h3></li>
                                     <li><span>EOS Account Name</span> <cite>{tradebooks.maker}</cite> </li>
                                     <li><span>Total</span> <cite>{tradebooks.amountBuy} {tradebooks.assetBuy}</cite> </li>
                                     <li><span>Fee</span> <cite>{tradebooks.makerFee} {tradebooks.assetBuy}</cite> </li>
                                     <li><span>Maker Exchange</span> {tradebooks.makerExchange} <cite></cite> </li>
                                     <li><span>Time stamp</span> <cite>{tradebooks.timestamp}</cite> </li>
-                                    <li><span>Trade Id</span> <cite className="tradeId">{tradebooks.tradeId}</cite> </li>
-                                    
+                                    <li><span>Trade Id</span> <cite  style={{'color': this.state.colors}} className="tradeId">{tradebooks.tradeId}</cite> </li>
+                                            <li><span>Transaction Id</span> <a style={{'color': this.state.colors}} target="_blank" href={'/transaction/?trxID='+tradebooks.transactionId+'&blocknumber='+tradebooks.blockNumber}>{tradebooks.transactionId}</a></li>
+                                  
                                 </ul>
                                 
                                 <ul>
-                                    <li><h3>Taker</h3></li>
+                                    <li><h3 style={{'background': this.state.colors}}>Taker</h3></li>
                                     <li><span>EOS Account Name</span> <cite>{tradebooks.taker}</cite> </li>
-                                    <li><span>Total</span> <cite>{tradebooks.amountSell} EOS</cite> </li>
-                                    <li><span>Fee</span> <cite>{tradebooks.takerFee} EOS</cite> </li>
+                                    <li><span>Total</span> <cite>{tradebooks.amountSell} {tradebooks.assetBuy}</cite> </li>
+                                    <li><span>Fee</span> <cite>{tradebooks.takerFee} {tradebooks.assetBuy}</cite> </li>
                                     <li><span>Taker Exchange</span> <cite>{tradebooks.takerExchange}</cite> </li>
                                     <li><span>Time stamp</span> <cite>{tradebooks.timestamp}</cite> </li>
-                                    <li><span>Trade Id</span> <cite className="tradeId">{tradebooks.tradeId}</cite> </li>
+                                    <li><span>Trade Id</span> <cite style={{'color': this.state.colors}}  className="tradeId">{tradebooks.tradeId}</cite> </li>
+                                          <li><span>Transaction Id</span> <a style={{'color': this.state.colors}} target="_blank" href={'/transaction/?trxID='+tradebooks.transactionId+'&blocknumber='+tradebooks.blockNumber}>{tradebooks.transactionId}</a></li>
+                                  
                                 </ul>
                             </div>
                         </div>

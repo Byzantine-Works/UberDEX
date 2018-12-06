@@ -1,13 +1,10 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
-import Datafeed from './TVChartContainer/api/index';
 import logoss from './logo_main.png';
-import logos from './logos.png';
 import $ from "jquery";
 
 import ScatterJS from 'scatterjs-core';
 import ScatterEOS from 'scatterjs-plugin-eosjs';
-import Eos from 'eosjs';
 import dp from '../app.json';
 var adminURL = dp['url'];
 var apiId = dp['apiId'];
@@ -37,7 +34,7 @@ const network = {
 
 function handlelight(e)
   {
-      
+    e.preventDefault();
     $('.lightT').css('display', 'none');
     $('.darkt').css('display', 'inline-block');
     $('body').removeClass('darkVersion');
@@ -48,10 +45,12 @@ function handlelight(e)
 
   function handledark(e)
   {
+    e.preventDefault();
     $('.darkt').css('display', 'none');
     $('.lightT').css('display', 'inline-block');
     $('body').removeClass('lightVersion');
     $('body').addClass('darkVersion');
+    $('.demo-big-content').addClass('darkVersion');
   }
   
 
@@ -64,13 +63,6 @@ function handlePublic(e){
 
 
 
-const tryRequire = (path) => {
-    try {
-     return require(`${path}`);
-    } catch (err) {
-     return null;
-    }
-  };
 
 
 class Header extends Component {
@@ -103,7 +95,7 @@ class Header extends Component {
 
         fetch(adminURL+'/getColors/'+apiId)
         .then(response => response.json())
-        .then(data => {if(data.logo=='')
+        .then(data => {if(data.logo==='')
         {
               this.setState({colors:'#0e9caf'});this.setState({logo:logoss});
         }
@@ -116,14 +108,15 @@ class Header extends Component {
              this.setState({colors:'#0e9caf'});this.setState({logo:logoss});
         });
        
-    
-            if (this.props.scatterID) {
+      let scatter = ScatterJS.scatter;
+      
+            if (scatter.identity) {
                 const scatter = ScatterJS.scatter;;
                 const requiredFields = { accounts: [network] };
                 let id = await scatter.getIdentity(requiredFields);
                 console.log("id: ", id);
                 console.log(scatter.identity.accounts[0].name)
-                const account = id.accounts.find(x => x.blockchain === 'eos');
+                //const account = id.accounts.find(x => x.blockchain === 'eos');
                 console.log(scatter.identity)
                 $('#signin').hide();
                 $('#signout').css('display', 'inline-block');
@@ -141,7 +134,6 @@ class Header extends Component {
 
 
 render(){
-    const { logo } = this.state;   
     
         return(
             <div className="header ">
@@ -152,16 +144,16 @@ render(){
                     <div className="menuSections">
                         <nav>
                             <ul>
-                                <li><Link to="/exchange/?opt=IQ" className="link">Exchange</Link></li>
+                                <li><Link to="/exchange/?opt=IQ&contract=everipediaiq" className="link">Exchange</Link></li>
                                 <li><Link to="/market" className="link">Markets</Link></li>
                                 <li><Link to="/contact" className="link">Supports</Link></li>
                                 {this.props.scatterID ?
                                 <span>
                                     <li id="signout"><a href="/"  onClick={this.handleSignout}>Sign out</a></li>
-                                    <li><Link to="/account" className="bgs" >{this.props.scatterID.identity.accounts[0].name}</Link></li>
+                                    <li><Link to="/account" className="bgs" >{(this.props.scatterID.identity)?this.props.scatterID.identity.accounts[0].name:""}</Link></li>
                                 </span> :
                                 <span>
-                                    <li id="signin"><a onClick={this.handleClick}>Sign In</a></li>
+                                    <li id="signin"><a href="/" onClick={this.handleClick}>Sign In</a></li>
                                     <li><a href="/" className="bgs"  onClick={handlePublic}>Get Started</a></li>
                                 </span>
                                 }
@@ -170,8 +162,8 @@ render(){
                         <div className="othersOptions">
                             <a href="/" className="fullscreen"><i className="fa fa-expand-arrows-alt"> </i></a>
                             <a href="/" className="smallscreen"><i className="fa fa-expand-arrows-alt"> </i></a>
-                            <a className="lightT" onClick={handlelight}><i className="fa fa-lightbulb"> </i></a>
-                            <a className="darkt" onClick={handledark}><i className="fa fa-lightbulb"> </i></a>
+                            <a href="/" className="lightT" onClick={handlelight}><i className="fa fa-lightbulb"> </i></a>
+                            <a href="/" className="darkt" onClick={handledark}><i className="fa fa-lightbulb"> </i></a>
                             
                         </div>
                     </div>

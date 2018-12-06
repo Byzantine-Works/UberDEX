@@ -1,9 +1,7 @@
 import React, {Component} from 'react';
 import { TVChartContainer } from './TVChartContainer/index';
 
-import Header from './header';
 import Callaction from './callAction';
-import Footer from './footer';
 import dp from '../app.json';
 var adminURL = dp['url'];
 var apiId = dp['apiId'];
@@ -22,7 +20,7 @@ componentDidMount() {
    
     fetch(adminURL+'/getColors/'+apiId)
     .then(response => response.json())
-    .then(data => {if(data.theme_color=='')
+    .then(data => {if(data.theme_color==='')
     {
         this.setState({colors:'#0e9caf'});
     }
@@ -36,7 +34,6 @@ componentDidMount() {
     });
 }
 render(){
-    const { colors } = this.state;
         return(
             <div className="supportPage">
                     <TVChartContainer />

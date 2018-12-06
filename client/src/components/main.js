@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import {Switch, Route} from 'react-router-dom';
-import { BrowserRouter } from 'react-router-dom';
 
-import Header from './header';
 import Home from './home';
 import Exchange from './exchangePage';
 import Market from './market';

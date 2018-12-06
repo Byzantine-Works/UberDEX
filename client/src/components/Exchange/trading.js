@@ -23,6 +23,7 @@ class tradingHead extends Component{
     
         this.state = {
           hits: [],
+          items: [],
         };
       }
 
@@ -32,14 +33,20 @@ class tradingHead extends Component{
         
         var url = new URL(window.location.href);
         var c = url.searchParams.get("opt");
+        var contract = url.searchParams.get("contract");
         var API = 'https://api.byzanti.ne/ticker?symbol='+c+'&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+        var CurrencyStats = 'https://api.byzanti.ne/getCurrencyStats?contract='+contract+'&symbol='+c+'&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
         fetch(API)
         .then(response => response.json())
         .then(data => {this.setState({ hits: data }); });
-        
+
+        fetch(CurrencyStats)
+        .then(response => response.json())
+        .then(data => {this.setState({ items: data[c] });});
+
         fetch(adminURL+'/getColors/'+apiId)
         .then(response => response.json())
-        .then(data => {if(data.theme_color=='')
+        .then(data => {if(data.theme_color==='')
         {
             this.setState({colors:'#0e9caf'});
         }
@@ -57,14 +64,19 @@ class tradingHead extends Component{
     render(){
        
         const { hits } = this.state;
+      
+        var url = new URL(window.location.href);
+        var symbol = url.searchParams.get("opt");
         return(
             <div className="tradingHead">
                 <div className="container">
                 
-                {hits.map(hit =>
+                
                     <div className="trading clearfix">
+                    {hits.map(hit =>
+                        <div key={hit.symbol}>
                         <div className="lefts">
-                            <span className=" background" style={{'background': this.state.colors}} ><img src={"/coins/"+hit.symbol+".png"} /></span>
+                            <span className=" background" style={{'background': this.state.colors}} ><img alt="img" src={"/coins/"+hit.symbol+".png"} /></span>
                             <h4>{hit.symbol} / <small> EOS</small></h4>
                             <p className="ist colors" style={{'color': this.state.colors}} onClick={handleClick}>Introduction</p>
                             <p className="ind colors" style={{'color': this.state.colors}} onClick={handleClicks}>Introduction</p>
@@ -73,19 +85,19 @@ class tradingHead extends Component{
                             <ul>
                                 <li>
                                     <p>Last Price</p>
-                                    <span className={hit.change < 0?'minus':'plus'}>{hit.last}</span> EOS
+                                    <span className={hit.change < 0?'minus':'plus'}>{hit.last}</span> {hit.symbol}
                                 </li>
                                 <li>
                                     <p>24H Change</p>
-                                    <span className={hit.change < 0?'minus':'plus'}>{hit.change}</span>
+                                    <span className={hit.change < 0?'minus':'plus'}>{hit.change} {hit.symbol}</span>
                                 </li>
                                 <li>
                                     <p>24H High</p>
-                                    <span>{hit.high} </span> EOS
+                                    <span>{hit.high} </span> {hit.symbol}
                                 </li>
                                 <li>
                                     <p>24H Low</p>
-                                    <span>{hit.low} </span> EOS
+                                    <span>{hit.low} </span> {hit.symbol}
                                 </li>
                                 
                                 <li>
@@ -94,21 +106,19 @@ class tradingHead extends Component{
                                 </li>
                             </ul>
                         </div>
+                        </div>
+                        )}
+                        
                         <div className="openDetail clearfix">
                             <div className="contrct">
-                                <p><strong>Total Supply</strong>
-                                10,000,000,000</p>
-                                <p><strong>Circulating</strong>
-                                5,200,000,000</p>
-                                <p><strong>Contract</strong>
-                                {hit.contract}</p>
-                                <p><strong>Website</strong>
-                                https://{hit.symbol}.com</p>
+                                <p><strong>Total Supply</strong>{this.state.items.max_supply}</p>
+                                <p><strong>Circulating</strong>{this.state.items.supply}</p>
+                                <p><strong>Contract</strong>{this.state.items.issuer}</p>
+                                <p><strong>Website</strong>http://{symbol}.com</p>
                             </div>
                         </div>
                     </div>
                 
-                )}
                 </div>
             </div>
         )

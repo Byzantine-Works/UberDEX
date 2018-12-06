@@ -72,8 +72,34 @@
 <script>
 
 
-
   $(document).ready(function(){
+    $('.calculator input[type="number"]').on('keyup',function () {
+    var er = /^[0-9]+[\.]?[0-9]*$/;
+                if(!er.test(this.value))
+                {
+                    
+                    $(this).val('');
+                    $(this).focus();
+                   return false;
+                }
+      });
+      
+      $('.demo-big-content').addClass('darkVersion');
+      
+      $('.fullscreen').click(function() {
+        $('body').fullscreen();
+        $('body').addClass('full');
+        $('.demo-big-content').css('background', '#fff');
+        return false;
+      });
+
+      $('.smallscreen').click(function() {
+        $('body').removeClass('full');
+        $('.demo-big-content').css('background', 'none');
+        $.fullscreen.exit();
+        return false;
+      });
+      
     var chartliexample4 = echarts.init(document.getElementById('lineChart4'));
         option = {
             tooltip: {
@@ -175,21 +201,7 @@
 
         chartliexample4.setOption(option);
 
-      $('.demo-big-content').addClass('darkVersion');
-      
-      $('.fullscreen').click(function() {
-        $('body').fullscreen();
-        $('body').addClass('full');
-        $('.demo-big-content').css('background', '#fff');
-        return false;
-      });
 
-      $('.smallscreen').click(function() {
-        $('body').removeClass('full');
-        $('.demo-big-content').css('background', 'none');
-        $.fullscreen.exit();
-        return false;
-      });
 
       $('#buyPrice').on('keyup',function () {
           var myBox1 = document.getElementById('price').value; 
