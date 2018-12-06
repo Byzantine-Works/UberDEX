@@ -1,7 +1,5 @@
 import React, {Component} from 'react';
-import Header from './header';
 import Callaction from './callAction';
-import Footer from './footer';
 import $ from "jquery";
 import dp from '../app.json';
 var adminURL = dp['url'];
@@ -33,12 +31,12 @@ class Contact extends Component{
         })
     ).then(res => {
         
-        if(res.data.error=='1')
+        if(res.data.error==='1')
         {
         
         return false;
         }
-        else if(res.data.error=='0')
+        else if(res.data.error==='0')
         {
             $('.msgs').show();
         }
@@ -54,9 +52,7 @@ class Contact extends Component{
       logo: [],
       companyName: [],
       companyEmail: [],
-      companyEmail: [],
       companyPhone: [],
-      logo: [],
       companyDesc:[],
   };
 }
@@ -65,7 +61,7 @@ componentDidMount() {
     
     fetch(adminURL+'/getColors/'+apiId)
     .then(response => response.json())
-    .then(data => {if(data.theme_color=='')
+    .then(data => {if(data.theme_color==='')
     {
         this.setState({colors:'#0e9caf'});
     }
@@ -85,7 +81,6 @@ componentDidMount() {
     
 }
 render(){
-  const { colors } = this.state;
         return(
             <div className="about_page">
                 <div className="about_wrap contactPage">

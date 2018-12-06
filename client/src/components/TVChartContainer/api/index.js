@@ -9,16 +9,16 @@ const config = {
 
 export default {
 	onReady: cb => {
-	console.log('=====onReady running')	
+	//console.log('=====onReady running')	
 		setTimeout(() => cb(config), 0)
 		
 	},
 	searchSymbols: (userInput, exchange, symbolType, onResultReadyCallback) => {
-		console.log('====Search Symbols running')
+		//console.log('====Search Symbols running')
 	},
 	resolveSymbol: (symbolName, onSymbolResolvedCallback, onResolveErrorCallback) => {
 		// expects a symbolInfo object in response
-		console.log('======resolveSymbol running')
+		//console.log('======resolveSymbol running')
 		// console.log('resolveSymbol:',{symbolName})
 		var split_data = symbolName.split(/[:/]/)
 		 
@@ -44,7 +44,7 @@ export default {
 		}
 		setTimeout(function() {
 			onSymbolResolvedCallback(symbol_stub)
-			console.log('Resolving that symbol....', symbol_stub)
+			//console.log('Resolving that symbol....', symbol_stub)
 		}, 0)
 		
 		
@@ -52,7 +52,7 @@ export default {
 
 	},
 	getBars: function(symbolInfo, resolution, from, to, onHistoryCallback, onErrorCallback, firstDataRequest) {
-		console.log('=====getBars running')
+		//console.log('=====getBars running')
 		// console.log('function args',arguments)
 		// console.log(`Requesting bars between ${new Date(from * 1000).toISOString()} and ${new Date(to * 1000).toISOString()}`)
 		historyProvider.getBars(symbolInfo, resolution, from, to, firstDataRequest)
@@ -63,7 +63,7 @@ export default {
 				onHistoryCallback(bars, {noData: true})
 			}
 		}).catch(err => {
-			console.log({err})
+			//console.log({err})
 			onErrorCallback(err)
 		})
 

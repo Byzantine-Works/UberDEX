@@ -1,6 +1,6 @@
 import assert from 'assert';
-import Eos from 'eosjs';
 import BN from 'bignumber.js';
+import Eos from 'eosjs';
 
 var {
     format
@@ -23,7 +23,7 @@ function serializeTokenSymbolName(tokenSymbol, precision) {
         tokenSymbolBuffer.writeUInt8(0, offset);
     }
     //log('tokenSymbolBuffer: ', tokenSymbolBuffer);
-    assert(tokenSymbolBuffer.length == uint64_size);
+    assert(tokenSymbolBuffer.length === uint64_size);
     return tokenSymbolBuffer;
 }
 
@@ -76,14 +76,14 @@ export function serializeOrder(exchangeAccount, tokenBuy, tokenSell, amountBuyBN
     orderBuffer.set(serializeAccountName(exchangeAccount), offset);
     offset += uint64_size;
     const tokenBuyBuffer = serializeExtendedSymbol(tokenBuy);
-    assert(tokenBuyBuffer.length == serializedTokenSymbolSize);
+    assert(tokenBuyBuffer.length === serializedTokenSymbolSize);
     orderBuffer.set(tokenBuyBuffer, offset);
     console.log('tokenBuyBuffer: ', tokenBuyBuffer);
     offset += serializedTokenSymbolSize;
     orderBuffer.set(serializeUInt64BN(amountBuyBN), offset);
     offset += uint64_size;
     const tokenSellBuffer = serializeExtendedSymbol(tokenSell);
-    assert(tokenSellBuffer.length == serializedTokenSymbolSize);
+    assert(tokenSellBuffer.length === serializedTokenSymbolSize);
     orderBuffer.set(tokenSellBuffer, offset);
     console.log('tokenSellBuffer: ', tokenSellBuffer);
     offset += serializedTokenSymbolSize;
@@ -93,7 +93,7 @@ export function serializeOrder(exchangeAccount, tokenBuy, tokenSell, amountBuyBN
     offset += uint64_size;
     orderBuffer.set(serializeAccountName(makerAccount), offset);
     offset += uint64_size;
-    assert(offset == serializedSize);
+    assert(offset === serializedSize);
    
     return orderBuffer;
 }
@@ -110,6 +110,6 @@ export function serializeTrade(orderHash, amountBN, takerAccount, tradeNonceBN) 
     offset += uint64_size;
     tradeBuffer.set(serializeUInt64BN(tradeNonceBN), offset);
     offset += uint64_size;
-    assert(offset == serializedSize);
+    assert(offset === serializedSize);
     return tradeBuffer;
 }

@@ -51,7 +51,7 @@ class App extends Component {
       balance[x.symbol] = x.amount;
     })
     this.setState({balance});
-    console.log(balance)
+    //console.log(balance)
 
   }
 
@@ -70,7 +70,7 @@ class App extends Component {
    
     fetch(adminURL+'/getColors/'+apiId)
     .then(response => response.json())
-    .then(data => {if(data.theme_color=='')
+    .then(data => {if(data.theme_color==='')
     {
         this.setState({colors:'#0e9caf'});
         this.setState({companyName:'UberDex'});
@@ -90,6 +90,12 @@ class App extends Component {
   render() {
     return (
       <div className="demo-big-content">
+       <div className="LdrChart" style={{'display':'none'}}>
+                    <div className="container">
+                        <div id="lineChart4" style={{"height":"400px"}}></div>
+                    </div>
+                </div>
+                
           <Layout>
               <Content>
                   <div className="page-content" />

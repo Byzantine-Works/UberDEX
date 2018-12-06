@@ -1,6 +1,4 @@
 import React, {Component} from 'react';
-import Header from './header';
-import Footer from './footer';
 import $ from "jquery";
 import dp from '../app.json';
 var adminURL = dp['url'];
@@ -37,15 +35,15 @@ function searchMarket(e)
       //  console.log(search);
        
            $('table tbody tr td:nth-child(2)').each(function(i,v){
-           console.log(search+" "+$(this).html().toLowerCase().indexOf(search));
+           //console.log(search+" "+$(this).html().toLowerCase().indexOf(search));
        if($(this).html().toLowerCase().indexOf(search)>=0)
        {
-        console.log('find');
+        //console.log('find');
         $('table tbody tr').eq(i).show();
        }
        else
        {
-        console.log('not');
+        //console.log('not');
          $('table tbody tr').eq(i).hide();
        }
     });
@@ -81,7 +79,7 @@ componentDidMount() {
 
     fetch(adminURL+'/getColors/'+apiId)
     .then(response => response.json())
-    .then(data => {if(data.theme_color=='')
+    .then(data => {if(data.theme_color==='')
     {
         this.setState({colors:'#0e9caf'});
     }
@@ -99,7 +97,6 @@ componentDidMount() {
     },3000);
 }
 render(){
-    const { colors } = this.state;
     const { hits } = this.state;
     const { hitss } = this.state;
         return(
@@ -160,7 +157,7 @@ render(){
                                 <table>
                                     <thead>
                                         <tr>
-                                            <th><a href="#"><i className="fa fa-mins"></i></a></th>
+                                            <th><a href="/"><i className="fa fa-mins"></i></a></th>
                                             <th>Exchange</th>
                                             <th>Ticker Price</th>
                                             <th>Tick Size</th>

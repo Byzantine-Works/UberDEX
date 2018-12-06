@@ -1,10 +1,8 @@
 import React, {Component} from 'react';
-import Header from './header';
 import Banner from './Home/mainBanner';
 import EOS from './Home/eosTable';
 import Features from './Home/features';
 import Callaction from './callAction';
-import Footer from './footer';
 import $ from "jquery";
 import dp from '../app.json';
 var adminURL = dp['url'];
@@ -39,7 +37,7 @@ class Home extends Component{
    
     fetch(adminURL+'/getColors/'+apiId)
     .then(response => response.json())
-    .then(data => {if(data.theme_color=='')
+    .then(data => {if(data.theme_color==='')
     {
         this.setState({colors:'#0e9caf'});
         this.setState({companyName:'UberDex'});
@@ -58,7 +56,7 @@ class Home extends Component{
     var API = adminURL+'/getNews/'+apiId;
     fetch(API)
     .then(response => response.json())
-    .then(data => {console.log(data.hits);this.setState({ hitss: data.hits }); });
+    .then(data => {this.setState({ hitss: data.hits }); });
 
      
     
@@ -68,7 +66,6 @@ class Home extends Component{
     },3000);
 }
 render(){
-    const { colors } = this.state;
     const { hitss } = this.state;
         return(
             <div className="HomePage" >
@@ -80,8 +77,8 @@ render(){
                 <div className="newsScroll">
                     <div className="container">
                         <marquee>
-                            {hitss.map(hit =>
-                                <a style={{'color': this.state.colors}} href="/announcements">{hit._source.tickerTitle}</a>
+                            {hitss.map((hit, i) =>
+                                <a key={i} style={{'color': this.state.colors}} href="/announcements">{hit._source.tickerTitle}</a>
                             )} 
                         </marquee>
                     </div>

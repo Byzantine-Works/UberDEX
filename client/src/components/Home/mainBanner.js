@@ -19,7 +19,7 @@ componentDidMount() {
     
     fetch(adminURL+'/getColors/'+apiId)
     .then(response => response.json())
-    .then(data => {if(data.theme_color=='')
+    .then(data => {if(data.theme_color==='')
     {
         this.setState({colors:'#0e9caf'});
     }
@@ -34,7 +34,7 @@ componentDidMount() {
     
     fetch(adminURL+'/getContents/'+apiId)
     .then(response => response.json())
-    .then(data => {if(data.mainTitle=='')
+    .then(data => {if(data.mainTitle==='')
     {
         
         $('#mainTitle').html('The First EOS based decentralized exchange in the world');
@@ -53,7 +53,6 @@ componentDidMount() {
 
 }
 render(){
-    const { colors } = this.state;
         return(
             <div className="mainBanner">
                 <div className="container">
@@ -65,7 +64,7 @@ render(){
                             <label  style={{'background': this.state.colors}}>Email Address</label>
                         </div>
                         <input type="submit" value="Sign Up" />
-                        <a href="#">Join our Telegram</a>
+                        <a href="/">Join our Telegram</a>
                     </form>
                 </div>
             </div>

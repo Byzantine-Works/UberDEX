@@ -7,7 +7,7 @@ class Visualizer extends Component {
     }
 
     render() {
-        let styleFrame = { border: 'solid', borderWidth: '0.5px', backgroundColor: 'rgba(0, 0, 0, 0.15)' };
+        let styleFrame = { backgroundColor: 'rgba(0, 0, 0, 0.15)' };
         let styleStaking = { border: 'solid', borderWidth: '0.5px', borderColor: 'rgba(0, 0, 0, 0.11)' };
         console.log("resources: ", (this.props.resources.ram_usage / this.props.resources.ram_quota));
 

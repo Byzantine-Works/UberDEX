@@ -19,7 +19,7 @@ componentDidMount() {
 
     fetch(adminURL+'/getColors/'+apiId)
     .then(response => response.json())
-    .then(data => {if(data.theme_color=='')
+    .then(data => {if(data.theme_color==='')
     {
         this.setState({colors:'#0e9caf'});
     }
@@ -33,7 +33,7 @@ componentDidMount() {
     
     fetch(adminURL+'/getColors/'+apiId)
     .then(response => response.json())
-    .then(data => {if(data.footerTitle=='')
+    .then(data => {if(data.footerTitle==='')
     {
         $('#titless').html('Ready to buy EOS');
         $('#fContent').html('Get started with $50 or less');
@@ -50,7 +50,7 @@ componentDidMount() {
     });
 }
 render(){
-    const { colors } = this.state;
+    //const { colors } = this.state;
         return(
             <div className="callAction">
                 <div className="callInner background"  style={{'background': this.state.colors}}>

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import scatter from './imgs/scatter.PNG';
 import logoBlue from './imgs/logoBlue.png';
-import logoBlueh from './imgs/logoBlueh.png';
+
 import $ from "jquery";
 
 import ScatterJS from 'scatterjs-core';
@@ -35,14 +35,13 @@ const network = {
 
 
 
-
 function handleClicks(e) {
     e.preventDefault();
     $('.signInPopup ').fadeOut();
 }
 
 
-async function handleClickss(e) {
+/* async function handleClickss(e) {
     e.preventDefault();
     let scatter = ScatterJS.scatter;
     scatter = scatter.isExtension ? window.ScatterJS.scatter : scatter;
@@ -72,6 +71,7 @@ async function handleClickss(e) {
 
 }
 
+*/
 
 class Footer extends Component {
     constructor(props) {
@@ -92,7 +92,7 @@ class Footer extends Component {
         fetch(adminURL + '/getColors/' + apiId)
             .then(response => response.json())
             .then(data => {
-                if (data.logo == '') {
+                if (data.logo === '') {
                     this.setState({ colors: '#0e9caf' }); this.setState({ logo: logoBlue });
                 }
                 else {
@@ -103,23 +103,26 @@ class Footer extends Component {
             }).catch(data => {
                 this.setState({ colors: '#0e9caf' }); this.setState({ logo: logoBlue });
             });
-
-        fetch(adminURL + '/getColors/' + apiId)
+            fetch(adminURL+'/getColors/'+apiId)
             .then(response => response.json())
-            .then(data => {
-                if (data.companyName == '') {
-                    this.setState({ companyName: 'UberDex' });
-                }
-                else {
-                    this.setState({ companyName: data.companyName });
-                }
+            .then(data => {if(data.footerCopyright==='')
+            {
+                $('#copyrite').html('© Uberdex 2018. All Right Reserved.');
+            }
+            else
+            {
+                $('#copyrite').html(data.footerCopyright);
+                $('#bottomss').html(data.footerBottom);
+        
+            }
             }).catch(data => {
-                this.setState({ companyName: 'UberDex' });
+                $('#copyrite').html('© Uberdex 2018. All Right Reserved.');
             });
+            
 
     }
 
-    async handleClickss(e) {
+     async handleClickss(e) {
         e.preventDefault();
         let scatter = ScatterJS.scatter;
         scatter = scatter.isExtension ? window.ScatterJS.scatter : scatter;
@@ -130,10 +133,7 @@ class Footer extends Component {
             console.log(connected)
         });
         setTimeout(async () => {
-            connected = connected
-            console.log(scatter);
-            console.log(connected)
-
+           
 
             // If the user does not have Scatter or it is Locked or Closed this will return false;
             if (!connected) {
@@ -145,10 +145,12 @@ class Footer extends Component {
             let id = await scatter.getIdentity(requiredFields);
 
             const account = id.accounts.find(x => x.blockchain === 'eos');
+            console.log("account: ", account);
+            console.log("scatter: ", scatter);
 
             const eosOptions = { expireInSeconds: 60 }
 
-            this.props.updateScatterID(scatter)
+            this.props.updateScatterID(scatter, account)
             const eos = scatter.eos(network, Eos, eosOptions)
             console.log("Scatter eos: ", eos);
             $('.signInPopup ').fadeOut();
@@ -164,10 +166,10 @@ class Footer extends Component {
             <div>
                 <div className="footer">
                     <div className="container clearfix">
-                        <img src={this.state.logo} className="darkF" />
-                        <img src={this.state.lightLogo} className="lightF" />
-                        <p>Cryptocurrency investment is subject to high market risk, please make your investments cautiously.</p>
-                        <span>© {this.state.companyName} 2018. All Right Reserved.</span>
+                        <img src={this.state.logo} className="darkF" alt=""  />
+                        <img src={this.state.lightLogo} className="lightF" alt="" />
+                        <p id="bottomss">please make your investments cautiously.</p>
+                        <span id="copyrite">© Uberdex 2018.</span>
                         <ul>
                             <li><Link to="/about" className="link">About</Link></li>
                             <li><Link to="/user_agreement" className="link">User Agreement</Link></li>
@@ -181,9 +183,9 @@ class Footer extends Component {
 
                 <div className="signInPopup">
                     <div className="inners">
-                        <a href="#" className="cls" onClick={handleClicks}><i className="fa fa-times"></i></a>
-                        <img src={scatter} />
-                        <a href="#" className="sgn" onClick={this.handleClickss}>Sign in via Scatter</a>
+                        <a href="/" className="cls" onClick={handleClicks}><i className="fa fa-times"></i></a>
+                        <img src={scatter} alt=""  />
+                        <a href="/" className="sgn" onClick={this.handleClickss}>Sign in via Scatter</a>
                         <p>Scatter allows convenient transactions without password</p>
                         {this.state.scatterConnect ? null : <p style={{color: 'red'}}>Please make sure that your Scatter app is opened first.</p>}
                     </div>
