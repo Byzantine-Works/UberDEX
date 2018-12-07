@@ -8,6 +8,7 @@ import Trading from './trading';
 import BN from 'bignumber.js';
 import ecc from 'eosjs-ecc';
 import axios from 'axios';
+import lodash from 'lodash';
 
 import dp from '../../app.json';
 var adminURL = dp['url'];
@@ -528,23 +529,7 @@ class tradingHead extends Component{
       }
 
 
-      cancelOrder(e) {
-         e.preventDefault();
-         var order_id = e.target.id;
-         $('#view'+order_id).fadeOut();
-           let datas = {
-              "orderId": order_id,
-              "orderHash": "ascascasc"
-        };
-         fetch('https://api.byzanti.ne/orderCancel?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', {
-         method: 'POST',headers: {
-      //  'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },  body: JSON.stringify(datas)})
-            .then(response => response.json())
-            .then(data =>this.refresh_data ); 
-            
-    }
+
 
 
       handleClick=(orderId)=> {
@@ -637,8 +622,8 @@ handleClicks=(orderId, e)=> {
     document.getElementById('sellPricetwo').value = '';
         });
         
-  
   }
+
 refresh_data(e)
 {
      e.preventDefault();
@@ -776,6 +761,7 @@ bColor='#52565a';
         
         var tradebook = 'https://api.byzanti.ne/tradebook?symbol='+c+'&size=10&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
         var OrderSell = 'https://api.byzanti.ne/orders?symbol=IQ&side=SELL&size=100&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+
         if(this.props.account) {
             fetch(`https://api.byzanti.ne/ordersByUser?user=${this.props.account.name}&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`)
                 .then(response => response.json())
@@ -841,6 +827,113 @@ bColor='#52565a';
         });
         
     }
+
+    async cancelOrder(e) {
+
+        console.log(e.target.innerHTML)
+
+        let scatter = this.props.scatterID;
+        
+        var url = new URL(window.location.href);
+        var c = url.searchParams.get("opt");
+
+        // e.preventDefault();
+        var order_id = e.target.id;
+        // $('#view'+order_id).fadeOut();
+
+        let ordObj = lodash.find(this.state.Orders, ["orderId", order_id]);
+
+
+
+        let precisionS = ordObj.assetSell === 'EOS' ? 4 : this.state.tokens[c].currency_precision;
+        let precisionB = ordObj.assetBuy === 'EOS' ? 4 : this.state.tokens[c].currency_precision;
+        console.log(precisionS, precisionB, ordObj);
+
+        let amS = parseFloat(ordObj.amountSell.toFixed(precisionS));
+        let amB = parseFloat(ordObj.amountBuy.toFixed(precisionB));
+    
+        var amountS = BN(amS).multipliedBy(Math.pow(10, precisionS));
+        var amountB = BN(amB).multipliedBy(Math.pow(10, precisionB));
+
+        console.log(amountS, amountB)
+    
+     
+        let amountBuy = new BN(amountB);
+        let amountSell = new BN(amountS);
+        let nonceBN = new BN(1);
+
+        console.log(ordObj.assetBuy, ordObj.assetSell, amountBuy, amountSell, nonceBN, this.props.account.name);
+    
+        let orderBuffer = serialize.serializeOrder('exchange', ordObj.assetBuy, ordObj.assetSell, amountBuy, amountSell, nonceBN, ordObj.useraccount);
+      
+        let orderHash = ecc.sha256(orderBuffer);
+
+        
+        
+
+        if(e.target.innerHTML === "Cancel") {
+
+          let datasCancel = {
+             "orderId": order_id,
+             "orderHash": orderHash
+       };
+        fetch('https://api.byzanti.ne/orderCancel?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', {
+        method: 'POST',headers: {
+     //  'Accept': 'application/json',
+       'Content-Type': 'application/json',
+     },  body: JSON.stringify(datasCancel)})
+           .then(response => response.json())
+           .then(data => {
+               console.log(data);
+               fetch(`https://api.byzanti.ne/ordersByUser?user=${this.props.account.name}&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`)
+               .then(response => response.json())
+               .then(data => {
+                   this.setState({ Orders: data });
+                   console.log("orders: ", data);
+               });
+            });
+
+
+        } else if (e.target.innerHTML === 'Reopen') {
+                
+            let datas = {
+                side: ordObj.side,
+                assetBuy: ordObj.assetBuy,
+                assetSell: ordObj.assetSell,
+                amountBuy: parseFloat(ordObj.amountBuy.toFixed(4)), 
+                amountSell: parseFloat(ordObj.amountSell.toFixed(4)),
+                price: ordObj.price,
+                type: 2,
+                hash: orderHash,
+                expires: "7d",
+                nonce: 1,
+                useraccount: this.props.account.name
+            };
+            let pubKey = this.props.account.publicKey;
+      
+            let signature = await scatter.getArbitrarySignature(pubKey, orderBuffer);
+            datas.signature = signature;
+
+            new Promise((resolve, reject) => {
+                let ordMakeResp = axios.post('https://api.byzanti.ne/orderMake/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', datas);
+                resolve(ordMakeResp)
+        }).then(() => {
+            fetch(`https://api.byzanti.ne/ordersByUser?user=${this.props.account.name}&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`)
+            .then(response => response.json())
+            .then(data => {
+                console.log(this)
+                this.setState({ Orders: data });
+                console.log("orders: ", data);
+            });
+
+        })
+
+        }
+        
+            
+
+           
+   }
 
     changeSellPrice2(e) {
         e.preventDefault();
@@ -1068,6 +1161,7 @@ bColor='#52565a';
       }
     
     render(){
+        console.log(this.props)
         const { tricker } = this.state;
         const { orderBook } = this.state;
         const { orderBooks } = this.state;
@@ -1420,16 +1514,17 @@ bColor='#52565a';
                                     <th>Amount</th>
                                     <th>Timestamp</th>
                                     <th>Status </th>
+                                    <th>Cancel</th>
                                     <th>Account Name</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {Orders.map((order, i) =>{
-                                    if(order.cancelled==='1')
+                                    if(order.cancelled === 1)
                                     {
                                          isCancel='Cancelled';
                                     }
-                                    else
+                                    else if(order.cancelled === 2)
                                     {
                                          isCancel='Active';
                                     }
@@ -1454,7 +1549,8 @@ bColor='#52565a';
                                             <td id={order.orderId}  onClick={orderView}>{parseFloat(order.price).toFixed(4)}</td>
                                             <td id={order.orderId}  onClick={orderView}>{parseFloat(amountToShow).toFixed(4)}</td>
                                             <td id={order.orderId}  onClick={orderView}>{order.created}</td>
-                                            <td id={order.orderId}    ><a href="/" id={order.orderId} onClick={this.cancelOrder}>{isCancel}</a></td>
+                                            <td id={order.orderId}  onClick={orderView}>{isCancel}</td>
+                                            <td id={order.orderId}    ><a id={order.orderId} onClick={this.cancelOrder}>{order.cancelled === 2 ? "Cancel" : "Reopen"}</a></td>
                                             <td id={order.orderId}  onClick={orderView}>{order.useraccount}</td>
                                         </tr>
                                     }
