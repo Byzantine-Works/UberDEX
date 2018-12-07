@@ -276,15 +276,15 @@ function closeView(e){
        if($('#apiType').val()==='make')
        {
         var datas = {
-            "side": "Buy",
-                "assetBuy": c,
-                "assetSell": "EOS",
-                "amountBuy": bprice,
-                "amountSell": sellPrice,
-                "price": price,
-                "expires": "3d",
-                "type": tps,
-                "useraccount": 'taker1'
+            "side": "BUY",
+            "assetBuy": c,
+            "assetSell": "EOS",
+            "amountBuy": bprice,
+            "amountSell": sellPrice,
+            "price": price,
+            "expires": "3d",
+            "type": tps,
+            "useraccount": 'taker1'
       };
     myuri='https://api.byzanti.ne/orderMake/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
    
@@ -363,15 +363,15 @@ function closeView(e){
         if($('#apiType').val()==='make')
         {
             var datas = {
-                  "side": "SELL",
-            "assetBuy": "EOS",
-            "assetSell": c,
-            "amountBuy": sellPrice,
-            "amountSell": bprice,
-            "price": price,
-            "expires": "3d",
-            "type": tps,
-            "useraccount": 'taker1'
+                "side": "SELL",
+                "assetBuy": "EOS",
+                "assetSell": c,
+                "amountBuy": bprice,
+                "amountSell": sellPrice,
+                "price": price,
+                "expires": "3d",
+                "type": tps,
+                "useraccount": 'taker1'
           };
      myuri='https://api.byzanti.ne/ordermake/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
         }
@@ -1239,7 +1239,20 @@ bColor='#52565a';
                                     </thead>
                                     
                                     <tbody>
-                                        
+                                        {orderBooks.map((bids, i) => {
+                                          
+                                            return  <tr key={i} onClick={this.handleClicks.bind(this,bids.orderId)}>
+                                                <td className='plus' id={bids.orderId} data-id={bids.orderId} data-assetbuy={bids.assetSell} data-assetsell={bids.assetBuy} data-amountsell={bids.amountBuy} data-amountbuy={bids.amountSell} data-price={bids.price} data-maker={bids.useraccount} data-makerexchange={bids.source} data-side={bids.side}   >{bids.price}</td>
+                                                <td id={bids.amountSell}>{bids.amountSell}</td>
+                                                <td id={bids.amountBuy}>{bids.amountBuy}</td>
+                                                <td id={bids.source}>{bids.source}</td>
+                                            </tr>
+                                        }
+                                        )}
+                               
+                                        <tr>
+                                            <td colSpan="4" className={"lastTrans "+this.state.mysign}><span id="lastValue">{this.state.myamount}</span><i className="fa fa-arrow-up"></i><i className="fa fa-arrow-down"></i></td>
+                                        </tr>
                                         {orderBook.map((ask, i) => 
                                             <tr key={i}>
                                                 <td className='minus' id={ask.price} data-id={ask.orderId} data-assetbuy={ask.assetSell} data-assetsell={ask.assetBuy} data-amountsell={ask.amountBuy} data-amountbuy={ask.amountSell} data-price={ask.price} data-maker={ask.useraccount} data-makerexchange={ask.source} data-side={ask.side} onClick={this.handleClick.bind(this,ask.orderId)}>{ask.price}</td>
@@ -1250,21 +1263,7 @@ bColor='#52565a';
                                                 <td id={ask.source}>{ask.source}</td>
                                             </tr>
                                         )}
-                               
-                                        <tr>
-                                            <td colSpan="4" className={"lastTrans "+this.state.mysign}><span id="lastValue">{this.state.myamount}</span><i className="fa fa-arrow-up"></i><i className="fa fa-arrow-down"></i></td>
-                                        </tr>
                                         
-                                        {orderBooks.map((bids, i) => {
-                                          
-                                          return  <tr key={i} onClick={this.handleClicks.bind(this,bids.orderId)}>
-                                              <td className='plus' id={bids.orderId} data-id={bids.orderId} data-assetbuy={bids.assetSell} data-assetsell={bids.assetBuy} data-amountsell={bids.amountBuy} data-amountbuy={bids.amountSell} data-price={bids.price} data-maker={bids.useraccount} data-makerexchange={bids.source} data-side={bids.side}   >{bids.price}</td>
-                                              <td id={bids.amountBuy}>{bids.amountBuy}</td>
-                                              <td id={bids.amountSell}>{bids.amountSell}</td>
-                                              <td id={bids.source}>{bids.source}</td>
-                                          </tr>
-                                      }
-                                      )}
                                     </tbody>
                                 </table>
                             </div>
@@ -1304,6 +1303,8 @@ bColor='#52565a';
                                             <th>Exchange</th>
                                     </tr>
                                     </thead>
+                                    
+                                   
                                     <tbody>
                                         {orderBooksss.map((bids, i) => 
                                                <tr key={i} onClick={this.handleClicks.bind(this,bids.orderId)}>
