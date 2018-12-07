@@ -458,6 +458,7 @@ function closeView(e){
         var views = e.target.id;
       //  console.log(views);
         $('#view'+views).fadeIn();
+        
     }
     function closeOrder(e){
         e.preventDefault();
@@ -523,15 +524,17 @@ class tradingHead extends Component{
         this.makeOrder = this.makeOrder.bind(this);
         this.order = this.order.bind(this);
       
-    this.cancelOrder= this.cancelOrder.bind(this);
+        this.cancelOrder= this.cancelOrder.bind(this);
       }
-      cancelOrder=(e)=>{
-        e.preventDefault();
+
+
+      cancelOrder(e) {
+         e.preventDefault();
          var order_id = e.target.id;
          $('#view'+order_id).fadeOut();
            let datas = {
               "orderId": order_id,
-      "orderHash": "ascascasc"
+              "orderHash": "ascascasc"
         };
          fetch('https://api.byzanti.ne/orderCancel?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', {
          method: 'POST',headers: {
@@ -542,6 +545,8 @@ class tradingHead extends Component{
             .then(data =>this.refresh_data ); 
             
     }
+
+
       handleClick=(orderId)=> {
         this.setState({orderType: "take"})
     let API="https://api.byzanti.ne/orderById?orderId="+orderId+"&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N";
@@ -879,14 +884,6 @@ bColor='#52565a';
     $('#BuyPricetwo').val(price/sellPrice);
     $('#apiType').val('make');
 }
-
-
-    async cancelOrder() {
-
-        let scatter = this.props.scatterID;
-        let respCancel = axios()
-
-    }
 
     async makeOrder(side) {
         console.log("in make order")
@@ -1384,7 +1381,7 @@ bColor='#52565a';
                     <div  key={i} className="orderWrap" id={'view'+order.orderId}>
                         <div className="orderView">
                             <a href="/" className="closeView"  onClick={closeOrder}><i className="fa fa-times"></i></a>
-                            <ul><h3  style={{'color': this.state.colors}}>Order Detail</h3><button >Cancel Order</button></ul>
+                            <h3  style={{'color': this.state.colors}}>Order Detail</h3>
                             <div className="viewBottom clearfix">
                                 <ul>
                                     <li><span>Account Name</span> <cite>{order.useraccount}</cite> </li>
