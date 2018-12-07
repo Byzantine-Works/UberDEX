@@ -7,36 +7,372 @@
                     <div class="row">
                         <div class="col-sm-12 col-md-12">
                             <div class="innerDetail contentPage clearfix">
-                                <form action="/postContent" method="post">
                                     <h4>Enter Your Pages Content</h4>
-                                    <div class="col-sm-12 col-md-12">
-                                        <h5>Home Page Detail</h5>
-                                        <input type="text" placeholder="Main Title" name="mainTitle" value="<%= data.mainTitle %>" />
-                                        <textarea class="convertit" name="mainContent"><%= data.mainContent %></textarea>
-                                    </div>
-                                    <div class="col-sm-12 col-md-12">
-                                        <h5>About Us</h5>
-                                        <input type="text" placeholder="Title" name="aboutUsTitle" value="<%= data.aboutUsTitle %>" />
-                                        <textarea name="aboutUs" class="convertit"><%= data.aboutUs %></textarea>
-                                    </div>
-                                    <div class="col-sm-12 col-md-12">
-                                        <h5>How to Trade</h5>
-                                        <input type="text" placeholder="Title" name="tradeTitle" value="<%= data.tradeTitle %>" />
-                                        <textarea name="trade" class="convertit"><%= data.trade %></textarea>
-                                    </div>
-                                    <div class="col-sm-12 col-md-12">
-                                        <h5>User Agreement</h5>
-                                        <input type="text" placeholder="Title" name="agreementTitle" value="<%= data.agreementTitle %>" />
-                                        <textarea name="agreement" class="convertit"><%= data.agreement %></textarea>
-                                    </div>
-                                    <div class="col-sm-12 col-md-12">
-                                        <h5>Contact</h5>
-                                        <input type="text" placeholder="Title" name="contactUsTitle" value="<%= data.contactUsTitle %>" />
-                                        <textarea name="contactUs" class="convertit"><%= data.contactUs %></textarea>
-                                    </div>
-                                    <div class="clearfix"></div>
+                                    <div class="row">
+                                        <div class="col-sm-3 col-md-3 ContentMenu">
+                                            <a href="#" id="header" class="active">Header</a>
+                                            <a href="#" id="feature">Features</a>
+                                            <a href="#" id="services">Services</a>
+                                            <a href="#" id="news">News</a>
+                                            <a href="#" id="aboutPage">About Page</a>
+                                            <a href="#" id="tradePage">Trade Page</a>
+                                            <a href="#" id="contactPage">Contact Page</a>
+                                            <a href="#" id="agreementPage">Agreement Page</a>
+                                            <a href="#" id="footer">Footer</a>
+                                        </div>
+                                        <div class="col-sm-9 col-md-9 contentOptions">
+                                            <div class="row">
+                                              
+                                                <div class="col-sm-12 col-md-12 defultClass MainFeatures">
+                                                   <form action="/postFeatures" method="post" enctype="multipart/form-data">
+                                   <% for(var i=0; i< features.hits.length ; i++) {%>
+                                              <% if(features.hits[i]._source.featureId==1){ %>
+                                                           <h5>Features Main Title</h5>
+                                                    <input type="text" placeholder="Title" value="<%= features.hits[i]._source.featureMainTitle %>" name="featureMainTitle1" />
+                                                    <h5> Feature Title</h5>
+                                                    <input type="text" placeholder="Title" value="<%= features.hits[i]._source.featureTitle %>" name="featureTitle1" />
+                                                    <h5>Feature Icons</h5>
+                                                    <input type="hidden" name="featureId1" value="1" />
+                                                    <label><input type="file" name="featureDark" value="<%= features.hits[i]._source.featureDark %>"  /> Dark Icon </label>
+                                                    <label><input type="file" name="featureLight" value="<%= features.hits[i]._source.featureLight %>"  /> Light Icon</label>
+                                                      <input type="hidden" name="fld" value="<%= features.hits[i]._source.featureDark %>" />
+                                                    <input type="hidden" name="fll" value="<%= features.hits[i]._source.featureLight %>" />
+                                                
+                                                    <h5>Feature Description</h5>
+                                                    <textarea name="featureDesc1"><%= features.hits[i]._source.featureDesc %></textarea>
+                                
+                                             <% } } %>     
+                                               <% for(var i=0; i< features.hits.length ; i++) {%>
+                                              <% if(features.hits[i]._source.featureId==2){ %>
+                                                     <input type="hidden" placeholder="Title" value="<%= features.hits[i]._source.featureMainTitle %>" name="featureMainTitle2" />
+                                                    <h5> Feature Title</h5>
+                                                    <input type="text" placeholder="Title" value="<%= features.hits[i]._source.featureTitle %>" name="featureTitle2" />
+                                                    <h5>Feature Icons</h5>
+                                                    <input type="hidden" name="featureId2" value="2" />
+                                                    <label><input type="file" name="featureDark2" value="<%= features.hits[i]._source.featureDark %>"  /> Dark Icon </label>
+                                                    <label><input type="file" name="featureLight2" value="<%= features.hits[i]._source.featureLight %>"   /> Light Icon</label>
+                                                      <input type="hidden" name="fld2" value="<%= features.hits[i]._source.featureDark %>" />
+                                                    <input type="hidden" name="fll2" value="<%= features.hits[i]._source.featureLight %>" />
+                                                
+                                                    <h5>Feature Description</h5>
+                                                    <textarea name="featureDesc2"><%= features.hits[i]._source.featureDesc %></textarea>
+                                
+                                             <% }} %>  
+                                              <% for(var i=0; i< features.hits.length ; i++) {%>
+                                              <% if(features.hits[i]._source.featureId==3){ %>
+                                                     <input type="hidden" placeholder="Title" value="<%= features.hits[i]._source.featureMainTitle %>" name="featureMainTitle3" />
+                                                    <h5> Feature Title</h5>
+                                                    <input type="text" placeholder="Title" value="<%= features.hits[i]._source.featureTitle %>" name="featureTitle3" />
+                                                    <h5>Feature Icons</h5>
+                                                    <input type="hidden" name="featureId3" value="3" />
+                                                    <label><input type="file" name="featureDark3" value="<%= features.hits[i]._source.featureDark %>"   /> Dark Icon </label>
+                                                    <label><input type="file" name="featureLight3" value="<%= features.hits[i]._source.featureLight %>"   /> Light Icon</label>
+                                                     <input type="hidden" name="fld3" value="<%= features.hits[i]._source.featureDark %>" />
+                                                    <input type="hidden" name="fll3" value="<%= features.hits[i]._source.featureLight %>" />
+                                                
+                                                    <h5>Feature Description</h5>
+                                                    <textarea name="featureDesc3"><%= features.hits[i]._source.featureDesc %></textarea>
+                                
+                                             <% }} %> 
+                                              <% for(var i=0; i< features.hits.length ; i++) {%>
+                                              <% if(features.hits[i]._source.featureId==4){ %>
+                                                    <input type="hidden" placeholder="Title" value="<%= features.hits[i]._source.featureMainTitle %>" name="featureMainTitle4" />
+                                                    <h5> Feature Title</h5>
+                                                    <input type="text" placeholder="Title" value="<%= features.hits[i]._source.featureTitle %>" name="featureTitle4" />
+                                                    <h5>Feature Icons</h5>
+                                                    <input type="hidden" name="featureId4" value="4" />
+                                                    <label><input type="file" name="featureDark4" value="<%= features.hits[i]._source.featureDark %>"   /> Dark Icon </label>
+                                                   <input type="hidden" name="fld4" value="<%= features.hits[i]._source.featureDark %>" />
+                                                    <input type="hidden" name="fll4" value="<%= features.hits[i]._source.featureLight %>" />
+                                                    <label><input type="file" name="featureLight4" value="<%= features.hits[i]._source.featureLight %>"   /> Light Icon</label>
+                                                    <h5>Feature Description</h5>
+                                                    <textarea name="featureDesc4"><%= features.hits[i]._source.featureDesc %></textarea>
+                                
+                                             <% }} %>
+                                                       
+                                          <%  
+                                   if(i==0)
+                                   {
+                                   %> 
+                                        <h5>Features Main Title</h5>
+                                                    <input type="text" placeholder="Title"  name="featureMainTitle1" />
+                                                  
+                                    <h5>First Feature Title</h5>
+                                                    <input type="text" placeholder="Title" name="featureTitle1" />
+                                                    <h5>Feature Icons</h5>
+                                                    <label><input type="file" name="featureDark" /> Dark Icon </label>
+                                                    <label><input type="file" name="featureLight" /> Light Icon</label>
+                                                      <input type="hidden" name="fld" value="" />
+                                                    <input type="hidden" name="fll" value="" />
+                                                
+                                                    <h5>Feature Description</h5>
+                                                    <input type="hidden" name="featureId1" value="1" />
+                                                    <textarea name="featureDesc1"></textarea>
+                                             
+                                      <h5>Second Feature Title</h5>
+                                                    <input type="text" placeholder="Title" name="featureTitle2" />
+                                                    <h5>Feature Icons</h5>
+                                                    <label><input type="file" name="featureDark2" /> Dark Icon </label>
+                                                    <label><input type="file" name="featureLight2" /> Light Icon</label>
+                                                       <input type="hidden" name="fld2" value="" />
+                                                    <input type="hidden" name="fll2" value="" />
+                                                
+                                                    <h5>Feature Description</h5>
+                                                     <input type="hidden" name="featureId2" value="2" />
+                                                   
+                                                    <textarea name="featureDesc2"></textarea>
+                                                     <h5>Third Feature Title</h5>
+                                                    <input type="text" placeholder="Title" name="featureTitle3" />
+                                                    <h5>Feature Icons</h5>
+                                                    <label><input type="file" name="featureDark3" /> Dark Icon </label>
+                                                    <label><input type="file" name="featureLight3" /> Light Icon</label>
+                                                       <input type="hidden" name="fld3" value="" />
+                                                    <input type="hidden" name="fll3" value="" />
+                                                
+                                                    <h5>Feature Description</h5>
+                                                     <input type="hidden" name="featureId3" value="3" />
+                                                   
+                                                    <textarea name="featureDesc3"></textarea>
+                                                     <h5>Fourth Feature Title</h5>
+                                                    <input type="text" placeholder="Title" name="featureTitle4" />
+                                                    <h5>Feature Icons</h5>
+                                                    <label><input type="file" name="featureDark4" /> Dark Icon </label>
+                                                    <label><input type="file" name="featureLight4" /> Light Icon</label>
+                                                       <input type="hidden" name="fld4" value="" />
+                                                    <input type="hidden" name="fll4" value="" />
+                                                
+                                                    <h5>Feature Description</h5>
+                                                     <input type="hidden" name="featureId4" value="4" />
+                                                   
+                                                    <textarea name="featureDesc4"></textarea>
+                                    <%}
+                                   %>
+                                                                      
+                                                   
+                                                    <div class="clearfix"></div>
+                                                    <input type="submit" value="Save">
+                                                    <input type="hidden" name="urlId" value="<%= data.uid %>" />
+                                             
+                                                    </form>
+                                                    
+                                                   
+                                                </div>
+                                                
+                                                <div class="col-sm-12 col-md-12 defultClass mainServices">
+                                                     <form action="/postService" method="post" enctype="multipart/form-data">
+                                 <% for(var i=0; i< services.hits.length; i++) {
+                                    if(services.hits[i]._source.serviceId==1){
+                                    %>
+                                                       
+                                                    <h5>First Service Titles</h5>
+                                                    <input type="text" placeholder="Title" name="serviceTitle1" value="<%= services.hits[i]._source.serviceTitle %>" />
+                                                    <h5>Service Icons</h5>
+                                                    <label><input type="file" name="serviceDark" value="<%= services.hits[i]._source.serviceDark %>" /> Dark Icon </label>
+                                                    <label><input type="file" name="serviceLight" value="<%= services.hits[i]._source.serviceLight %>" /> Light Icon</label>
+                                                          <input type="hidden" name="fld" value="<%= services.hits[i]._source.serviceDark %>" />
+                                                    <input type="hidden" name="fll" value="<%= services.hits[i]._source.serviceLight %>" />
+                                                
+                                                    <input type="hidden" name="serviceId" value="1" />
+                                                    <h5>Service Description</h5>
+                                                    <textarea name="serviceContent1"><%= services.hits[i]._source.serviceContent %></textarea>
+                                       <% } %>
+                                    <% }%>
+                                     <% for(var i=0; i< services.hits.length; i++) {
+                                    if(services.hits[i]._source.serviceId==2){
+                                    %>
+                                                       
+                                                    <h5>Second Service Title</h5>
+                                                    <input type="text" placeholder="Title" name="serviceTitle2" value="<%= services.hits[i]._source.serviceTitle %>" />
+                                                    <h5>Service Icons</h5>
+                                                    <label><input type="file" name="serviceDark2" value="<%= services.hits[i]._source.serviceDark %>" /> Dark Icon </label>
+                                                    <label><input type="file" name="serviceLight2" value="<%= services.hits[i]._source.serviceLight %>" /> Light Icon</label>
+                                                          <input type="hidden" name="fld2" value="<%= services.hits[i]._source.serviceDark %>" />
+                                                    <input type="hidden" name="fll2" value="<%= services.hits[i]._source.serviceLight %>" />
+                                                
+                                                    <h5>Service Description</h5>
+                                                     <input type="hidden" name="serviceId2" value="2" />
+                                                    <textarea name="serviceContent2"><%= services.hits[i]._source.serviceContent %></textarea>
+                                      <% } %>
+                                    <% }%>
+                                     <% for(var i=0; i< services.hits.length; i++) {
+                                    if(services.hits[i]._source.serviceId==3){
+                                    %>
+                                                       
+                                                    <h5>3rd Service Title</h5>
+                                                    <input type="text" placeholder="Title" name="serviceTitle3" value="<%= services.hits[i]._source.serviceTitle %>" />
+                                                    <h5>Service Icons</h5>
+                                                    <label><input type="file" name="serviceDark3" /> Dark Icon </label>
+                                                    <label><input type="file" name="serviceLight3" /> Light Icon</label>
+                                                         <input type="hidden" name="fld3" value="<%= services.hits[i]._source.serviceDark %>" />
+                                                    <input type="hidden" name="fll3" value="<%= services.hits[i]._source.serviceLight %>" />
+                                                
+                                                     <input type="hidden" name="serviceId3" value="3" />
+                                                    <h5>Service Description</h5>
+                                                    <textarea name="serviceContent3"><%= services.hits[i]._source.serviceContent %></textarea>
+                                      <% } %>
+                                    <% }%>
+                                    <% if(i==0){ %>
+                                                      
+                                                    <h5>First Service Title</h5>
+                                                    <input type="text" placeholder="Title" name="serviceTitle1" />
+                                                    <h5>Service Icons</h5>
+                                                    <label><input type="file" name="serviceDark" /> Dark Icon </label>
+                                                    <label><input type="file" name="serviceLight" /> Light Icon</label>
+                                                         <input type="hidden" name="fld" value="" />
+                                                    <input type="hidden" name="fll" value="" />
+                                                
+                                                     <input type="hidden" name="serviceId" value="1" />
+                                                    <h5>Service Description</h5>
+                                                    <textarea name="serviceContent1"></textarea>
+                                                    
+                                                                     <h5>Second Service Title</h5>
+                                                    <input type="text" placeholder="Title" name="serviceTitle2" />
+                                                    <h5>Service Icons</h5>
+                                                    <label><input type="file" name="serviceDark2" /> Dark Icon </label>
+                                                    <label><input type="file" name="serviceLight2" /> Light Icon</label>
+                                                         <input type="hidden" name="fld2" value="" />
+                                                    <input type="hidden" name="fll2" value="" />
+                                                
+                                                     <input type="hidden" name="serviceId2" value="2" />
+                                                    <h5>Service Description</h5>
+                                                    <textarea name="serviceContent2"></textarea>
+                        
+                        
+                                         <h5>3rd Service Title</h5>
+                                                    <input type="text" placeholder="Title" name="serviceTitle3" />
+                                                    <h5>Service Icons</h5>
+                                                    <label><input type="file" name="serviceDark3" /> Dark Icon </label>
+                                                    <label><input type="file" name="serviceLight3" /> Light Icon</label>
+                                                         <input type="hidden" name="fld3" value="" />
+                                                    <input type="hidden" name="fll3" value="" />
+                                                
+                                                     <input type="hidden" name="serviceId3" value="3" />
+                                                    <h5>Service Description</h5>
+                                                    <textarea name="serviceContent3"></textarea>
+                        
+                           <% }  %>
+                                                      <input type="hidden" name="urlId" value="<%= data.uid %>" />
+                                                     <input type="submit" value="Save">
+                                 
+                                             </form>
+                                                  
+                                                </div>
+                                                
+                                                <div class="col-sm-12 col-md-12 defultClass MianFooter">
+                                                   <form action="/postFooter" method="post">
+                                
+                                                    <h5>Footer Title</h5>
+                                                    <input type="text" placeholder="Title" name="footerTitle" value="<%= footer.footerTitle %>" />
+                                                    <h5>Footer Description</h5>
+                                                    <textarea name="footerContent"><%= footer.footerContent %></textarea>
+                                                    <h5>Footer Copyright Text</h5>
+                                                    <textarea name="footerCopyright"><%= footer.footerCopyright %></textarea>
+                                                       <h5>Footer bottom Text</h5>
+                                                    <textarea name="footerBottom"><%= footer.footerBottom %></textarea>
+                                                  
+                                                      <div class="clearfix"></div>
+                                                    <input type="submit" value="Save">
+                                                    <input type="hidden" name="urlId" value="<%= data.uid %>" />
+                                             </form>
+                                                </div>
+            
+                                                
+                                                <div class="col-sm-12 col-md-12 defultClass MainNews">
+                                                   <form action="/postNews" method="post">
+                                
+                                                    <h5>News Title</h5>
+                                                    <input type="text" placeholder="Title" name="newsTitle" />
+                                                    <h5>News Description</h5>
+                                                    <textarea name="newsContent"></textarea>
+                                                    <div class="clearfix"></div>
+                                                    <input type="submit" value="Save">
+                                  <input type="hidden" name="urlId" value="<%= data.uid %>" />
+                                             
+                                                    </form>
+                                                    <table style="margin-top:20px;">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Title</th>
+                                                                <th>Date</th>
+                                                                <th>Actions</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                         <% for(var i=0; i< ticker.hits.length; i++) {%>
+                               
+                                                            <tr>
+                                                                <td><%= ticker.hits[i]._source.tickerTitle  %></td>
+                                                                <td><%= ticker.hits[i]._source.dateTimes  %></td>
+                                                                <td>
+                                                                <% if(ticker.hits[i]._source.isActive=='1')
+                                                                {%>
+                                                                    <a href="#">Active</a>
+                                                                   <% }else{%>
+                                                                    <a href="#">Deactive</a>
+                                                                    <% }%>
+                                                                <a href="/deleteNews/<%= ticker.hits[i]._id %>">Delete</a>
+                                                                </td>
+                                                                
+                                                            </tr>
+                                                            <%}%>
+                                                           
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                    
+                                                
+                                                <form action="/postContent" method="post">
+                                
+                                                <input type="hidden" name="urlId" value="<%= data.uid %>" />
+                                                  <div class="col-sm-12 col-md-12 HeaderSections">
+                                                    <h5>Header Title</h5>
+                                                    <input type="text" placeholder="Main Title" name="mainTitle" value="<%= data.mainTitle %>" />
+                                                    
+                                                    <h5>Header Description</h5>
+                                                    <textarea class="convertit" name="mainContent"><%= data.mainContent %></textarea>
+                                                                  <div class="clearfix"></div>
                                     <input type="submit" value="Save">
-                                </form>
+                               
+                                                </div>
+                                                
+                                                <div class="col-sm-12 col-md-12 defultClass AboutPage">
+                                                    <h5>About Us</h5>
+                                                    <input type="text" placeholder="Title" name="aboutUsTitle" value="<%= data.aboutUsTitle %>" />
+                                                    <textarea name="aboutUs" class="convertit"><%= data.aboutUs %></textarea>
+                                                                 <div class="clearfix"></div>
+                                    <input type="submit" value="Save">
+                               
+                                                </div>
+                                                <div class="col-sm-12 col-md-12 defultClass TradePage">
+                                                    <h5>How to Trade</h5>
+                                                    <input type="text" placeholder="Title" name="tradeTitle" value="<%= data.tradeTitle %>" />
+                                                    <textarea name="trade" class="convertit"><%= data.trade %></textarea>
+                                                                <div class="clearfix"></div>
+                                    <input type="submit" value="Save">
+                               
+                                                </div>
+                                                <div class="col-sm-12 col-md-12 defultClass AgreementPage">
+                                                    <h5>User Agreement</h5>
+                                                    <input type="text" placeholder="Title" name="agreementTitle" value="<%= data.agreementTitle %>" />
+                                                    <textarea name="agreement" class="convertit"><%= data.agreement %></textarea>
+                                                                <div class="clearfix"></div>
+                                    <input type="submit" value="Save">
+                               
+                                                </div>
+                                                <div class="col-sm-12 col-md-12 defultClass ContactPage">
+                                                    <h5>Contact</h5>
+                                                    <input type="text" placeholder="Title" name="contactUsTitle" value="<%= data.contactUsTitle %>" />
+                                                    <textarea name="contactUs" class="convertit"><%= data.contactUs %></textarea>
+                                                                <div class="clearfix"></div>
+                                    <input type="submit" value="Save">
+                               
+                                                </div>
+                                  
+                                  </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
                             </div>
                         </div>
                     </div>

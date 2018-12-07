@@ -1,0 +1,178 @@
+<% include header.ejs %>
+
+        <!--End Header-->
+
+        <div class="PageContent">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12">
+                            <div class="innerDetail contentPage clearfix">
+                                    <h4>Enter Your Pages Content</h4>
+                                    <div class="row">
+                                        <div class="col-sm-3 col-md-3 ContentMenu">
+                                            <a href="#" id="header" class="active">Header</a>
+                                            <a href="#" id="feature">Features</a>
+                                            <a href="#" id="services">Services</a>
+                                            <a href="#" id="news">News</a>
+                                            <a href="#" id="aboutPage">About Page</a>
+                                            <a href="#" id="tradePage">Trade Page</a>
+                                            <a href="#" id="contactPage">Contact Page</a>
+                                            <a href="#" id="agreementPage">Agreement Page</a>
+                                            <a href="#" id="footer">Footer</a>
+                                        </div>
+                                        <div class="col-sm-9 col-md-9">
+                                            <div class="row">
+                                              
+                                                <div class="col-sm-12 col-md-12 defultClass MainFeatures">
+                                                   <form action="/postFeatures" method="post" enctype="multipart/form-data">
+                                
+                                                    <h5>Features Main Title</h5>
+                                                    <input type="text" placeholder="Title" name="featureMainTitle" />
+                                                    
+                                                    <h5>First Feature Title</h5>
+                                                    <input type="text" placeholder="Title" name="featureTitle" />
+                                                    <h5>Feature Icons</h5>
+                                                    <label><input type="file" name="featureDark" /> Dark Icon </label>
+                                                    <label><input type="file" name="featureLight" /> Light Icon</label>
+                                                    <h5>Feature Description</h5>
+                                                    <textarea name="featureDesc"></textarea>
+                                                    <div class="clearfix"></div>
+                                                    <input type="submit" value="Save">
+                                                    <input type="hidden" name="urlId" value="<%= data.uid %>" />
+                                             
+                                                    </form>
+                                                </div>
+                                                
+                                                <div class="col-sm-12 col-md-12 defultClass mainServices">
+                                                     <form action="/postService" method="post" enctype="multipart/form-data">
+                                
+                                                    <h5>First Service Title</h5>
+                                                    <input type="text" placeholder="Title" name="serviceTitle" />
+                                                    <h5>Service Icons</h5>
+                                                    <label><input type="file" name="serviceDark" /> Dark Icon </label>
+                                                    <label><input type="file" name="servicelight" /> Light Icon</label>
+                                                    <h5>Service Description</h5>
+                                                    <textarea name="serviceContent"></textarea>
+                                                      <input type="submit" value="Save">
+                                                    <input type="hidden" name="urlId" value="<%= data.uid %>" />
+                                             </form>
+                                                </div>
+                                                
+                                                <div class="col-sm-12 col-md-12 defultClass MianFooter">
+                                                   <form action="/postFooter" method="post">
+                                
+                                                    <h5>Footer Title</h5>
+                                                    <input type="text" placeholder="Title" name="footerTitle" value="<%= footer.footerTitle %>" />
+                                                    <h5>Footer Description</h5>
+                                                    <textarea name="footerContent"><%= footer.footerContent %></textarea>
+                                                    <h5>Footer Copyright Text</h5>
+                                                    <textarea name="footerCopyright"><%= footer.footerCopyright %></textarea>
+                                                      <div class="clearfix"></div>
+                                                    <input type="submit" value="Save">
+                                                    <input type="hidden" name="urlId" value="<%= data.uid %>" />
+                                             </form>
+                                                </div>
+            
+                                                
+                                                <div class="col-sm-12 col-md-12 defultClass MainNews">
+                                                   <form action="/postNews" method="post">
+                                
+                                                    <h5>News Title</h5>
+                                                    <input type="text" placeholder="Title" name="newsTitle" />
+                                                    <h5>News Description</h5>
+                                                    <textarea name="newsContent"></textarea>
+                                                    <div class="clearfix"></div>
+                                                    <input type="submit" value="Save">
+                                  <input type="hidden" name="urlId" value="<%= data.uid %>" />
+                                             
+                                                    </form>
+                                                    <table>
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Title</th>
+                                                                <th>Date</th>
+                                                                <th>Actions</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                         <% for(var i=0; i< ticker.hits.length; i++) {%>
+                               
+                                                            <tr>
+                                                                <td><%= ticker.hits[i]._source.tickerTitle  %></td>
+                                                                <td><%= ticker.hits[i]._source.dateTimes  %></td>
+                                                                <td>
+                                                                <% if(ticker.hits[i]._source.isActive=='1')
+                                                                {%>
+                                                                    <a href="#">Active</a>
+                                                                   <% }else{%>
+                                                                    <a href="#">Deactive</a>
+                                                                    <% }%>
+                                                                </td>
+                                                            </tr>
+                                                            <%}%>
+                                                           
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                    
+                                                
+                                                <form action="/postContent" method="post">
+                                
+                                                <input type="hidden" name="urlId" value="<%= data.uid %>" />
+                                                  <div class="col-sm-12 col-md-12 HeaderSections">
+                                                    <h5>Header Title</h5>
+                                                    <input type="text" placeholder="Main Title" name="mainTitle" value="<%= data.mainTitle %>" />
+                                                    
+                                                    <h5>Header Description</h5>
+                                                    <textarea class="convertit" name="mainContent"><%= data.mainContent %></textarea>
+                                                                  <div class="clearfix"></div>
+                                    <input type="submit" value="Save">
+                               
+                                                </div>
+                                                
+                                                <div class="col-sm-12 col-md-12 defultClass AboutPage">
+                                                    <h5>About Us</h5>
+                                                    <input type="text" placeholder="Title" name="aboutUsTitle" value="<%= data.aboutUsTitle %>" />
+                                                    <textarea name="aboutUs" class="convertit"><%= data.aboutUs %></textarea>
+                                                                 <div class="clearfix"></div>
+                                    <input type="submit" value="Save">
+                               
+                                                </div>
+                                                <div class="col-sm-12 col-md-12 defultClass TradePage">
+                                                    <h5>How to Trade</h5>
+                                                    <input type="text" placeholder="Title" name="tradeTitle" value="<%= data.tradeTitle %>" />
+                                                    <textarea name="trade" class="convertit"><%= data.trade %></textarea>
+                                                                <div class="clearfix"></div>
+                                    <input type="submit" value="Save">
+                               
+                                                </div>
+                                                <div class="col-sm-12 col-md-12 defultClass AgreementPage">
+                                                    <h5>User Agreement</h5>
+                                                    <input type="text" placeholder="Title" name="agreementTitle" value="<%= data.agreementTitle %>" />
+                                                    <textarea name="agreement" class="convertit"><%= data.agreement %></textarea>
+                                                                <div class="clearfix"></div>
+                                    <input type="submit" value="Save">
+                               
+                                                </div>
+                                                <div class="col-sm-12 col-md-12 defultClass ContactPage">
+                                                    <h5>Contact</h5>
+                                                    <input type="text" placeholder="Title" name="contactUsTitle" value="<%= data.contactUsTitle %>" />
+                                                    <textarea name="contactUs" class="convertit"><%= data.contactUs %></textarea>
+                                                                <div class="clearfix"></div>
+                                    <input type="submit" value="Save">
+                               
+                                                </div>
+                                  
+                                  </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+      
+     <% include footer.ejs %>

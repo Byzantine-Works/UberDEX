@@ -1,0 +1,25 @@
+<% include header.ejs %>
+
+<div class="loginPage">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                
+                <div class="loginWrap">
+                    <div class="loginInner">
+                        <h3>Exchange</h3>
+                        <form action="/saveExchange" method="post">
+                            <div class="field">
+                                <label>Title</label>
+                                <input type="text" name="exchangeName"> 
+                                <input type="hidden" name="codes" value="<%= codes %>" />
+                            </div>
+                            <input type="submit" value="generate">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<% include footer.ejs %>
