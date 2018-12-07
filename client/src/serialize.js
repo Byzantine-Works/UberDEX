@@ -29,9 +29,9 @@ function serializeTokenSymbolName(tokenSymbol, precision) {
 }
 
 function serializeUInt64BN(bn) {
-    // assert(new BN(bn).isInteger());
-    // assert(new BN(bn).gte(0));
-    // assert(new BN(bn).lt(BN(2).pow(64)));
+    assert(new BN(bn).isInteger());
+    assert(new BN(bn).gte(0));
+    assert(new BN(bn).lt(BN(2).pow(64)));
 
     var buf = Buffer.alloc(8);
     var byte;

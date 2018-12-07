@@ -251,7 +251,7 @@ function closeView(e){
     e.preventDefault();
      var url = new URL(window.location.href);
         var c = url.searchParams.get("opt");
-                  var bprice= parseFloat($('#buyPrice').val());
+        var bprice= parseFloat($('#buyPrice').val());
        var sellPrice= parseFloat($('#sellPrice').val());
        var price= parseFloat($('#price').val());
        var tps=1;
@@ -514,18 +514,24 @@ class tradingHead extends Component{
 
         this.changeSellPrice = this.changeSellPrice.bind(this);
         this.changeSellPrice1 = this.changeSellPrice1.bind(this);
+        this.changeSellPrice2 = this.changeSellPrice2.bind(this);
+
         this.changeBuyPrice = this.changeBuyPrice.bind(this);
         this.changeBuyPrice1 = this.changeBuyPrice1.bind(this);
+
+
         this.takeOrder = this.takeOrder.bind(this);
         this.makeOrder = this.makeOrder.bind(this);
         this.order = this.order.bind(this);
     
       }
       handleClick=(orderId)=> {
+        this.setState({orderType: "take"})
     let API="https://api.byzanti.ne/orderById?orderId="+orderId+"&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N";
    fetch(API)
         .then(response => response.json())
         .then(data => {
+             this.setState({orderData: data})
              var amount_two = data.amountSell;
     var amount_twos = data.amountBuy;
     var amount = data.price;
@@ -549,26 +555,29 @@ class tradingHead extends Component{
     document.getElementById('prices').value = prices;
     document.getElementById('makerexchange').value = makerexchange;
     document.getElementById('side').value = side;
-    document.getElementById('priceTwo').value = '';
-    document.getElementById('BuyPricetwos').value = '';
-    document.getElementById('BuyPricetwo').value = '';
-    document.getElementById('sellPricetwo').value = '';
+
+    document.getElementById('price').value = '';
+    document.getElementById('buyPrices').value = '';
+    document.getElementById('buyPrice').value = '';
+    document.getElementById('sellPrice').value = '';
   //  console.log(amount_twos);
    $('#apiType').val('take');
-    document.getElementById('price').value = amount;
-    document.getElementById('buyPrices').value = amount_two;
-    document.getElementById('buyPrice').value = amount_two;
-    document.getElementById('sellPrice').value = amount_twos;
+    document.getElementById('priceTwo').value = amount;
+    document.getElementById('BuyPricetwos').value = amount_two;
+    document.getElementById('BuyPricetwo').value = amount_twos;
+    document.getElementById('sellPricetwo').value = amount_two;
             });
    
     
   }
 handleClicks=(orderId, e)=> {
     this.setState({orderType: "take"})
+    console.log(orderId);
   let API1="https://api.byzanti.ne/orderById?orderId="+orderId+"&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N";
    fetch(API1)
         .then(response => response.json())
         .then(data => {
+            this.setState({orderData: data});
             //console.log(data)
              var amount_four = data.amountBuy;
     var amount_fours = data.amountSell;
@@ -594,15 +603,16 @@ handleClicks=(orderId, e)=> {
     document.getElementById('prices').value = prices;
     document.getElementById('makerexchange').value = makerexchange;
     document.getElementById('side').value = side;
-    document.getElementById('priceTwo').value = amounts;
-    document.getElementById('BuyPricetwos').value = amount_four;
-    document.getElementById('BuyPricetwo').value = amount_four;
-    document.getElementById('sellPricetwo').value = amount_fours;
+
+    document.getElementById('price').value = amounts;
+    document.getElementById('buyPrice').value = amount_four;
+    document.getElementById('buyPrice').value = amount_fours;
+    document.getElementById('sellPrice').value = amount_four;
     $('#apiType').val('take');
-     document.getElementById('price').value = '';
-    document.getElementById('buyPrices').value = '';
-    document.getElementById('buyPrice').value = '';
-    document.getElementById('sellPrice').value = '';
+     document.getElementById('priceTwo').value = '';
+    document.getElementById('BuyPricetwos').value = '';
+    document.getElementById('BuyPricetwo').value = '';
+    document.getElementById('sellPricetwo').value = '';
         });
         
   
@@ -615,7 +625,7 @@ refresh_data(e)
       
         var API = 'https://api.byzanti.ne/ticker?symbol='+c+'&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
         var APISr = 'https://api.byzanti.ne/orderBook?symbol='+c+'&side=BUY&size=150&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
-        var APIS = 'https://api.byzanti.ne/orderBook?symbol='+c+'&side=BUY&size=10&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
+        var APIS = 'https://api.byzanti.ne/orderBook?symbol='+c+'&size=10&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
         var APISS = 'https://api.byzanti.ne/orders?symbol='+c+'&side=BUY&size=22&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
         var orderTaker = 'https://api.byzanti.ne/tradebook?symbol='+c+'&size=100&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
          var orderHistory= 'https://api.byzanti.ne/tradesByUser?user=taker1&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N';
@@ -633,11 +643,11 @@ refresh_data(e)
         
         fetch(APIS)
         .then(response => response.json())
-        .then(data => {this.setState({ orderBook: data['asks'], orderBooks: data['bids'] }); });
+        .then(data => {this.setState({ orderBook: data['bids'], orderBooks: data['asks'] }); });
         
         fetch(APISr)
         .then(response => response.json())
-        .then(data => {this.setState({ orderBookss: data['asks'], orderBooksss: data['bids'] }); });
+        .then(data => {this.setState({ orderBookss: data['bids'], orderBooksss: data['asks'] }); });
         
          fetch(orderTaker)
         .then(response => response.json())
@@ -726,7 +736,7 @@ bColor='#52565a';
         
         fetch(APIS)
         .then(response => response.json())
-        .then(data => {this.setState({ orderBook: data['asks'], orderBooks: data['bids'] }); });
+        .then(data => {this.setState({ orderBook: data['bids'], orderBooks: data['asks'] }); });
         
         fetch(APISr)
         .then(response => response.json())
@@ -810,33 +820,43 @@ bColor='#52565a';
         
     }
 
-    changeSellPrice1(e) {
-        this.setState({orderType: "make"})
+    changeSellPrice2(e) {
         e.preventDefault();
-        var price= parseFloat(e.target.value);
-        var sellPrice= parseFloat($('#price').val());
+        this.setState({orderType: "make"});
+        var quantTok = parseFloat(e.target.value);
+        var price = parseFloat($('#priceTwo').val());
         $('#apiType').val('make');
-        $('#sellPrice').val(price*sellPrice);
+        $('#sellPricetwo').val(price*quantTok);
+}
+
+    changeSellPrice1(e) {
+        e.preventDefault();
+        this.setState({orderType: "make"})
+        var price= parseFloat(e.target.value);
+        var buyPrice= parseFloat($('#buyPrice').val());
+        $('#apiType').val('make');
+        $('#sellPrice').val(price*buyPrice);
 }
     changeSellPrice(e) {
+        e.preventDefault();
         this.setState({orderType: "make"})
-    e.preventDefault();
     var price= parseFloat(e.target.value);
     var sellPrice= parseFloat($('#price').val());
     $('#buyPrice').val(price/sellPrice);
     $('#apiType').val('make');
 }
     changeBuyPrice1(e) {
+        e.preventDefault();
         this.setState({orderType: "make"})
-    e.preventDefault();
      var price= parseFloat(e.target.value);
-    var sellPrice= parseFloat($('#priceTwo').val());
-    $('#sellPricetwo').val(price*sellPrice);
+    var sellPrice= parseFloat($('#sellPricetwo').val());
+    console.log(price)
+    $('#BuyPricetwo').val(sellPrice/price);
     $('#apiType').val('make');
 }
     changeBuyPrice(e) {
+        e.preventDefault();
         this.setState({orderType: "make"})
-    e.preventDefault();
      var price= parseFloat(e.target.value);
     var sellPrice= parseFloat($('#priceTwo').val());
     $('#BuyPricetwo').val(price/sellPrice);
@@ -844,12 +864,14 @@ bColor='#52565a';
 }
 
     async makeOrder(side) {
+        console.log("in make order")
 
         var url = new URL(window.location.href);
         var c = url.searchParams.get("opt");
-        var price = parseFloat($('#priceTwo').val());
-        var amSell = parseFloat($('#BuyPricetwo').val());
-        var amBuy = parseFloat($('#sellPricetwo').val());
+        var price = side === "BUY" ? parseFloat($('#price').val()) : parseFloat($('#priceTwo').val());
+        var amSell = side === "BUY" ? parseFloat($('#buyPrice').val()) : parseFloat($('#BuyPricetwo').val());
+        var amBuy = side === "BUY" ? parseFloat($('#sellPrice').val()) : parseFloat($('#sellPricetwo').val());
+
 
         let symbSell = side === "SELL" ? c : "EOS";
         let symbBuy = side === "BUY" ? c : "EOS";
@@ -862,11 +884,11 @@ bColor='#52565a';
         let precisionB = symbBuy === 'EOS' ? 4 : this.state.tokens[c].currency_precision;
         console.log(precisionS, precisionB);
 
-        let amS = amSell.toFixed(precisionS);
-        let amB = amBuy.toFixed(precisionB);
+        let amS = parseFloat(amSell.toFixed(precisionS));
+        let amB = parseFloat(amBuy.toFixed(precisionB));
     
-        var amountS = BN(parseFloat(amS)).multipliedBy(Math.pow(10, precisionS));
-        var amountB = BN(parseFloat(amB)).multipliedBy(Math.pow(10, precisionB));
+        var amountS = BN(amS).multipliedBy(Math.pow(10, precisionS));
+        var amountB = BN(amB).multipliedBy(Math.pow(10, precisionB));
 
         console.log(amountS, amountB)
     
@@ -875,19 +897,19 @@ bColor='#52565a';
         let amountSell = new BN(amountS);
         let nonceBN = new BN(1);
 
-        console.log(symbSell, symbBuy, amountSell, amountBuy, nonceBN, this.props.account.name);
+        console.log(symbBuy, symbSell, amountBuy, amountSell, nonceBN, this.props.account.name);
     
-        let orderBuffer = serialize.serializeOrder('exchange', symbSell, symbBuy, amountSell, amountBuy, nonceBN, this.props.account.name);
+        let orderBuffer = serialize.serializeOrder('exchange', symbBuy, symbSell, amountBuy, amountSell, nonceBN, this.props.account.name);
       
         let orderHash = ecc.sha256(orderBuffer);
     
     
            let datas = {
               side: side,
-              assetBuy: symbSell,
-              assetSell: symbBuy,
-              amountBuy: parseFloat(amSell.toFixed(4)),
-              amountSell: parseFloat(amBuy.toFixed(4)), 
+              assetBuy: symbBuy,
+              assetSell: symbSell,
+              amountBuy: parseFloat(amBuy.toFixed(4)), 
+              amountSell: parseFloat(amSell.toFixed(4)),
               price: price,
               type: 2,
               hash: orderHash,
@@ -901,7 +923,7 @@ bColor='#52565a';
         datas.hash = orderHash;
         datas.signature = signature;
     
-        let ordMakeResp = await axios.post('http://local.byzanti.ne:8901/orderMake/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', datas);
+        let ordMakeResp = await axios.post('https://api.byzanti.ne/orderMake/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', datas);
         console.log(ordMakeResp);
     
         let json = ordMakeResp.data;
@@ -930,56 +952,67 @@ bColor='#52565a';
     }
     
     async takeOrder(side) {
+        console.log("in ordertake")
+
+        let orderData = this.state.orderData;
 
         
-      //  var url = new URL(window.location.href);
-        //var c = url.searchParams.get("opt");
-    
-        const account = this.props.scatterID.identity.accounts[0].name;
+        var c = url.searchParams.get("opt");
+        var price = side === "BUY" ? parseFloat($('#price').val()) : parseFloat($('#priceTwo').val());
+        var amBuy = side === "BUY" ? parseFloat($('#buyPrice').val()) : parseFloat($('#BuyPricetwo').val());
+        var amSell = side === "BUY" ? parseFloat($('#sellPrice').val()) : parseFloat($('#sellPricetwo').val());
+
+        console.log(price, amSell, amBuy);
+
         
+        let symbSell = side === "SELL" ? c : "EOS";
+        let symbBuy = side === "BUY" ? c : "EOS";
 
-        var price = parseFloat($('#priceTwo').val());
-        var amSell = parseFloat($('#BuyPricetwo').val());
-        var amBuy = parseFloat($('#sellPricetwo').val());
+        console.log(amBuy, amSell, symbSell, symbBuy);
 
+        let scatter = this.props.scatterID;
 
+        let precisionS = symbSell === 'EOS' ? 4 : this.state.tokens[c].currency_precision;
+        let precisionB = symbBuy === 'EOS' ? 4 : this.state.tokens[c].currency_precision;
+
+        console.log(precisionS, precisionB);
+
+        let amS = parseFloat(amSell.toFixed(precisionS));
+        let amB = parseFloat(amBuy.toFixed(precisionB));
     
-        const scatter = this.props.scatterID;
+        var amountS = BN(amS).multipliedBy(Math.pow(10, precisionS));
+        var amountB = BN(amB).multipliedBy(Math.pow(10, precisionB));
+
+        console.log(amountS, amountB)
+
+        const account = this.props.account.name;
     
-    
-    
-        var amountB = BN(359.422).multipliedBy(1000);
-        var amountS = BN(0.4144).multipliedBy(10000);
-    
-        // amountB = Math.floor(amountB / 10);
-    
-        //console.log(amountB, amountS);
      
         let amountBuy = new BN(amountB);
         let amountSell = new BN(amountS);
         let nonceBN = new BN(1);
 
-        // console.log(
-        //     'exchange', 'IQ', 'EOS', amountBuy, amountSell, nonceBN, 'ubermaker'
-        // )
-        
-        let orderBuffer = serialize.serializeOrder('exchange', 'IQ', 'EOS', amountBuy, amountSell, nonceBN, 'ubermaker');
+        console.log(symbBuy, symbSell, amountBuy, amountSell, nonceBN, orderData.useraccount);
+    
+        let orderBuffer = serialize.serializeOrder('exchange', symbBuy, symbSell, amountBuy, amountSell, nonceBN, orderData.useraccount);
+ 
       
         let orderHash = ecc.sha256(orderBuffer);
+        console.log(orderHash);
     
         var orderHashBuffer = Buffer.from(orderHash, 'hex');
         
     
         let tradeBuffer = serialize.serializeTrade(orderHashBuffer, amountBuy, account, nonceBN)
         let data = {
-                assetBuy: 'IQ',
-                assetSell: 'EOS',
-                amountBuy: 359.4218,
-                amountSell: 0.4144,
-                price: 0.001153,
+                assetBuy: symbBuy,
+                assetSell: symbSell,
+                amountBuy: amBuy,
+                amountSell: amSell,
+                price: price,
                 taker: account,
                 takerExchange: 'uberdex',
-                makerExchange: 'uberdex'
+                makerExchange: orderData.source
           }
 
     
@@ -990,8 +1023,8 @@ bColor='#52565a';
         
          
           data.signature = await scatter.getArbitrarySignature(pubKey, tradeBuffer, "test ordertake", false);
-          data.orderId = '2Z61e2cBKKlqgDKXMy_8'
-          data.maker = 'ubermaker'
+          data.orderId = orderData.orderId
+          data.maker = orderData.useraccount
     
     
           fetch('https://api.byzanti.ne/orderTake/?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', {
@@ -1007,6 +1040,7 @@ bColor='#52565a';
       }
 
       order(side) {
+          console.log(this.state.orderType)
           return this.state.orderType === 'take' ? this.takeOrder(side) : this.makeOrder(side);
 
       }
@@ -1030,7 +1064,7 @@ bColor='#52565a';
         return(
             <div>
                 
-                <div className="wellcomBanner background exchangeHeader" style={{'background': this.state.colors}}>
+                {/* <div className="wellcomBanner background exchangeHeader" style={{'background': this.state.colors}}>
                     <div className="header">
                         <div className="container clearfix">
                             <div className="logo">
@@ -1064,7 +1098,7 @@ bColor='#52565a';
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> */}
 
                 <Trading />
 
@@ -1093,8 +1127,8 @@ bColor='#52565a';
                                           
                                             return  <tr key={i} onClick={this.handleClicks.bind(this,bids.orderId)}>
                                                 <td className='plus' id={bids.orderId} data-id={bids.orderId} data-assetbuy={bids.assetSell} data-assetsell={bids.assetBuy} data-amountsell={bids.amountBuy} data-amountbuy={bids.amountSell} data-price={bids.price} data-maker={bids.useraccount} data-makerexchange={bids.source} data-side={bids.side}   >{bids.price}</td>
-                                                <td id={bids.amountBuy}>{bids.amountBuy}</td>
                                                 <td id={bids.amountSell}>{bids.amountSell}</td>
+                                                <td id={bids.amountBuy}>{bids.amountBuy}</td>
                                                 <td id={bids.source}>{bids.source}</td>
                                             </tr>
                                         }
@@ -1106,8 +1140,9 @@ bColor='#52565a';
                                         {orderBook.map((ask, i) => 
                                             <tr key={i}>
                                                 <td className='minus' id={ask.price} data-id={ask.orderId} data-assetbuy={ask.assetSell} data-assetsell={ask.assetBuy} data-amountsell={ask.amountBuy} data-amountbuy={ask.amountSell} data-price={ask.price} data-maker={ask.useraccount} data-makerexchange={ask.source} data-side={ask.side} onClick={this.handleClick.bind(this,ask.orderId)}>{ask.price}</td>
-                                                 <td id={ask.amountSell}>{ask.amountSell}</td>
                                                 <td id={ask.amountBuy}>{ask.amountBuy}</td>
+                                                 <td id={ask.amountSell}>{ask.amountSell}</td>
+                                                
                                                
                                                 <td id={ask.source}>{ask.source}</td>
                                             </tr>
@@ -1184,15 +1219,15 @@ bColor='#52565a';
                                             this.state.blc[0].amount) +" "+this.state.blc[0].symbol}</span></h6>
                                     )}
                                     <label>Price <span>EOS</span> </label>
-                                    <input type="number" id="price" />
+                                    <input type="number" id="price" onChange={this.changeSellPrice1}/>
                                     <label>Amount {tricker.map((hit, i) =>
                                         <span key={i}>{hit.symbol} </span>
                                     )}</label>
-                                     <input type="hidden" id="buyPrices"  />
-                                       <input type="number" id="buyPrice" onChange={changeSellPrice1} />
+                                     <input type="hidden" id="buyPrices"  onChange={this.changeSellPrice1}/>
+                                       <input type="number" id="buyPrice" onChange={this.changeSellPrice2} />
                                      
                                    <label>Total <span>EOS </span> </label>
-                                       <input type="number"  id="sellPrice" onChange={changeSellPrice} />
+                                       <input type="number"  id="sellPrice" onChange={this.changeSellPrice} />
                             
                               {tricker.map((hit, i) => {
                                         return <span key={i}>
@@ -1213,7 +1248,7 @@ bColor='#52565a';
                                             </span></h6>
                                     )}
                                     <label>Price <span>EOS</span></label>
-                                    <input type="number"  id="priceTwo" />
+                                    <input type="number"  id="priceTwo" onChange={this.changeBuyPrice1}/>
 
                                     <label>Amounts <span>EOS</span> </label>
                                    <input type="number" id="sellPricetwo" onChange={this.changeBuyPrice} />
@@ -1235,7 +1270,7 @@ bColor='#52565a';
                                         <span key={i}>{hit.symbol} </span>
                                     )}
                                     </label>
-                                       <input type="number" id="BuyPricetwo"  onChange={changeBuyPrice1} />  
+                                       <input type="number" id="BuyPricetwo"  onChange={this.changeBuyPrice2} />  
                                        {tricker.map((hit, i) => {
                                         return <span key={i}>
                                                  <input type="submit" value={'Sell '+hit.symbol} onClick={handleSell} className="background" />
