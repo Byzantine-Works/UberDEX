@@ -15,7 +15,7 @@ const API = 'https://api.byzanti.ne/ticker?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J879
        search= search.toLowerCase();
        if(search.length<2)
        {
-          $('table tbody tr td:nth-child(2)').each(function(i,v){
+          $('table tbody tr td:nth-child(1)').each(function(i,v){
       $('table tbody tr').eq(i).show();
     });
     $('.rhide').css('display','none');
@@ -23,7 +23,7 @@ const API = 'https://api.byzanti.ne/ticker?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J879
        }
        else
        {
-           $('table tbody tr td:nth-child(2)').each(function(i,v){
+           $('table tbody tr td:nth-child(1)').each(function(i,v){
        if($(this).html().toLowerCase().indexOf(search)>0)
        {
         $('table tbody tr').eq(i).show();
@@ -130,13 +130,11 @@ class Home_banner extends Component{
                             <i className="fa fa-search"></i>
                             <input type="text" placeholder="Search" id="searchMarket" onChange={searchMarket} />
                         </form>
-                        <p  style={{'color': this.state.colors, 'borderColor':this.state.colors}}><i className="fa fa-star"></i> Favorites</p>
                     </div>
                     <table>
                         <thead>
                             <tr>
-                                <th></th>
-                                <th>Pair</th>
+                                <th><input type="text" placeholder="Pair" id="searchMarket" onChange={searchMarket} /></th>
                                 <th>Last Price</th>
                                  <th>24h Change <span><i className="fa fa-angle-up" onClick={this.changeUp}></i><i className="fa fa-angle-down" onClick={this.changeDown}></i></span></th>
                                 <th>24h High</th>
@@ -146,22 +144,14 @@ class Home_banner extends Component{
                         </thead>
                         <tbody>
                             {tricker.map((hit, i) =>{
-                                 if(this.state.allSymbols[hit.symbol] || this.state.allSymbols2[hit.symbol])
-                            {
                             return <tr id={hit.symbol} key={i}>
-                                    <td><i className="fa fa-star"></i></td>
-                                    <td><Link to={'/exchange/?opt='+hit.symbol+'&contract='+hit.contract} className="link">{hit.symbol} / EOS</Link></td>
+                                   <td><Link to={'/exchange/?opt='+hit.symbol+'&contract='+hit.contract} className="link">{hit.symbol} / EOS</Link></td>
                                     <td className={hit.change < 0?'minus':'plus'}>{hit.last}</td>
                                     <td className={hit.change < 0?'minus':'plus'}>{hit.change}</td>
                                     <td>{hit.high}</td>
                                     <td>{hit.low}</td>
                                     <td>{hit.volume}</td>
-                                </tr>;
-                              }
-                              else
-                              {
-                                return <tr key={i} className="rhide" style={{'display':'none'}}><td></td><td></td></tr>
-                              }  })}
+                                </tr>;  })}
                         </tbody>
                     </table>
                     <div className="clearfix">

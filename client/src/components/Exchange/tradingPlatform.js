@@ -12,6 +12,8 @@ import axios from 'axios';
 import dp from '../../app.json';
 var adminURL = dp['url'];
 var apiId = dp['apiId'];
+var pricePrecision=5;
+var currencyPrecision=5;
 
 const serialize = require('../../serialize');
 
@@ -112,6 +114,7 @@ var c = url.searchParams.get("opt");
   function handledark(e)
   {
     e.preventDefault();
+    
     var url = new URL(window.location.href);
 var c = url.searchParams.get("opt");
 
@@ -154,6 +157,7 @@ var c = url.searchParams.get("opt");
   
   function handledefualt(e)
   {
+      
     var bColor='#52565a';
      if($('body').hasClass('lightVersion'))
       {
@@ -173,6 +177,18 @@ bColor='#52565a';
 //    $('body').addClass('darkVersion');   
 var url = new URL(window.location.href);
 var c = url.searchParams.get("opt");
+
+fetch('https://api.byzanti.ne/symbols?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N')
+.then(response => response.json())
+.then(data => {
+   data.forEach(function(v,i){
+    if(v.symbol===c)
+    {
+       pricePrecision=v.price_precision;
+       currencyPrecision=v.currency_precision;
+    }
+   });
+});
     //e.preventDefault();
     const widgetOptions = {
         debug: false,
@@ -418,7 +434,6 @@ function closeView(e){
         
 }
 
-
  var url = new URL(window.location.href);
      var     c = url.searchParams.get("opt");
 
@@ -449,23 +464,7 @@ function closeView(e){
         $('.orderWrap').fadeOut();
     }
     
-    function cancelOrder(e){
-        e.preventDefault();
-         var order_id = e.target.id;
-         $('#view'+order_id).fadeOut();
-           let datas = {
-              "orderId": order_id,
-      "orderHash": "ascascasc"
-        };
-         fetch('https://api.byzanti.ne/orderCancel?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', {
-         method: 'POST',headers: {
-      //  'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },  body: JSON.stringify(datas)})
-            .then(response => response.json())
-            .then(data => window.location.reload());
-            
-    }
+    
     
 class tradingHead extends Component{
      
@@ -523,8 +522,26 @@ class tradingHead extends Component{
         this.takeOrder = this.takeOrder.bind(this);
         this.makeOrder = this.makeOrder.bind(this);
         this.order = this.order.bind(this);
-    
+      
+    this.cancelOrder= this.cancelOrder.bind(this);
       }
+      cancelOrder=(e)=>{
+        e.preventDefault();
+         var order_id = e.target.id;
+         $('#view'+order_id).fadeOut();
+           let datas = {
+              "orderId": order_id,
+      "orderHash": "ascascasc"
+        };
+         fetch('https://api.byzanti.ne/orderCancel?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N', {
+         method: 'POST',headers: {
+      //  'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },  body: JSON.stringify(datas)})
+            .then(response => response.json())
+            .then(data =>this.refresh_data ); 
+            
+    }
       handleClick=(orderId)=> {
         this.setState({orderType: "take"})
     let API="https://api.byzanti.ne/orderById?orderId="+orderId+"&api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N";
@@ -1432,7 +1449,7 @@ bColor='#52565a';
                                             <td id={order.orderId}  onClick={orderView}>{parseFloat(order.price).toFixed(4)}</td>
                                             <td id={order.orderId}  onClick={orderView}>{parseFloat(amountToShow).toFixed(4)}</td>
                                             <td id={order.orderId}  onClick={orderView}>{order.created}</td>
-                                            <td id={order.orderId}    ><a href="/" id={order.orderId} onClick={cancelOrder}>{isCancel}</a></td>
+                                            <td id={order.orderId}    ><a href="/" id={order.orderId} onClick={this.cancelOrder}>{isCancel}</a></td>
                                             <td id={order.orderId}  onClick={orderView}>{order.useraccount}</td>
                                         </tr>
                                     }
