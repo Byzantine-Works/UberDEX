@@ -1,13 +1,31 @@
 <% include header.ejs %>
 
-        <div class="dashboard">
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-12 col-md-12">
-                        <h3>Welcome to Dashboard</h3>
+    <div class="dashboard exchangeDashboard">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12 col-md-12">
+                    <h3>Exchanges</h3>
+                    <a class="newexchange" href="/addExchange">New Exchange</a>
+                    <div class="exchange">
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Exchange Name</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% for(var i=0; i<data.hits.length; i++) {%>
+                                    <tr><td><%= data.hits[i]._source.exchangeName %></td><td><a style="display: none;" href="/exportJson/<%= data.hits[i]._source.apiId %>" target="_blank">Export</a><a href="/appLogo/<%= data.hits[i]._source.apiId %>">Profile</a><a href="/appColor/<%= data.hits[i]._source.apiId %>">App Color</a><a href="/appContent/<%= data.hits[i]._source.apiId %>">Content</a><a  href="/deleteExchange/<%= data.hits[i]._id %>" >Delete</a></td></tr>
+                                <%}%>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+        
 
      <% include footer.ejs %>

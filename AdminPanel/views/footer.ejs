@@ -2,7 +2,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-sm-12 col-md-12">
-                        <img src="images/logo.png" />
+                        <img src="/images/logo.png" />
                         <p>UberDex Inc. 2018</p>
                     </div>
                 </div>
@@ -11,7 +11,219 @@
 
 
         <!-- jQuery -->
-        <script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript" src="/js/jquery.js"></script>
+        
+        <script>
+                $ = jQuery;
+                    
+                $('#header').click(function(event) {
+                    event.preventDefault();
+                    $(this).addClass('active');
+                    $('#feature').removeClass('active');
+                    $('#services').removeClass('active');
+                    $('#news').removeClass('active');
+                    $('#aboutPage').removeClass('active');
+                    $('#tradePage').removeClass('active');
+                    $('#contactPage').removeClass('active');
+                    $('#agreementPage').removeClass('active');
+                    $('#footer').removeClass('active');
+    
+                    $('.HeaderSections').css('display','block');
+                    $('.MainFeatures').css('display','none');
+                    $('.mainServices').css('display','none');
+                    $('.MianFooter').css('display','none');
+                    $('.MainNews').css('display','none');
+                    $('.AboutPage').css('display','none');
+                    $('.TradePage').css('display','none');
+                    $('.AgreementPage').css('display','none');
+                    $('.ContactPage').css('display','none');
+                });
+                    
+                    $('#feature').click(function(event) {
+                        event.preventDefault();
+                        $(this).addClass('active');
+                        $('#header').removeClass('active');
+                        $('#services').removeClass('active');
+                        $('#news').removeClass('active');
+                        $('#aboutPage').removeClass('active');
+                        $('#tradePage').removeClass('active');
+                        $('#contactPage').removeClass('active');
+                        $('#agreementPage').removeClass('active');
+                        $('#footer').removeClass('active');
+    
+                        $('.HeaderSections').css('display','none');
+                        $('.MainFeatures').css('display','block');
+                        $('.mainServices').css('display','none');
+                        $('.MianFooter').css('display','none');
+                        $('.MainNews').css('display','none');
+                        $('.AboutPage').css('display','none');
+                        $('.TradePage').css('display','none');
+                        $('.AgreementPage').css('display','none');
+                        $('.ContactPage').css('display','none');
+                    });
+                    
+                    $('#services').click(function(event) {
+                        event.preventDefault();
+                        $(this).addClass('active');
+                        $('#header').removeClass('active');
+                        $('#feature').removeClass('active');
+                        $('#news').removeClass('active');
+                        $('#aboutPage').removeClass('active');
+                        $('#tradePage').removeClass('active');
+                        $('#contactPage').removeClass('active');
+                        $('#agreementPage').removeClass('active');
+                        $('#footer').removeClass('active');
+    
+                        $('.HeaderSections').css('display','none');
+                        $('.MainFeatures').css('display','none');
+                        $('.mainServices').css('display','block');
+                        $('.MianFooter').css('display','none');
+                        $('.MainNews').css('display','none');
+                        $('.AboutPage').css('display','none');
+                        $('.TradePage').css('display','none');
+                        $('.AgreementPage').css('display','none');
+                        $('.ContactPage').css('display','none');
+                    });
+                    
+                    $('#news').click(function(event) {
+                        event.preventDefault();
+                        $(this).addClass('active');
+                        $('#header').removeClass('active');
+                        $('#services').removeClass('active');
+                        $('#feature').removeClass('active');
+                        $('#aboutPage').removeClass('active');
+                        $('#tradePage').removeClass('active');
+                        $('#contactPage').removeClass('active');
+                        $('#agreementPage').removeClass('active');
+                        $('#footer').removeClass('active');
+    
+                        $('.HeaderSections').css('display','none');
+                        $('.MainFeatures').css('display','none');
+                        $('.mainServices').css('display','none');
+                        $('.MianFooter').css('display','none');
+                        $('.MainNews').css('display','block');
+                        $('.AboutPage').css('display','none');
+                        $('.TradePage').css('display','none');
+                        $('.AgreementPage').css('display','none');
+                        $('.ContactPage').css('display','none');
+                    });
+                    
+                    $('#aboutPage').click(function(event) {
+                        event.preventDefault();
+                        $(this).addClass('active');
+                        $('#header').removeClass('active');
+                        $('#services').removeClass('active');
+                        $('#news').removeClass('active');
+                        $('#feature').removeClass('active');
+                        $('#tradePage').removeClass('active');
+                        $('#contactPage').removeClass('active');
+                        $('#agreementPage').removeClass('active');
+                        $('#footer').removeClass('active');
+    
+                        $('.HeaderSections').css('display','none');
+                        $('.MainFeatures').css('display','none');
+                        $('.mainServices').css('display','none');
+                        $('.MianFooter').css('display','none');
+                        $('.MainNews').css('display','none');
+                        $('.AboutPage').css('display','block');
+                        $('.TradePage').css('display','none');
+                        $('.AgreementPage').css('display','none');
+                        $('.ContactPage').css('display','none');
+                    });
+                    
+                    $('#tradePage').click(function(event) {
+                        event.preventDefault();
+                        $(this).addClass('active');
+                        $('#header').removeClass('active');
+                        $('#services').removeClass('active');
+                        $('#news').removeClass('active');
+                        $('#aboutPage').removeClass('active');
+                        $('#feature').removeClass('active');
+                        $('#contactPage').removeClass('active');
+                        $('#agreementPage').removeClass('active');
+                        $('#footer').removeClass('active');
+    
+                        $('.HeaderSections').css('display','none');
+                        $('.MainFeatures').css('display','none');
+                        $('.mainServices').css('display','none');
+                        $('.MianFooter').css('display','none');
+                        $('.MainNews').css('display','none');
+                        $('.AboutPage').css('display','none');
+                        $('.TradePage').css('display','block');
+                        $('.AgreementPage').css('display','none');
+                        $('.ContactPage').css('display','none');
+                    });
+                    
+                    $('#contactPage').click(function(event) {
+                        event.preventDefault();
+                        $(this).addClass('active');
+                        $('#header').removeClass('active');
+                        $('#services').removeClass('active');
+                        $('#news').removeClass('active');
+                        $('#aboutPage').removeClass('active');
+                        $('#tradePage').removeClass('active');
+                        $('#feature').removeClass('active');
+                        $('#agreementPage').removeClass('active');
+                        $('#footer').removeClass('active');
+    
+                        $('.HeaderSections').css('display','none');
+                        $('.MainFeatures').css('display','none');
+                        $('.mainServices').css('display','none');
+                        $('.MianFooter').css('display','none');
+                        $('.MainNews').css('display','none');
+                        $('.AboutPage').css('display','none');
+                        $('.TradePage').css('display','none');
+                        $('.AgreementPage').css('display','none');
+                        $('.ContactPage').css('display','block');
+                    });
+                    
+                    $('#agreementPage').click(function(event) {
+                        event.preventDefault();
+                        $(this).addClass('active');
+                        $('#header').removeClass('active');
+                        $('#services').removeClass('active');
+                        $('#news').removeClass('active');
+                        $('#aboutPage').removeClass('active');
+                        $('#tradePage').removeClass('active');
+                        $('#contactPage').removeClass('active');
+                        $('#feature').removeClass('active');
+                        $('#footer').removeClass('active');
+    
+                        $('.HeaderSections').css('display','none');
+                        $('.MainFeatures').css('display','none');
+                        $('.mainServices').css('display','none');
+                        $('.MianFooter').css('display','none');
+                        $('.MainNews').css('display','none');
+                        $('.AboutPage').css('display','none');
+                        $('.TradePage').css('display','none');
+                        $('.AgreementPage').css('display','block');
+                        $('.ContactPage').css('display','none');
+                    });
+                    
+                    $('#footer').click(function(event) {
+                        event.preventDefault();
+                        $(this).addClass('active');
+                        $('#header').removeClass('active');
+                        $('#services').removeClass('active');
+                        $('#news').removeClass('active');
+                        $('#aboutPage').removeClass('active');
+                        $('#tradePage').removeClass('active');
+                        $('#contactPage').removeClass('active');
+                        $('#agreementPage').removeClass('active');
+                        $('#feature').removeClass('active');
+    
+                        $('.HeaderSections').css('display','none');
+                        $('.MainFeatures').css('display','none');
+                        $('.mainServices').css('display','none');
+                        $('.MianFooter').css('display','block');
+                        $('.MainNews').css('display','none');
+                        $('.AboutPage').css('display','none');
+                        $('.TradePage').css('display','none');
+                        $('.AgreementPage').css('display','none');
+                        $('.ContactPage').css('display','none');
+                    });
+            </script>
+
         <script src="https://cdn.tinymce.com/4/tinymce.min.js"></script>
         <script>
         tinymce.init({
@@ -45,6 +257,7 @@
 
         <!-- Custom -->
         <script type="text/javascript" src="js/custom.js"></script>
+
 
     </body>
 

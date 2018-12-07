@@ -10,13 +10,14 @@
                         <div class="innerDetail">
                             <form action="/saveColor" method="post">
                                 <h5>Select your App Color</h5>
-                                <label><input type="radio" value="#0e9caf" name="color" checked> <img src="images/defltImg.PNG" /></label>
-                                <label><input type="radio" value="#d5364f" name="color" > <img src="images/redImg.PNG" /></label>
-                                <label><input type="radio" value="#5fb158" name="color"> <img src="images/greenImg.PNG" /> </label>
-                                <label><input type="radio" value="#fce050" name="color"> <img src="images/yellowImg.PNG" />  </label>
-                                <label><input type="radio" value="#e88745" name="color"> <img src="images/browneImg.PNG" /></label>
-                                <label><input type="radio" value="#8630ad" name="color"> <img src="images/purpleImg.PNG" /></label>
-                                <label><input type="radio" value="#79edee" name="color"> <img src="images/blueImg.PNG" /> </label>
+                                <label><input type="radio" value="#0e9caf" name="color" checked> <img src="/images/defltImg.PNG" /></label>
+                               <input type="hidden" name="urlId" value="<%= uid %>" />
+                                <label><input type="radio" value="#d5364f" name="color" > <img src="/images/redImg.PNG" /></label>
+                                <label><input type="radio" value="#5fb158" name="color"> <img src="/images/greenImg.PNG" /> </label>
+                                <label><input type="radio" value="#fce050" name="color"> <img src="/images/yellowImg.PNG" />  </label>
+                                <label><input type="radio" value="#e88745" name="color"> <img src="/images/browneImg.PNG" /></label>
+                                <label><input type="radio" value="#8630ad" name="color"> <img src="/images/purpleImg.PNG" /></label>
+                                <label><input type="radio" value="#79edee" name="color"> <img src="/images/blueImg.PNG" /> </label>
                                 <p>OR Upload New Color</p>
                                 <input type="color">
                                 <input type="submit" name="submit" value="Save" />
