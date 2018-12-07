@@ -880,14 +880,22 @@ bColor='#52565a';
     $('#apiType').val('make');
 }
 
+
+    async cancelOrder() {
+
+        let scatter = this.props.scatterID;
+        let respCancel = axios()
+
+    }
+
     async makeOrder(side) {
         console.log("in make order")
 
         var url = new URL(window.location.href);
         var c = url.searchParams.get("opt");
         var price = side === "BUY" ? parseFloat($('#price').val()) : parseFloat($('#priceTwo').val());
-        var amSell = side === "BUY" ? parseFloat($('#buyPrice').val()) : parseFloat($('#BuyPricetwo').val());
-        var amBuy = side === "BUY" ? parseFloat($('#sellPrice').val()) : parseFloat($('#sellPricetwo').val());
+        var amSell = side === "BUY" ? parseFloat($('#sellPrice').val()) : parseFloat($('#BuyPricetwo').val());
+        var amBuy = side === "BUY" ? parseFloat($('#buyPrice').val()) : parseFloat($('#sellPricetwo').val());
 
 
         let symbSell = side === "SELL" ? c : "EOS";
@@ -1376,7 +1384,7 @@ bColor='#52565a';
                     <div  key={i} className="orderWrap" id={'view'+order.orderId}>
                         <div className="orderView">
                             <a href="/" className="closeView"  onClick={closeOrder}><i className="fa fa-times"></i></a>
-                            <h3  style={{'color': this.state.colors}}>Order Detail</h3>
+                            <ul><h3  style={{'color': this.state.colors}}>Order Detail</h3><button >Cancel Order</button></ul>
                             <div className="viewBottom clearfix">
                                 <ul>
                                     <li><span>Account Name</span> <cite>{order.useraccount}</cite> </li>

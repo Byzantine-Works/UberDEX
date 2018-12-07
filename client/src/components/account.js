@@ -66,10 +66,14 @@ class Account extends Component {
 
     async componentDidMount() {
         if(!this.props.scatterID) window.location.href = "/";
-        await this.getResources()
-        await this.checkBalance();
-        // await this.getTokens();
-        await this.getSymbols();
+
+        new Promise((resolve, reject) => {
+                this.getResources()
+                this.checkBalance(resolve);
+                
+            }).then((balSym) => {
+                this.getSymbols(balSym);
+            })
     }
 
     
@@ -98,7 +102,7 @@ class Account extends Component {
 
 
 
-    async checkBalance() {
+    async checkBalance(resolve) {
         console.log("resources: ", this.state.resources)
 
         /*Get balance on exchange*/
@@ -117,7 +121,7 @@ class Account extends Component {
         console.log("exchange balance: ", response);
         let balSym = [];
         let balance = response.data.map(el => {
-            return { token: el.symbol, amount: el.amount }
+            return { token: el.symbol, amount: el.amount, chainBal: 0.0000 }
         })
         balance.forEach(async x => {
 
@@ -151,16 +155,17 @@ class Account extends Component {
         this.setState({ tokens: tokensByAccount });
         this.setState({ balance_tokens: balSym })
         this.setState({ balance: balance })
+        resolve(balSym);
     }
 
-    async getSymbols() {
+    async getSymbols(balSym) {
 
         let response = await axios('https://api.byzanti.ne/symbols?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N');
         console.log("symbols response: ", response);
         let symbols = [];
         let tokens = {EOS: { precision: 4, contract: 'eosio.token', price_precision: 6 }}
         response.data.forEach(sym => {
-            if (!this.state.balance_tokens.includes(sym.symbol)) symbols.push(sym.symbol);
+            if (!balSym.includes(sym.symbol)) symbols.push(sym.symbol);
             tokens[sym.symbol] = { precision: sym.currency_precision, contract: sym.contract, price_precision: sym.price_precision}
         });
 
