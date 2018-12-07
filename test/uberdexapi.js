@@ -1117,6 +1117,8 @@ async function getAllBalances(user, symbol) {
 
 //Validate Order Buffer
 async function validateOrder(order, registeredKey) {
+
+    console.log(typeof order.amountBuy)
     //Get BN's
     var amountbuyBN = new BN(order.amountBuy);
     var amountsellBN = new BN(order.amountSell);
@@ -1141,9 +1143,13 @@ async function validateOrder(order, registeredKey) {
         throw new Error("Computed orderHash and POST orderHash do not match => " + orderHash + ":" + order.hash + " => please check your data/signatures")
 
     var recoveredKey = ecc.recover(order.signature, orderBuffer);
+    console.log(recoveredKey);
 
     if (recoveredKey != registeredKey)
         throw new Error("Registered Key and Recovered key do not match => " + registeredKey + ":" + recoveredKey);
+
+
+    
 }
 
 //Trade function
