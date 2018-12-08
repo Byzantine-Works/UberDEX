@@ -18,7 +18,7 @@ import data from '../app.json';
 import ecc from 'eosjs-ecc';
 var color = { background: data['theme_color'] };
 
-const socket = openSocket('https://api.byzanti.ne:9090/');
+//const socket = openSocket('https://api.byzanti.ne:9090/');
 
 const network = {
     blockchain: 'eos',
@@ -45,7 +45,7 @@ class Account extends Component {
         super(props);
         this.state = {
             // accountName: this.props.scatterID.identity.accounts[0].name 
-            accountName: 'vernisnotvic',
+            accountName: 'thebyzantine',
             view: 'wallet',
             balance: false,
             success: false,
@@ -63,7 +63,7 @@ class Account extends Component {
     }
     async getResources() {
 
-        let response = await axios(`https://api.byzanti.ne/getAccount/vernisnotvic?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`)
+        let response = await axios(`https://api.byzanti.ne/getAccount/thebyzantine?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`)
         //let response = await axios(`https://api.byzanti.ne/getAccount/${this.props.scatterID.identity.accounts[0].name}?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`)
         console.log("resposne: ", response);
         response = response.data;
@@ -134,7 +134,7 @@ class Account extends Component {
         let symbols = [];
         let tokens = {EOS: { precision: 4, contract: 'eosio.token', price_precision: 6 }}
         response.data.forEach(sym => {
-            if (!this.state.balance_tokens.includes(sym.symbol)) symbols.push(sym.symbol);
+            if  (this.state.balance_tokens != null && !this.state.balance_tokens.includes(sym.symbol)) symbols.push(sym.symbol);
             tokens[sym.symbol] = { precision: sym.currency_precision, contract: sym.contract, price_precision: sym.price_precision}
         });
 
