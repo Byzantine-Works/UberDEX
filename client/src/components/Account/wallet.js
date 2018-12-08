@@ -49,11 +49,11 @@ class Wallet extends Component {
                             if(sym.token.includes(this.state.search)) {
                             return (
                                 <tr>
-                                    {/* this.props.tokens[sym.token].precision ? this.props.tokens[sym.token].precision : 4 */}
+                                    
                                     <td><a href={'/exchange/?opt=' + sym.token}>{sym.token}</a></td>
-                                    <td>{Number(sym.amount).toFixed(4)}</td>
+                                    <td>{Number(sym.amount).toFixed(this.props.tokens ? this.props.tokens[sym.token].precision : 4)}</td>
                                     <td><a id={sym.token} onClick={(e) => this.props.changeView("withdraw", e.target.id)} style={{display:'inline-block'}}>Withdraw</a> / <a id={sym.token} onClick={(e) => this.props.changeView("deposit", e.target.id)} style={{display:'inline-block'}}>Deposit</a> / <a id={sym.token} onClick={(e) => this.props.changeView("transfer", e.target.id)} style={{display:'inline-block'}}>Transfer</a></td>
-                                    <td>{Number(sym.chainBal).toFixed(4)}</td>                                 
+                                    <td>{Number(sym.chainBal).toFixed(this.props.tokens ? this.props.tokens[sym.token].precision : 4)}</td>                                 
                                 </tr>
                             )
                             } else  {

@@ -73,6 +73,8 @@ class Account extends Component {
                 
             }).then((balSym) => {
                 this.getSymbols(balSym);
+            }).then(() => {
+                this.setState({view: 'wallet'});
             })
     }
 
@@ -169,7 +171,7 @@ class Account extends Component {
             tokens[sym.symbol] = { precision: sym.currency_precision, contract: sym.contract, price_precision: sym.price_precision}
         });
 
-        this.setState({ symbols: symbols, view: 'wallet' , tokens: tokens});
+        this.setState({ symbols: symbols, tokens: tokens});
     }
 
 
