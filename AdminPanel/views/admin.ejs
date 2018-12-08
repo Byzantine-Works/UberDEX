@@ -1,13 +1,11 @@
 <% include header.ejs %>
-
     <div class="dashboard exchangeDashboard">
         <div class="container">
             <div class="row">
                 <div class="col-sm-12 col-md-12">
                     <h3>Exchanges</h3>
-                    <a class="newexchange" href="/addExchange">New Exchange</a>
+                    <!-- <a class="newexchange" href="/addExchange">New Exchange</a> -->
                     <div class="exchange">
-
                         <table>
                             <thead>
                                 <tr>
@@ -16,8 +14,8 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <% for(var i=0; i<data.hits.length; i++) {%>
-                                    <tr><td><%= data.hits[i]._source.exchangeName %></td><td><a style="display: none;" href="/exportJson/<%= data.hits[i]._source.apiId %>" target="_blank">Export</a><a href="/appLogo/<%= data.hits[i]._source.apiId %>">Profile</a><a href="/appColor/<%= data.hits[i]._source.apiId %>">App Color</a><a href="/appContent/<%= data.hits[i]._source.apiId %>">Content</a><a  href="/deleteExchange/<%= data.hits[i]._id %>" >Delete</a></td></tr>
+                                <% for(var i=0; i<data.length; i++) {%>
+                                    <tr><td><%= data[i].name %></td><td><a style="display: none;" href="/exportJson/<%= data[i].exchangeId %>" target="_blank">Export</a><a href="/appLogo/<%= data[i].exchangeId %>">Profile</a><a href="/appColor/<%= data[i].exchangeId %>">App Color</a><a href="/appContent/<%= data[i].exchangeId %>">Content</a><a  href="/deleteExchange/<%= data[i].exchangeId %>" >Delete</a></td></tr>
                                 <%}%>
                             </tbody>
                         </table>
@@ -26,6 +24,4 @@
             </div>
         </div>
     </div>
-        
-
      <% include footer.ejs %>
