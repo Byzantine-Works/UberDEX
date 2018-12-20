@@ -571,7 +571,7 @@ function serializeOrder(exchangeAccount, tokenBuy, tokenSell, amountBuyBN, amoun
     orderBuffer.set(tokenSellBuffer, offset);
     console.log('tokenSellBuffer: ', tokenSellBuffer);
     offset += serializedTokenSymbolSize;
-    console.log("BINS for amountSell:nonce=> " + amountSellBN,nonceBN);
+    console.log("BINS for amountSell:nonce=> " + amountSellBN, nonceBN);
     orderBuffer.set(serializeUInt64BN(amountSellBN), offset);
     offset += uint64_size;
     orderBuffer.set(serializeUInt64BN(nonceBN), offset);
@@ -1310,17 +1310,25 @@ async function exregisteruseraccount(account) {
         console.log("key => " + accountInfo.permissions[i].required_auth.keys[0].key);
         if (accountInfo.permissions[i].perm_name == 'active') {
             var registerTrx = await exregisteruser(account, accountInfo.permissions[i].required_auth.keys[0].key);
-            console.log(registerTrx);
-            break;
+            console.log("exregisteruseraccount => " + registerTrx);
+            return registerTrx;
         }
     }
 }
 
 async function exregisteruser(account, pubkey) {
-    log('exregisteruser ' + account + ' :: ' + pubkey);
+    console.log('exregisteruser ' + account + ' :: ' + pubkey);
 
+    //TODO: @reddy fix this issue globally for privatekey fetches
+    //Temporary fix below
+    var eos = Eos({
+        keyProvider: '5K71w2uenhVkQ5E16bxZtGL65aJYhWbmgHCBeBJYU3Ve1ZmX7YS', // private key
+        httpEndpoint: 'http://127.0.0.1:8888',
+        chainId: 'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f'
+    });
+    
     if (!ecc.isValidPublic(pubkey)) {
-        log(' Invalid pubkey!');
+        console.log(' Invalid pubkey!');
         return;
     }
 
@@ -1329,16 +1337,16 @@ async function exregisteruser(account, pubkey) {
     pkPacked.set(Uint8Array.of(0), 0);
     pkPacked.set(pk, 1);
     var pkHex = pkPacked.toString('hex');
-    log('pkHex in bytes -> ' + pkHex);
 
     trxRegisterUser = await eos.transaction('exchange', (contractuser) => {
         contractuser.registeruser({
             user: account,
             publickey: pkHex
         }, {
-            authorization: [account]
+            authorization: [EXCHANGE_ACCOUNT]
         });
     });
+    console.log(trxRegisterUser);
     return trxRegisterUser;
 }
 

@@ -50,23 +50,6 @@
     };
 
     /**
-     Gets the portfolio.
-
-     @public
-     @param resultHandler {function} the result handler called when the portfolio has been retrieved. The async result indicates whether the call was successful or not. 
-     */
-    this.getPortfolio = function(resultHandler) {
-      var __args = arguments;
-      if (__args.length === 1 && typeof __args[0] === 'function') {
-        if (closed) {
-          throw new Error('Proxy is closed');
-        }
-        j_eb.send(j_address, {}, {"action":"getPortfolio"}, function(err, result) { __args[0](err, result &&result.body); });
-        return;
-      } else throw new TypeError('function invoked with invalid arguments');
-    };
-
-    /**
      Buy `amount` shares of the given shares (quote).
 
      @public
@@ -100,6 +83,23 @@
           throw new Error('Proxy is closed');
         }
         j_eb.send(j_address, {"amount":__args[0], "quote":__args[1]}, {"action":"sell"}, function(err, result) { __args[2](err, result &&result.body); });
+        return;
+      } else throw new TypeError('function invoked with invalid arguments');
+    };
+
+    /**
+     Gets the portfolio.
+
+     @public
+     @param resultHandler {function} the result handler called when the portfolio has been retrieved. The async result indicates whether the call was successful or not. 
+     */
+    this.getPortfolio = function(resultHandler) {
+      var __args = arguments;
+      if (__args.length === 1 && typeof __args[0] === 'function') {
+        if (closed) {
+          throw new Error('Proxy is closed');
+        }
+        j_eb.send(j_address, {}, {"action":"getPortfolio"}, function(err, result) { __args[0](err, result &&result.body); });
         return;
       } else throw new TypeError('function invoked with invalid arguments');
     };
