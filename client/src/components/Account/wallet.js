@@ -46,16 +46,24 @@ class Wallet extends Component {
                     </thead>
                     <tbody>
                         {this.props.balance.map(sym => {
-                            if(sym.token.includes(this.state.search)) {
-                                console.log("@reddy-debug-symbol:=>" + JSON.stringify(sym));
+                            if(sym.token.includes(this.state.search) && sym.token != 'EOS') {
                             return (
                                 <tr>
-                                    <td><a href={'/exchange/?opt=' + sym.token}>{sym.token}</a></td>
+                                    <td><a href={'/exchange/?opt=' + sym.token + '&contract=' + sym.contract}>{sym.token}</a></td>
                                     <td>{Number(sym.amount).toFixed(this.props.tokens[sym.token].precision)}</td>
                                     <td><a id={sym.token} onClick={(e) => this.props.changeView("withdraw", e.target.id)} style={{display:'inline-block'}}>Withdraw</a> / <a id={sym.token} onClick={(e) => this.props.changeView("deposit", e.target.id)} style={{display:'inline-block'}}>Deposit</a> / <a id={sym.token} onClick={(e) => this.props.changeView("transfer", e.target.id)} style={{display:'inline-block'}}>Transfer</a></td>
                                     <td>{Number(sym.chainBal).toFixed(this.props.tokens[sym.token].precision)}</td>                                 
                                 </tr>
                             )
+                            } else if(sym.token.includes(this.state.search) && sym.token == 'EOS') {
+                                return (
+                                    <tr>
+                                        <td><a>{sym.token}</a></td>
+                                        <td>{Number(sym.amount).toFixed(this.props.tokens[sym.token].precision)}</td>
+                                        <td><a id={sym.token} onClick={(e) => this.props.changeView("withdraw", e.target.id)} style={{display:'inline-block'}}>Withdraw</a> / <a id={sym.token} onClick={(e) => this.props.changeView("deposit", e.target.id)} style={{display:'inline-block'}}>Deposit</a> / <a id={sym.token} onClick={(e) => this.props.changeView("transfer", e.target.id)} style={{display:'inline-block'}}>Transfer</a></td>
+                                        <td>{Number(sym.chainBal).toFixed(this.props.tokens[sym.token].precision)}</td>                                 
+                                    </tr>
+                                )
                             } else  {
                                 return null;
                             }
