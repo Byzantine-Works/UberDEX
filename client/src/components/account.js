@@ -65,7 +65,7 @@ class Account extends Component {
 
         let response = await axios(`https://api.byzanti.ne/getAccount/thebyzantine?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`)
         //let response = await axios(`https://api.byzanti.ne/getAccount/${this.props.scatterID.identity.accounts[0].name}?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`)
-        console.log("resposne: ", response);
+        //console.log("resposne: ", response);
         response = response.data;
 
         let resources = {
