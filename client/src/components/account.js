@@ -122,7 +122,7 @@ class Account extends Component {
             let symbol = el.split(' ')[1];
             let bal = el.split(' ')[0];
             let tokenContract = await axios(`https://api.byzanti.ne/ticker?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N&symbol=` + symbol);
-            var contract = (symbol == 'EOS' ? '' : tokenContract.data[0].contract);
+            var contract = (symbol == 'EOS' ? 'NA' : tokenContract.data[0].contract);
             console.log( 'Token Contract in checkBalances() is => ' + symbol, bal,contract)
             if (balSym.includes(symbol)) {
                 let index = lodash.findIndex(balance, ['token', symbol])

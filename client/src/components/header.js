@@ -58,7 +58,7 @@ function handlePublic(e){
     e.preventDefault();
     var scatter = ScatterJS.scatter;
     //alert(scatter.identity.publicKey);
-    console.log(scatter.identity);
+    console.log("Scatter Identity => " + scatter.identity);
 }
 
 
