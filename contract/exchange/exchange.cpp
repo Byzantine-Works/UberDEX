@@ -126,7 +126,7 @@ void exchange::resetex(account_name owner)
 /// @abi action
 void exchange::registeruser(account_name user, bytes publickey)
 {
-  require_auth(user);
+  //require_auth(user);
   _accounts.register_user(user, publickey);
 }
 
@@ -163,7 +163,7 @@ void exchange::trade(account_name admin, int64_t amountbuy, int64_t amountsell, 
 
   checksum256 trade_hash = get_trade_hash(order_hash, amount, taker, tradenonce);
   // TODO(Dima): add a check to make sure the exchange can't charge exuberant fees.
-  _accounts.record_trade(taker, trade_hash, amount, amountbuy, amountsell, takerfee,
+  _accounts.record_trade(taker, trade_hash, amount, amountbuy, amountsell, takerfee, makerfee,
                          token_buy_symbol, token_sell_symbol,
                          tapos_block_num(), exchange_settings.trade_lock_period, takersig);
 

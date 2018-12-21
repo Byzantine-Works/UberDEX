@@ -197,7 +197,7 @@ void exchange_accounts::get_balances(account_name owner, int64_t current_block_n
 }
 
 void exchange_accounts::record_trade(account_name taker, const checksum256 &trade_hash,
-                                     int64_t amount, int64_t amount_buy, int64_t amount_sell, int64_t taker_fee,
+                                     int64_t amount, int64_t amount_buy, int64_t amount_sell, int64_t taker_fee, int64_t maker_fee,
                                      const extended_symbol &token_buy_symbol, const extended_symbol &token_sell_symbol,
                                      int64_t block_number, int64_t trade_lock_period, bytes taker_signature)
 {
@@ -220,9 +220,11 @@ void exchange_accounts::record_trade(account_name taker, const checksum256 &trad
     // Update token balances.
     auto &balances = existing_account.balances;
     eosio_assert(balances[token_buy_symbol] >= amount, "Insufficient taker's balance for the trade");
-    balances[token_buy_symbol] = safe_sub(balances[token_buy_symbol], amount);
-    balances[token_buy_symbol] = safe_sub(balances[token_buy_symbol], taker_fee);
-    balances[token_sell_symbol] = safe_add(balances[token_sell_symbol], safe_mul(amount_sell, amount) / amount_buy);
+    balances[token_buy_symbol] = safe_add(balances[token_buy_symbol], amount);
+    balances[token_sell_symbol] = safe_sub(balances[token_sell_symbol], amount_sell);
+    balances[token_buy_symbol] = safe_sub(balances[token_buy_symbol], maker_fee);
+    //balances[token_sell_symbol] = safe_sub(balances[token_sell_symbol], taker_fee);
+    balances[token_sell_symbol] = safe_sub(balances[token_sell_symbol], safe_mul(amount_sell, amount) / amount_buy);
   });
 }
 

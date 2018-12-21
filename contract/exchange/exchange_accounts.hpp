@@ -50,7 +50,7 @@ struct exchange_accounts
                              int64_t maker_fee, int64_t taker_fee, int64_t block_number);
     void get_balances(account_name owner, int64_t current_block_number);
     void record_trade(account_name taker, const checksum256 &trade_hash,
-                      int64_t amount, int64_t amount_buy, int64_t amount_sell, int64_t taker_fee,
+                      int64_t amount, int64_t amount_buy, int64_t amount_sell, int64_t taker_fee, int64_t maker_fee,
                       const extended_symbol &token_buy_symbol, const extended_symbol &token_sell_symbol,
                       int64_t block_number, int64_t trade_lock_period, bytes taker_signature);
     void update_order(account_name maker, const checksum256 &order_hash,
